@@ -1,4 +1,4 @@
-namespace ChatClient;
+﻿namespace ChatClient;
 
 public class UserAccount
 {
