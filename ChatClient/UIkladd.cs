@@ -38,7 +38,6 @@ namespace ChatClient
             Rectangle rectLogIn = new Rectangle(rectX, rectY, rectWidth, rectHeight);
 
 
-
             Raylib.DrawRectangleRounded(rectUser, 0.3f, 10, Color.Gold);
 
             Raylib.DrawRectangleRounded(rectPassword, 0.3f, 10, Color.Gold);
