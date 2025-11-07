@@ -9,7 +9,7 @@ int userID = 0;
 // Dictionary keyed by Username
 var users = new Dictionary<string, User>
 {
-    { "TestUser", new User { Id = 1, Password = "Password123" } }
+    { "TestUser", new User { Id = userID++, Password = "Password123" } }
 };
 
 app.MapGet("/", () => "Hello world");
