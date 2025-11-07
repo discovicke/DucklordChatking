@@ -9,17 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ca5f0c6-0fee-4905-853b-f8ef09da58b4" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/ChatClient/.idea/.idea.ChatClient.dir/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChatClient/.idea/.idea.ChatClient.dir/.idea/copilot.data.migration.agent.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChatClient/.idea/.idea.ChatClient.dir/.idea/copilot.data.migration.ask.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChatClient/.idea/.idea.ChatClient.dir/.idea/copilot.data.migration.ask2agent.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChatClient/.idea/.idea.ChatClient.dir/.idea/copilot.data.migration.edit.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChatClient/.idea/.idea.ChatClient.dir/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChatClient/.idea/.idea.ChatClient.dir/.idea/material_theme_project_new.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChatClient/.idea/.idea.ChatClient.dir/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/H1337.sln" beforeDir="false" afterPath="$PROJECT_DIR$/H1337.sln" afterDir="false" />
-    </list>
+    <list default="true" id="7ca5f0c6-0fee-4905-853b-f8ef09da58b4" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -134,6 +124,7 @@
       <option name="presentableId" value="Default" />
       <updated>1762505246509</updated>
       <workItem from="1762505249042" duration="476000" />
+      <workItem from="1762505753464" duration="359000" />
     </task>
     <servers />
   </component>
