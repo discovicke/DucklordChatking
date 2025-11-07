@@ -12,6 +12,8 @@ public class Program
         while (!Raylib.WindowShouldClose())
         {
             MainMenu.Run();
+            // calls on class for mouse interact
+            MouseInput.Update();
         }
 
         Raylib.CloseWindow();
