@@ -14,4 +14,26 @@ var users = new Dictionary<string, User>
 
 app.MapGet("/", () => "Hello world");
 
+
+// Login
+app.MapPost("/login", (LoginDTO dto) =>
+{
+  // Validate input
+  if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
+  {
+    return Results.BadRequest(new { Message = "Username and password are required" });
+  }
+
+  if (users.TryGetValue(dto.Username, out var user) && user.Password == dto.Password)
+  {
+    return Results.Ok(new { UserID = user.Id, Message = "Login successful" });
+  }
+
+  return Results.BadRequest(new { Message = "Invalid username or password" });
+});
+
+
+// TODO: POST for message to chat
+
+// TODO: GET all messages
 app.Run();
