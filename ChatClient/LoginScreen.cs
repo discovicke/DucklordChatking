@@ -8,7 +8,7 @@ public class LoginScreen
     //TODO: Kolla så login fungerar med servern
     private static readonly HttpClient httpClient = new HttpClient
     {
-        BaseAddress = new Uri("http://localhost:5000")
+        BaseAddress = new Uri("http://localhost:5201")
     };
 
     public static void LoginTest()
