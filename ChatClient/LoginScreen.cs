@@ -16,7 +16,7 @@ public class LoginScreen
         var loginScreen = new LoginScreen();
         var user = new UserAccount();
         user.Username = "Ducklord";
-        user.Code = "chatking";
+        user.Password = "chatking";
         bool loginSuccess = loginScreen.Login(user); //TODO: Läsa av input från användaren och skicka till Login-metoden
         if (!loginSuccess)
         {
@@ -33,7 +33,7 @@ public class LoginScreen
         var loginDto = new LoginDTO
         {
             Username = user.Username,
-            Password = user.Code
+            Password = user.Password
         };
 
         try
