@@ -90,8 +90,20 @@ public class UserStore
   // UPDATE USER
   public bool Update(string oldUsername, string newUsername, string? newPassword = null)
   {
-    // TODO: Implement logic
-    return false;
+    if (!usersByUsername.TryGetValue(oldUsername, out var user)) { return false; } // If the old username does not exist, the update cannot continue.
+    if (oldUsername != newUsername && usersByUsername.ContainsKey(newUsername)) { return false; } // If the username changes, make sure the new username is not already taken.
+
+    // Remove the old username key from the dictionary. (Note: the user object still exists in memory at this point)
+    usersByUsername.Remove(oldUsername);
+
+    // Update the properties on the existing User instance.
+    user.Username = newUsername;
+    if (!string.IsNullOrWhiteSpace(newPassword)) { user.Password = newPassword; } // Only update the password if a new one was provided.
+
+    // Insert the updated user using the new username as key.
+    usersByUsername.Add(newUsername, user);
+
+    return true;
   }
 
   #region GET USER (by USERNAME)
