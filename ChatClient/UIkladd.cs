@@ -18,14 +18,14 @@ namespace ChatClient
 
             Raylib.BeginDrawing();
             // LoginScreen-test
-            Raylib.ClearBackground(new Color(15, 112, 152));
+            Raylib.ClearBackground(Colors.BackgroundColor);
             int fontSize = 15;
             string userName = "Username:";
             string passWord = "Password";
 
             // Rita label
-            Raylib.DrawText(userName, 220, 305, fontSize, Color.Gold);
-            Raylib.DrawText(passWord, 220, 355, fontSize, Color.Gold);
+            Raylib.DrawText(userName, 220, 305, fontSize, Colors.TextFieldColor);
+            Raylib.DrawText(passWord, 220, 355, fontSize, Colors.TextFieldColor);
 
             // Beräkna textens bredd
             int textWidth = Raylib.MeasureText(userName, fontSize);
@@ -60,20 +60,20 @@ namespace ChatClient
 
 
 
-            Raylib.DrawRectangleRounded(rectUser, 0.3f, 10, Color.Gold);
+            Raylib.DrawRectangleRounded(rectUser, 0.3f, 10, Colors.TextFieldColor);
 
-            Raylib.DrawRectangleRounded(rectPassword, 0.3f, 10, Color.Gold);
+            Raylib.DrawRectangleRounded(rectPassword, 0.3f, 10, Colors.TextFieldColor);
             
             
             
             // Visual hover feedback (outline)
             if (hoverUser)
             {
-                Raylib.DrawRectangleRounded(rectUser, 0.3f, 10, (new Color(247, 227, 182)));
+                Raylib.DrawRectangleRounded(rectUser, 0.3f, 10, Colors.HoverColor);
             }
             if (hoverPassword)
             { 
-                Raylib.DrawRectangleRounded(rectPassword, 0.3f, 10, (new Color(247, 227, 182)));
+                Raylib.DrawRectangleRounded(rectPassword, 0.3f, 10, Colors.HoverColor);
             }
 
             // Logo
@@ -81,7 +81,7 @@ namespace ChatClient
             Raylib.DrawTextureEx(logo, new Vector2(300, 50), 0, 0.15f, Color.White);
 
 
-            Raylib.DrawText("DuckLord v.1.0.0", 10, 580, 10, Color.Black);
+            Raylib.DrawText("DuckLord v.1.0.0", 10, 580, 10, Colors.TextColor);
 
             Raylib.EndDrawing();
         }
