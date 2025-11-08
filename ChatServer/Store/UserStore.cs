@@ -1,3 +1,5 @@
+using ChatServer.Models;
+
 namespace ChatServer.Store;
 
 public class UserStore
