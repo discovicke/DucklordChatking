@@ -41,6 +41,42 @@ public class UserStore
     return true;
   }
 
+  #region UPDATE USER
+  /// <summary>
+  /// Updates the username and optionally the password of an existing user.
+  /// The update keeps dictionary consistency by removing the old key and inserting the new one.
+  /// </summary>
+  /// <param name="oldUsername">
+  /// The current username used to locate the existing user.
+  /// </param>
+  /// <param name="newUsername">
+  /// The username that replaces the old one. Must be unused by other users.
+  /// </param>
+  /// <param name="newPassword">
+  /// A new password to assign. When null or empty, the existing password remains.
+  /// </param>
+  /// <returns>
+  /// True when the update succeeds. False when the old username is not found or the new one is already taken.
+  /// </returns>
+  #endregion
+  public bool Update(string oldUsername, string newUsername, string? newPassword = null)
+  {
+    if (!usersByUsername.TryGetValue(oldUsername, out var user)) { return false; } // If the old username does not exist, the update cannot continue.
+    if (oldUsername != newUsername && usersByUsername.ContainsKey(newUsername)) { return false; } // If the username changes, make sure the new username is not already taken.
+
+    // Remove the old username key from the dictionary. (Note: the user object still exists in memory at this point)
+    usersByUsername.Remove(oldUsername);
+
+    // Update the properties on the existing User instance.
+    user.Username = newUsername;
+    if (!string.IsNullOrWhiteSpace(newPassword)) { user.Password = newPassword; } // Only update the password if a new one was provided.
+
+    // Insert the updated user using the new username as key.
+    usersByUsername.Add(newUsername, user);
+
+    return true;
+  }
+
   #region REMOVE USER (by USERNAME)
   /// <summary>
   /// Removes a user from the store using their username.
@@ -83,25 +119,6 @@ public class UserStore
 
     usersById.Remove(id);
     usersByUsername.Remove(user.Username);
-
-    return true;
-  }
-
-  // UPDATE USER
-  public bool Update(string oldUsername, string newUsername, string? newPassword = null)
-  {
-    if (!usersByUsername.TryGetValue(oldUsername, out var user)) { return false; } // If the old username does not exist, the update cannot continue.
-    if (oldUsername != newUsername && usersByUsername.ContainsKey(newUsername)) { return false; } // If the username changes, make sure the new username is not already taken.
-
-    // Remove the old username key from the dictionary. (Note: the user object still exists in memory at this point)
-    usersByUsername.Remove(oldUsername);
-
-    // Update the properties on the existing User instance.
-    user.Username = newUsername;
-    if (!string.IsNullOrWhiteSpace(newPassword)) { user.Password = newPassword; } // Only update the password if a new one was provided.
-
-    // Insert the updated user using the new username as key.
-    usersByUsername.Add(newUsername, user);
 
     return true;
   }
