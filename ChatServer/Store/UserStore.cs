@@ -44,14 +44,24 @@ public class UserStore
   // REMOVE USER
   public bool Remove(string username)
   {
-    // TODO: Implement logic
-    return false;
+    if (!usersByUsername.TryGetValue(username, out var user))
+      return false;
+
+    usersByUsername.Remove(username);
+    usersById.Remove(user.Id);
+
+    return true;
   }
 
   public bool Remove(int id)
   {
-    // TODO: Implement logic
-    return false;
+    if (!usersById.TryGetValue(id, out var user))
+      return false;
+
+    usersById.Remove(id);
+    usersByUsername.Remove(user.Username);
+
+    return true;
   }
 
   // UPDATE USER
