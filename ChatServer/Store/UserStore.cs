@@ -9,7 +9,21 @@ public class UserStore
   // User ID counter
   private int nextId = 1;
 
-  // ADD USER
+  #region ADD USER
+  /// <summary>
+  /// Adds a new user to the store. The method assigns a unique ID and registers
+  /// the user in both UserStore dictionaries (by username and by ID).
+  /// </summary>
+  /// <param name="username">
+  /// The identifier the caller wants to use when referring to the user.
+  /// </param>
+  /// <param name="password">
+  /// The secret credential stored for authentication.
+  /// </param>
+  /// <returns>
+  /// True when creation succeeds. False when a user with the same username already exists.
+  /// </returns>
+  #endregion
   public bool Add(string username, string password)
   {
     if (usersByUsername.ContainsKey(username))
