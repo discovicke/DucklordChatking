@@ -1,20 +1,18 @@
 ﻿using Shared;
-using ChatServer.Models;
+using ChatServer.Store;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-int userID = 0;
+// Create a single shared UserStore instance.
+// The store contains both dictionaries (by username and by id).
+UserStore userStore = new();
+
+// Add one user for testing
+userStore.Add("Ducklord", "chatking");
 
 
-// TODO: Create helpers for adding, removing and getting users/user property contents from this dictionary
-// Dictionary keyed by Username
-var users = new Dictionary<string, User>
-{
-    { "Ducklord", new User { Id = userID++, Password = "chatking" } }
-};
-
-// Login
+// Login endpoint
 app.MapPost("/login", (LoginDTO dto) =>
 {
   // Validate input
@@ -23,7 +21,9 @@ app.MapPost("/login", (LoginDTO dto) =>
     return Results.BadRequest(new { Message = "Username and password are required" });
   }
 
-  if (users.TryGetValue(dto.Username, out var user) && user.Password == dto.Password)
+  var user = userStore.GetByUsername(dto.Username);
+
+  if (user != null && user.Password == dto.Password)
   {
     return Results.Ok(new { UserID = user.Id, Message = "Login successful" });
   }
@@ -31,7 +31,8 @@ app.MapPost("/login", (LoginDTO dto) =>
   return Results.BadRequest(new { Message = "Invalid username or password" });
 });
 
-// Registration
+
+// Registration endpoint
 app.MapPost("/register", (LoginDTO dto) =>
 {
   // Validate input
@@ -40,30 +41,23 @@ app.MapPost("/register", (LoginDTO dto) =>
     return Results.BadRequest(new { Message = "Username and password are required" });
   }
 
-  // Check if username already exists
-  if (users.ContainsKey(dto.Username))
+  // Attempt to add user
+  if (!userStore.Add(dto.Username, dto.Password))
   {
     return Results.BadRequest(new { Message = "Username already exists" });
   }
 
-  // Create new userID
-  userID++;
+  var newUser = userStore.GetByUsername(dto.Username);
 
-  users[dto.Username] = new User
-  {
-    Id = userID,
-    Password = dto.Password
-  };
-
-  return Results.Ok(new { UserID = userID, Message = "Registration successful" });
+  return Results.Ok(new { UserID = newUser!.Id, Message = "Registration successful" });
 });
 
+
+// Return a list of all usernames (Note: only return the usernames, not the full objects)
 app.MapGet("/users", () =>
 {
-  return Results.Ok(users.Keys.ToList());
+  return Results.Ok(userStore.GetAllUsernames());
 });
 
-// TODO: POST for message to chat
 
-// TODO: GET all messages
 app.Run();
