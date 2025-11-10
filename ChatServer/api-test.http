@@ -1,6 +1,7 @@
 @ChatServer_HostAddress = http://localhost:5201
 
-POST http://localhost:5201/login
+### LOGIN
+POST {{ChatServer_HostAddress}}/login
 Content-Type: application/json
 
 {
@@ -10,7 +11,8 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:5201/register
+### REGISTER
+POST {{ChatServer_HostAddress}}/register
 Content-Type: application/json
 
 {
@@ -20,7 +22,21 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:5201/users
+### GET ALL USERS
+GET {{ChatServer_HostAddress}}/users
+
+###
+
+### SEND MESSAGE
+POST {{ChatServer_HostAddress}}/send-message
 Content-Type: application/json
 
+{
+    "sender": "Ducklord",
+    "content": "Hello from Ducklord"
+}
 
+###
+
+### GET ALL MESSAGES
+GET {{ChatServer_HostAddress}}/messages
