@@ -13,7 +13,7 @@ namespace ChatClient.Windows
     internal class UIkladd
     {
         private enum SelectedField { None, Username, Password }
-        private static SelectedField _selected = SelectedField.None;
+        private static SelectedField selected = SelectedField.None;
         public static void Run()
         {
 
@@ -48,15 +48,15 @@ namespace ChatClient.Windows
 
             if (MouseInput.IsLeftClick(rectUser))
             {
-                _selected = SelectedField.Username;
+                selected = SelectedField.Username;
             }
             else if (MouseInput.IsLeftClick(rectPassword))
             {
-                _selected = SelectedField.Password;
+                selected = SelectedField.Password;
             }
             else if (leftPressed && !hoverUser && !hoverPassword)
             {
-                _selected = SelectedField.None;
+                selected = SelectedField.None;
             }
 
 

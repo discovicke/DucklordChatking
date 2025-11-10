@@ -10,20 +10,20 @@ namespace ChatClient.Configurations
 {
     internal static class MouseInput
     {
-        private static Vector2 _mousePos;
+        private static Vector2 mousePos;
 
         public static void Update() 
         {
-            _mousePos = Raylib.GetMousePosition();
+            mousePos = Raylib.GetMousePosition();
         }
 
         // mouse position
-        public static Vector2 Position => _mousePos;
+        public static Vector2 Position => mousePos;
 
         // True if mouse curser are over rectangle
         public static bool IsHovered(Rectangle rect)
         {
-            return Raylib.CheckCollisionPointRec(_mousePos, rect);
+            return Raylib.CheckCollisionPointRec(mousePos, rect);
         }
 
         // True if mouse click is left when over rectangle 
