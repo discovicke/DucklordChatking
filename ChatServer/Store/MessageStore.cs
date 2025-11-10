@@ -46,14 +46,14 @@ public class MessageStore(UserStore userStore)
 
   #region GET ALL MESSAGES
   /// <summary>
-  /// Converts all stored chat messages into DTOs and returns them in insertion order.
+  /// Retrieves every stored chat message and returns them in the order they were added.
   /// </summary>
   /// <remarks>
-  /// Each returned message contains the sender's username resolved from the UserStore.
-  /// If a message references a user that no longer exists, the method throws an exception.
+  /// Each stored message is converted into a <see cref="MessageDTO"/>. The sender identifier is resolved to a username
+  /// by querying the <see cref="UserStore"/>. The returned list preserves the chronological order of insertion.
   /// </remarks>
   /// <returns>
-  /// A read-only list of <see cref="MessageDTO"/> objects formatted for client use.
+  /// A read-only list of <see cref="MessageDTO"/> representing the full chat history.
   /// </returns>
   #endregion
   public IReadOnlyList<MessageDTO> GetAll()
@@ -65,6 +65,47 @@ public class MessageStore(UserStore userStore)
       var user = userStore.GetById(m.SenderId) ?? throw new InvalidOperationException(
             $"Message with ID {m.Id} references a missing user"
         );
+      result.Add(new MessageDTO
+      {
+        Sender = user.Username,
+        Content = m.Content,
+        Timestamp = m.Timestamp
+      });
+    }
+
+    return result;
+  }
+
+
+  #region GET LAST MESSAGES
+  /// <summary>
+  /// Returns the most recently stored chat messages in chronological order up to the amount specified.
+  /// </summary>
+  /// <param name="count">
+  /// The number of messages the caller wants to retrieve. If the value is larger than the number of stored messages,
+  /// all available messages are returned.
+  /// </param>
+  /// <returns>
+  /// A read-only list of <see cref="MessageDTO"/> representing the latest messages in the store. The list contains the
+  /// newest messages based on insertion order, formatted for client use.
+  /// </returns>
+  #endregion
+  public IReadOnlyList<MessageDTO> GetLast(int count)
+  {
+    if (count <= 0)
+      return [];
+
+    // Determine starting index
+    int startIndex = Math.Max(0, messages.Count - count);
+
+    var result = new List<MessageDTO>(count);
+
+    for (int i = startIndex; i < messages.Count; i++)
+    {
+      var m = messages[i];
+      var user = userStore.GetById(m.SenderId)
+                 ?? throw new InvalidOperationException($"Message with ID {m.Id} references a missing user");
+
       result.Add(new MessageDTO
       {
         Sender = user.Username,
