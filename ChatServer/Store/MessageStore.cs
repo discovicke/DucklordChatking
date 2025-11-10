@@ -77,6 +77,47 @@ public class MessageStore(UserStore userStore)
   }
 
 
+  #region GET LAST MESSAGES
+  /// <summary>
+  /// Returns the most recently stored chat messages in chronological order up to the amount specified.
+  /// </summary>
+  /// <param name="count">
+  /// The number of messages the caller wants to retrieve. If the value is larger than the number of stored messages,
+  /// all available messages are returned.
+  /// </param>
+  /// <returns>
+  /// A read-only list of <see cref="MessageDTO"/> representing the latest messages in the store. The list contains the
+  /// newest messages based on insertion order, formatted for client use.
+  /// </returns>
+  #endregion
+  public IReadOnlyList<MessageDTO> GetLast(int count)
+  {
+    if (count <= 0)
+      return [];
+
+    // Determine starting index
+    int startIndex = Math.Max(0, messages.Count - count);
+
+    var result = new List<MessageDTO>(count);
+
+    for (int i = startIndex; i < messages.Count; i++)
+    {
+      var m = messages[i];
+      var user = userStore.GetById(m.SenderId)
+                 ?? throw new InvalidOperationException($"Message with ID {m.Id} references a missing user");
+
+      result.Add(new MessageDTO
+      {
+        Sender = user.Username,
+        Content = m.Content,
+        Timestamp = m.Timestamp
+      });
+    }
+
+    return result;
+  }
+
+
   #region REMOVE MESSAGE BY ID
   /// <summary>
   /// Removes a chat message with the specified identifier from the store.
