@@ -19,6 +19,7 @@ Content-Type: application/json
 }
 
 ### GET ALL USERS
+# Returns a JSON array of all registered usernames
 GET {{ChatServer_HostAddress}}/users
 
 ### SEND MESSAGE
@@ -31,4 +32,6 @@ Content-Type: application/json
 }
 
 ### GET ALL MESSAGES
+# Returns a JSON list containing every stored chat message (in insertion order)
 GET {{ChatServer_HostAddress}}/messages
+
