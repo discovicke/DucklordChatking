@@ -9,8 +9,6 @@ Content-Type: application/json
     "password": "chatking"
 }
 
-###
-
 ### REGISTER
 POST {{ChatServer_HostAddress}}/register
 Content-Type: application/json
@@ -20,12 +18,8 @@ Content-Type: application/json
     "password": "pass"
 }
 
-###
-
 ### GET ALL USERS
 GET {{ChatServer_HostAddress}}/users
-
-###
 
 ### SEND MESSAGE
 POST {{ChatServer_HostAddress}}/send-message
@@ -35,8 +29,6 @@ Content-Type: application/json
     "sender": "Ducklord",
     "content": "Hello from Ducklord"
 }
-
-###
 
 ### GET ALL MESSAGES
 GET {{ChatServer_HostAddress}}/messages
