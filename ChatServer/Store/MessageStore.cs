@@ -53,8 +53,27 @@ public class MessageStore
     return messages;
   }
 
-  public void RemoveById(int messageId)
+
+  #region REMOVE MESSAGE BY ID
+  /// <summary>
+  /// Removes a chat message with the specified identifier from the store.
+  /// </summary>
+  /// <param name="messageId">The unique identifier of the message to remove.</param>
+  /// <returns>
+  /// True if the message was found and removed.
+  /// False if no message with the given <paramref name="messageId"/> exists.
+  /// </returns>
+  #endregion
+  public bool RemoveById(int messageId)
   {
-    throw new NotImplementedException();
+    if (messagesById.TryGetValue(messageId, out var message))
+    {
+      messages.Remove(message);
+      messagesById.Remove(messageId);
+      return true;
+    }
+
+    return false;
   }
+
 }
