@@ -2,6 +2,7 @@
 using ChatServer.Store;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSignalR(); // Register the SignalR service
 var app = builder.Build();
 
 // Create a single shared UserStore instance.
