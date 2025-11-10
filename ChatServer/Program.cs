@@ -10,7 +10,7 @@ UserStore userStore = new();
 
 // Create a single shared MessageStore instance
 // The store contains both a list and dictionary (for ID lookup).
-MessageStore messageStore = new();
+MessageStore messageStore = new(userStore);
 
 // Add one user for testing
 userStore.Add("Ducklord", "chatking");
@@ -86,7 +86,7 @@ app.MapPost("/send-message", (MessageDTO dto) =>
     return Results.BadRequest(new { Message = "User does not exist" });
 
   // Add message to store
-  var added = messageStore.Add(user, dto.Content);
+  var added = messageStore.Add(dto.Sender, dto.Content);
   if (!added)
     return Results.BadRequest(new { Message = "Failed to add message" }); // unlikely with current store, but safe
 
