@@ -9,7 +9,7 @@ public class Message
     public DateTime Timestamp { get; set; }
 
     // Skapar en DTO från detta objekt (när vi skickar till servern)
-    public MessageDTO ToDTO()
+    public MessageDTO SendToDTO()
     {
         return new MessageDTO
         {
@@ -20,7 +20,7 @@ public class Message
     }
 
     // Skapar ett Message-objekt från en DTO (när vi tar emot från servern)
-    public static Message FromDTO(MessageDTO dto)
+    public static Message GetFromDTO(MessageDTO dto)
     {
         return new Message
         {

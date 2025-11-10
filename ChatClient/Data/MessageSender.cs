@@ -8,11 +8,11 @@ namespace ChatClient.Data
 {
     public class MessageSender
     {
-        private readonly HttpClient _httpClient;
+        private readonly HttpClient httpClient;
 
         public MessageSender(HttpClient httpClient)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         public bool SendMessage(MessageDTO message)
@@ -29,7 +29,7 @@ namespace ChatClient.Data
 
             try
             {
-                var response = _httpClient.PostAsJsonAsync("/messages", message).Result;
+                var response = httpClient.PostAsJsonAsync("/messages", message).Result;
                 return response.IsSuccessStatusCode;
             }
             catch
