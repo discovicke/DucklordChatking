@@ -27,10 +27,10 @@ namespace ChatClient
             Raylib.ClearBackground(Colors.BackgroundColor);
 
             // Logo
-            /*
+            
             Texture2D logo = Raylib.LoadTexture(@"Bilder/DuckLord1.0.png");
             Raylib.DrawTextureEx(logo, new Vector2(620, 25), 0, 0.15f, Color.White);
-            */
+            
 
             int rectX = 0;
             int rectY = 0;
