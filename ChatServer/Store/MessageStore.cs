@@ -2,8 +2,9 @@ using ChatServer.Models;
 
 namespace ChatServer.Store;
 
-public class MessageStore
+public class MessageStore(UserStore userStore)
 {
+  private readonly UserStore userStore = userStore;
   private readonly List<ChatMessage> messages = [];
   private readonly Dictionary<int, ChatMessage> messagesById = [];
 
@@ -20,18 +21,21 @@ public class MessageStore
   /// False if <paramref name="user"/> is null or <paramref name="messageContent"/> is invalid.
   /// </returns>
   #endregion
-  public bool Add(User user, string messageContent)
+  public bool Add(string username, string messageContent)
   {
-    if (user == null || string.IsNullOrWhiteSpace(messageContent)) // Validate message sender and content
+    if (string.IsNullOrEmpty(username) || string.IsNullOrWhiteSpace(messageContent)) // Validate message sender and content
     { return false; }
 
     var newMessage = new ChatMessage // Create new message
     {
       Id = nextMessageId++,
-      SenderId = user.Id,
+      SenderId = userStore.GetByUsername(username)?.Id ?? 0,
       Content = messageContent,
       Timestamp = DateTime.UtcNow
     };
+
+    if (newMessage.SenderId == 0) // Validate message sender
+    { return false; }
 
     // Store message in both list and dictionary
     messages.Add(newMessage);
