@@ -53,7 +53,6 @@ public class MessageStore
     return messages;
   }
 
-
   #region REMOVE MESSAGE BY ID
   /// <summary>
   /// Removes a chat message with the specified identifier from the store.
