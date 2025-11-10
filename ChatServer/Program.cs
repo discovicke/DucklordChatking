@@ -71,6 +71,12 @@ app.MapGet("/users", () =>
 
 // TODO: add endpoints for sending and receiving chat messages
 
+app.MapGet("/messages", () =>
+{
+  var messages = messageStore.GetAll();
+  return Results.Ok(messages);
+});
+
 app.MapPost("/send-message", (MessageDTO dto) =>
 {
   // Validate basic input
