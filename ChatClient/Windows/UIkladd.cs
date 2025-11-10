@@ -14,6 +14,7 @@ namespace ChatClient.Windows
     {
         private enum SelectedField { None, Username, Password }
         private static SelectedField selected = SelectedField.None;
+        private static Texture2D logo = Raylib.LoadTexture(@"Bilder/DuckLord1.0.png");
         public static void Run()
         {
 
@@ -78,7 +79,6 @@ namespace ChatClient.Windows
             }
 
             // Logo
-            Texture2D logo = Raylib.LoadTexture(@"Bilder/DuckLord1.0.png");
             Raylib.DrawTextureEx(logo, new Vector2(300, 50), 0, 0.15f, Color.White);
 
 
