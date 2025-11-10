@@ -46,14 +46,14 @@ public class MessageStore(UserStore userStore)
 
   #region GET ALL MESSAGES
   /// <summary>
-  /// Converts all stored chat messages into DTOs and returns them in insertion order.
+  /// Retrieves every stored chat message and returns them in the order they were added.
   /// </summary>
   /// <remarks>
-  /// Each returned message contains the sender's username resolved from the UserStore.
-  /// If a message references a user that no longer exists, the method throws an exception.
+  /// Each stored message is converted into a <see cref="MessageDTO"/>. The sender identifier is resolved to a username
+  /// by querying the <see cref="UserStore"/>. The returned list preserves the chronological order of insertion.
   /// </remarks>
   /// <returns>
-  /// A read-only list of <see cref="MessageDTO"/> objects formatted for client use.
+  /// A read-only list of <see cref="MessageDTO"/> representing the full chat history.
   /// </returns>
   #endregion
   public IReadOnlyList<MessageDTO> GetAll()
