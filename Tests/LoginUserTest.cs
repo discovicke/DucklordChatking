@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using ChatClient.Data;
 using ChatClient.Tests.Helpers;
+using ChatServer.Models;
 using Shared;
 using Xunit;
 
@@ -13,7 +14,7 @@ public class LoginUserTests
     {
         var handler = new FakeHttpHandler(HttpStatusCode.OK);
         var client = new HttpClient(handler) { BaseAddress = new Uri("http://localhost:5201") };
-        var loginUser = new LoginUser(client);
+        var loginUser = new UserAuth(client);
 
         var user = new UserDTO { Username = "Ducklord", Password = "chatking" };
 
@@ -27,7 +28,7 @@ public class LoginUserTests
     {
         var handler = new FakeHttpHandler(HttpStatusCode.BadRequest);
         var client = new HttpClient(handler) { BaseAddress = new Uri("http://localhost:5201") };
-        var loginUser = new LoginUser(client);
+        var loginUser = new UserAuth(client);
 
         var user = new UserDTO { Username = "Ducklord", Password = "wrong" };
 
@@ -41,7 +42,7 @@ public class LoginUserTests
     {
         var handler = new ThrowingHttpHandler();
         var client = new HttpClient(handler);
-        var loginUser = new LoginUser(client);
+        var loginUser = new UserAuth(client);
 
         var user = new UserDTO { Username = "ErrorUser", Password = "nope" };
 
