@@ -74,7 +74,7 @@ namespace ChatClient.Windows
             {
                 selected = SelectedField.TypeWindow;
             }
-            else if (sendButton.IsClicked())
+            else if (sendButton.IsClicked()|| Raylib.IsKeyPressed(KeyboardKey.Enter))
              {
                 // Click on Send: save message and clear input field
                 if (!string.IsNullOrWhiteSpace(textField.Text))
