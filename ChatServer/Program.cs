@@ -83,7 +83,7 @@ app.MapGet("/users", () =>
 });
 
 // TODO: Add endpoints for updating and deleting users
-app.MapPost("/update-user", (UpdateUserDTO dto) =>
+app.MapPost("/user/update", (UpdateUserDTO dto) =>
 {
   // Validate input
   if (string.IsNullOrWhiteSpace(dto.OldUsername) || string.IsNullOrWhiteSpace(dto.NewUsername))
@@ -99,6 +99,29 @@ app.MapPost("/update-user", (UpdateUserDTO dto) =>
 
   return Results.Ok(new { UpdatedUsername = dto.NewUsername, Message = "User updated successfully" });
 });
+
+app.MapPost("/user/delete", (UserDTO dto) =>
+{
+  // Validate input
+  if (string.IsNullOrWhiteSpace(dto.Username))
+  {
+    return Results.BadRequest(new { Message = "Username is required." });
+  }
+  if (string.IsNullOrWhiteSpace(dto.Password))
+  {
+    return Results.BadRequest(new { Message = "Password is required." });
+  }
+
+  // Delete logic
+  var deleted = userStore.Remove(dto.Username);
+  if (!deleted)
+  {
+    return Results.BadRequest(new { Message = "User not found or could not be deleted." });
+  }
+
+  return Results.Ok(new { Message = "User deleted successfully." });
+});
+
 
 app.MapPost("/send-message", async (MessageDTO dto, IHubContext<ChatHub> hub) =>
 {
@@ -131,4 +154,7 @@ app.MapGet("/messages/history", (int? take) =>
 
 app.MapHub<ChatHub>("/chat");
 
+
 app.Run();
+
+
