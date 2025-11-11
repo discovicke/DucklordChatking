@@ -6,18 +6,19 @@ namespace ChatClient.Configurations
     // Text field component handle draw, hover and textinput (incl. backspace).
     // Stores text between frames.
     public class TextField(Rectangle rect, Color backgroundColor, Color hoverColor, Color textColor)
+        : UIComponent
     {
-        public Rectangle Rect { get; } = rect;
+        private Rectangle Rect { get; } = rect;
         public string Text { get; private set; } = string.Empty;
-        public Color BackgroundColor { get; set; } = backgroundColor;
-        public Color HoverColor { get; set; } = hoverColor;
-        public Color TextColor { get; set; } = textColor;
-        public bool IsSelected { get; private set; } = false;
+        private Color BackgroundColor { get; set; } = backgroundColor;
+        private Color HoverColor { get; set; } = hoverColor;
+        private Color TextColor { get; set; } = textColor;
+        private bool IsSelected { get; set; } = false;
 
         private float CreatBlinkTimer = 0f;
         private bool CreatVisible = true;
 
-        public void Draw()
+        public override void Draw()
         {
             var fill = MouseInput.IsHovered(Rect) ? HoverColor : BackgroundColor;
             Raylib.DrawRectangleRounded(Rect, 0.3f, 10, fill);
@@ -38,7 +39,7 @@ namespace ChatClient.Configurations
             if (IsSelected && CreatVisible)
             {
                 int textWidth = Raylib.MeasureText(Text, fontSize);
-                int caretX = textX + + textWidth;    // same X offset as text
+                int caretX = textX + textWidth;    // same X offset as text
                 int caretTop = textY;              // same Y as text
                 int caretBottom = caretTop + fontSize;              // same font size as height
                 Raylib.DrawLine(caretX, caretTop, caretX, caretBottom, TextColor);
@@ -47,7 +48,7 @@ namespace ChatClient.Configurations
 
 
         // Get call every frame after MouseInput.Update() to handle click and text-input.
-        public void Update()
+        public override void Update()
         {
             // Mouseclick to select field
             if (MouseInput.IsLeftClick(Rect))
