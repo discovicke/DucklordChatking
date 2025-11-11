@@ -12,6 +12,9 @@ namespace ChatClient.Windows
 {
     public class RegisterScreen
     {
-
+        public static void Run()
+        {
+            
+        }
     }
 }

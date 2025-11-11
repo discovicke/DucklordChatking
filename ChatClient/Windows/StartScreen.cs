@@ -98,11 +98,16 @@ public static void Run()
     Button registerButton = new Button(rectRegister, "Register", Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor);
     registerButton.Draw();
 
-    Button loginButton = new Button(rectLogin, "Login", Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor);
-    loginButton.Draw();
-
-    // Logo
-    Raylib.DrawTextureEx(logo, new Vector2(300, 50), 0, 0.15f, Color.White);
+            Button loginButton = new Button(rectLogin, "Login", Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor);
+            loginButton.Draw();
+            if (MouseInput.IsLeftClick(rectLogin))
+            {
+                AppState.CurrentScreen = Screen.Chat;
+                Log.Info("User logged in, switching to chat screen");
+            }
+           
+            // Logo
+            Raylib.DrawTextureEx(logo, new Vector2(300, 50), 0, 0.15f, Color.White);
 
     Raylib.EndDrawing();
 }
