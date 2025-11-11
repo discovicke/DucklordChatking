@@ -55,6 +55,11 @@ namespace ChatClient.Windows
 
             Button loginButton = new Button(rectLogin, "Login", Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor);
             loginButton.Draw();
+            if (MouseInput.IsLeftClick(rectLogin))
+            {
+                AppState.CurrentScreen = Screen.Chat;
+                Log.Info("User logged in, switching to chat screen");
+            }
            
             // Logo
             Raylib.DrawTextureEx(logo, new Vector2(300, 50), 0, 0.15f, Color.White);
