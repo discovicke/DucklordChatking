@@ -27,7 +27,7 @@ public class Program
             // RegisterScreen.Run();
             // ChatScreen.Run();
             
-            // Kör rätt fönster baserat på tillstånd
+            // Tracks current screen and runs it.
             switch (AppState.CurrentScreen)
             {
                 case Screen.Start:

@@ -19,7 +19,7 @@ namespace ChatClient
         {
             string timestamp = DateTime.Now.ToString("[dd/MM/yy HH:mm:ss]");
             string colorCode = GetColorCode(level);
-            string logEntry = $"{timestamp} {colorCode} {message}";
+            string logEntry = $"{timestamp} {colorCode}\t{message}";
 
             lock (lockObject)
             {

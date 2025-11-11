@@ -14,10 +14,10 @@
   <ItemGroup>
     <None Include="Windows\RegisterScreen.cs" />
     <None Include="Windows\StartScreen.cs" />
-    <None Update="log.txt">
+    <None Update="Bilder\DuckLordsmall.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Bilder\DuckLordsmall.png">
+    <None Update="log.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
