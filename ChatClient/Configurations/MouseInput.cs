@@ -31,12 +31,6 @@ namespace ChatClient.Configurations
         {
             return IsHovered(rect) && Raylib.IsMouseButtonPressed(MouseButton.Left);
         }
-
-        // colore change if mouse hoovers over rectangle
-        public static Color ButtonColor(Rectangle rect, Color hoverColor, Color normalColor)
-        {
-            return IsHovered(rect) ? hoverColor : normalColor;
-        }
         
         #if DEBUG
         public static void TestSetPosition(Vector2 testPos) => mousePos = testPos;
