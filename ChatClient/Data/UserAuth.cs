@@ -3,20 +3,18 @@ using Shared;
 
 namespace ChatClient.Data;
 
-public class LoginUser
+public class UserAuth
 {
     //TODO: Kolla så login fungerar med servern
     
-    //TODO: Change LoginUser to more abstract user class
-
     private readonly HttpClient httpClient;
 
     // Production construktor
-    public LoginUser() : this(new HttpClient { BaseAddress = new Uri("http://localhost:5201") })
+    public UserAuth() : this(new HttpClient { BaseAddress = new Uri("http://localhost:5201") })
     { }
 
     // Test construktor
-    public LoginUser(HttpClient httpClient)
+    public UserAuth(HttpClient httpClient)
     {
         this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         if (this.httpClient.BaseAddress == null)

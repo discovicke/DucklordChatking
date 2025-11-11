@@ -30,7 +30,6 @@ namespace ChatClient.Windows
 
          public static void Run() //TODO Koppla inloggad user till sender
          {
-             //messageSender = "USERNAME";
              // ChatWindow-test
              Raylib.BeginDrawing();
              Raylib.ClearBackground(Colors.BackgroundColor);
@@ -79,10 +78,9 @@ namespace ChatClient.Windows
                 // Click on Send: save message and clear input field
                 if (!string.IsNullOrWhiteSpace(textField.Text))
                 {
-                    userMessage = textField.Text;
                     if (messageSender != null)
                     {
-                        bool success = messageSender.SendMessage(userMessage);
+                        bool success = messageSender.SendMessage(textField.Text);
                         if (!success)
                         {
                             Console.WriteLine("Failed to send message!"); // TODO: To log
