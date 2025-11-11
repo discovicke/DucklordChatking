@@ -7,7 +7,7 @@ namespace ChatClient;
 
 public class Program
 {
-    
+    // TODO: What happens when connection to server is lost?
     public static void Main()
     {
         Raylib.InitWindow(800, 600, "DuckLord 0.0.1");
@@ -19,14 +19,8 @@ public class Program
             // --- Mouse settings ---
             // Calls on class for mouse interact (always on top)
             MouseInput.Update();
-            var mousePos = MouseInput.Position;
-            bool mousePressed = Raylib.IsMouseButtonPressed(MouseButton.Left);
             
             // --- UI ---
-            // StartScreen.Run();
-            // RegisterScreen.Run();
-            // ChatScreen.Run();
-            
             // Tracks current screen and runs it.
             switch (AppState.CurrentScreen)
             {
