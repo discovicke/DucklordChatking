@@ -5,22 +5,14 @@ namespace ChatClient.Configurations
 {
     // Text field component handle draw, hover and textinput (incl. backspace).
     // Stores text between frames.
-    public class TextField
+    public class TextField(Rectangle rect, Color backgroundColor, Color hoverColor, Color textColor)
     {
-        public Rectangle Rect { get; }
+        public Rectangle Rect { get; } = rect;
         public string Text { get; private set; } = string.Empty;
-        public Color BackgroundColor { get; set; }
-        public Color HoverColor { get; set; }
-        public Color TextColor { get; set; }
+        public Color BackgroundColor { get; set; } = backgroundColor;
+        public Color HoverColor { get; set; } = hoverColor;
+        public Color TextColor { get; set; } = textColor;
         public bool IsSelected { get; private set; } = false;
-
-        public TextField(Rectangle rect, Color backgroundColor, Color hoverColor, Color textColor)
-        {
-            Rect = rect;
-            BackgroundColor = backgroundColor;
-            HoverColor = hoverColor;
-            TextColor = textColor;
-        }
 
         public void Draw()
         {
@@ -64,13 +56,22 @@ namespace ChatClient.Configurations
             }
 
             // Backspace
+            // TODO: Backspace pressed = hold down for continuous delete
             if (Raylib.IsKeyPressed(KeyboardKey.Backspace) && Text.Length > 0)
             {
                 Text = Text.Substring(0, Text.Length - 1);
             }
+            // TODO: Enter = isClicked
+            
+            // TODO: Add visible cursor
+            
+            // TODO: Text row break when hitting border
+            
+            // TODO: Scroll logicZ
+            
+            // TODO: Font?
         }
         
-
         public void Clear() => Text = string.Empty;
     }
     
