@@ -103,6 +103,7 @@ namespace ChatClient.Windows
                             Log.Success("Message sent successfully");
                             Console.WriteLine("Message sent successfully");
                         }
+
                     }
 
                     // Empty text field
