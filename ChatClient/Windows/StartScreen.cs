@@ -12,8 +12,6 @@ namespace ChatClient.Windows
 {
     public class StartScreen
     {
-        // private enum SelectedField { None, Username, Password }
-        // private static SelectedField selected = SelectedField.None;
         private static Texture2D logo = Raylib.LoadTexture(@"Bilder/DuckLord1.0.png");
         public static void Run()
         {
@@ -25,18 +23,18 @@ namespace ChatClient.Windows
             string userName = "Username:";
             string passWord = "Password";
 
-            // Rita label
+            // Draw label
             Raylib.DrawText(userName, 220, 305, fontSize, Colors.TextFieldColor);
             Raylib.DrawText(passWord, 220, 355, fontSize, Colors.TextFieldColor);
 
-            // Beräkna textens bredd
+            // Calculate the text width
             int textWidth = Raylib.MeasureText(userName, fontSize);
 
-            // Placera rektangeln direkt efter texten
-            int rectX = 220 + textWidth + 10; // +10 för lite mellanrum
+            // Place rectangle after text
+            int rectX = 220 + textWidth + 10; // +10 for spaceing
             int rectY = 300;
             int rectWidth = 150;
-            int rectHeight = fontSize + 10; // lite högre än texten
+            int rectHeight = fontSize + 10; // +10 for centering text vs rectangle
 
             // Rectangles
             Rectangle rectUser = new Rectangle(rectX, rectY, rectWidth, rectHeight);
