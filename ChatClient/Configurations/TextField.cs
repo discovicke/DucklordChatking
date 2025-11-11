@@ -5,19 +5,34 @@ namespace ChatClient.Configurations
 {
     // Text field component handle draw, hover and textinput (incl. backspace).
     // Stores text between frames.
-    public class TextField(Rectangle rect, Color backgroundColor, Color hoverColor, Color textColor)
+    public class TextField
         : UIComponent
     {
-        private Rectangle Rect { get; } = rect;
+        private Rectangle Rect { get; }
         public string Text { get; private set; } = string.Empty;
-        private Color BackgroundColor { get; set; } = backgroundColor;
-        private Color HoverColor { get; set; } = hoverColor;
-        private Color TextColor { get; set; } = textColor;
+        private Color BackgroundColor { get; set; }
+        private Color HoverColor { get; set; }
+        private Color TextColor { get; set; }
         private bool IsSelected { get; set; } = false;
+        private bool AllowMultiline { get; set; } = false;
 
         private float CreatBlinkTimer = 0f;
         private bool CreatVisible = true;
+        private int scrollOffset = 0; // For single line text
 
+        private const int FontSize = 20;
+        private const int Padding = 5;
+
+        public TextField(Rectangle rect, Color backgroundColor, Color hoverColor, Color textColor, bool allowMultiline = false)
+        {
+            Rect = rect;
+            BackgroundColor = backgroundColor;
+            HoverColor = hoverColor;
+            TextColor = textColor;
+            AllowMultiline = allowMultiline;
+        }
+        // TODO: Ctrl+A, Ctr+C, Ctr+V
+        // TODO: Ctrl+ArrowKey to move cursor over words and not characters
         public override void Draw()
         {
             var fill = MouseInput.IsHovered(Rect) ? HoverColor : BackgroundColor;
@@ -27,25 +42,115 @@ namespace ChatClient.Configurations
             {
                 Raylib.DrawRectangleRoundedLinesEx(Rect, 0.3f, 10, 2, TextColor);
             }
-
-            int fontSize = 20;
-            int padding = 5;
-            int textX = (int)(Rect.X + padding);
-            int textY = (int)(Rect.Y + padding);
-
-            Raylib.DrawText(Text, textX, textY, fontSize, TextColor);
-
+            
+            int textX = (int)(Rect.X + Padding);
+            int textY = (int)(Rect.Y + Padding);
+            
+            Raylib.BeginScissorMode((int)Rect.X, (int)Rect.Y, (int)Rect.Width, (int)Rect.Height);
+            // Checks if text is multiline or single line for text drawing
+            if (AllowMultiline)
+            {
+                DrawMultilineText(textX, textY);
+            }
+            else
+            {
+                DrawSingleLineText(textX, textY);
+            }
+            Raylib.EndScissorMode();
 
             if (IsSelected && CreatVisible)
             {
-                int textWidth = Raylib.MeasureText(Text, fontSize);
-                int caretX = textX + textWidth; // same X offset as text
-                int caretTop = textY; // same Y as text
-                int caretBottom = caretTop + fontSize; // same font size as height
-                Raylib.DrawLine(caretX, caretTop, caretX, caretBottom, TextColor);
+                DrawCaret(textX, textY);
             }
         }
 
+        private void DrawSingleLineText(int textX, int textY)
+        {
+            // Count text width and scroll if needed
+            int textWidth = Raylib.MeasureText(Text, FontSize);
+            int availableWidth = (int)Rect.Width - Padding * 2;
+
+            if (textWidth > availableWidth)
+            {
+                scrollOffset = textWidth - availableWidth;
+            }
+            else
+            {
+                scrollOffset = 0;
+            }
+
+            Raylib.DrawText(Text, textX - scrollOffset, textY, FontSize, TextColor);
+        }
+
+        // Responsible for drawing multiline text with rowbreak
+        // TODO: Rowbreak logic with Shift+Enter
+        private void DrawMultilineText(int textX, int textY)
+        {
+            var lines = WrapText(Text, (int)Rect.Width - Padding * 2);
+            int currentY = textY;
+
+            foreach (var line in lines)
+            {
+                Raylib.DrawText(line, textX, currentY, FontSize, TextColor);
+                currentY += FontSize + 2; // Radavstånd
+            }
+        }
+
+        // Wraps text with a string and splits it into lines.
+        private List<string> WrapText(string text, int maxWidth)
+        {
+            var lines = new List<string>();
+            var words = text.Split(' ');
+            var currentLine = "";
+
+            foreach (var word in words)
+            {
+                var testLine = string.IsNullOrEmpty(currentLine) ? word : currentLine + " " + word;
+                int lineWidth = Raylib.MeasureText(testLine, FontSize);
+
+                if (lineWidth > maxWidth && !string.IsNullOrEmpty(currentLine))
+                {
+                    lines.Add(currentLine);
+                    currentLine = word;
+                }
+                else
+                {
+                    currentLine = testLine;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(currentLine))
+            {
+                lines.Add(currentLine);
+            }
+
+            return lines.Count > 0 ? lines : new List<string> { "" };
+        }
+        
+        // Draws caret at the end of the text
+        // TODO: Change caret position with arrow keys and mouse click
+        private void DrawCaret(int textX, int textY)
+        {
+            int textWidth = Raylib.MeasureText(Text, FontSize);
+            int caretX = AllowMultiline ? textX + textWidth : textX - scrollOffset + textWidth;
+            
+            if (AllowMultiline)
+            {
+                var lines = WrapText(Text, (int)Rect.Width - Padding * 2);
+                int lineCount = lines.Count;
+                textY += (lineCount - 1) * (FontSize + 2);
+                
+                if (lines.Count > 0)
+                {
+                    int lastLineWidth = Raylib.MeasureText(lines[^1], FontSize);
+                    caretX = textX + lastLineWidth;
+                }
+            }
+
+            int caretTop = textY;
+            int caretBottom = caretTop + FontSize;
+            Raylib.DrawLine(caretX, caretTop, caretX, caretBottom, TextColor);
+        }
 
         // Get call every frame after MouseInput.Update() to handle click and text-input.
         public override void Update()
@@ -70,9 +175,11 @@ namespace ChatClient.Configurations
                     CreatVisible = !CreatVisible;
                 }
             }
-
-
-            if (!IsSelected) return;
+            
+            if (!IsSelected)
+            {
+                return;
+            }
 
             // Read text input
             int key = Raylib.GetCharPressed();
@@ -91,8 +198,7 @@ namespace ChatClient.Configurations
 
                 key = Raylib.GetCharPressed();
             }
-
-
+            
             // Backspace
             if (Raylib.IsKeyPressed(KeyboardKey.Backspace) && Text.Length > 0 ||
                 Raylib.IsKeyPressedRepeat(KeyboardKey.Backspace) && Text.Length > 0)

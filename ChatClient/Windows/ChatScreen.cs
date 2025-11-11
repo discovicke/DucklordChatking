@@ -27,8 +27,11 @@ namespace ChatClient.Windows
         private static Texture2D logo = Raylib.LoadTexture(@"Bilder/DuckLord1.0.png");
 
         // Text field for user input
-        private static TextField textField = new TextField(new Rectangle(50, 450, 550, 100), Colors.TextFieldColor,
-            Colors.HoverColor, Colors.TextColor);
+        private static TextField textField = new TextField(
+            new Rectangle(50, 450, 550, 100),
+            Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor,
+            allowMultiline: true
+        );
 
         // Adds a message sender to the text field
         private static MessageHandler? messageSender = new MessageHandler(new HttpClient
