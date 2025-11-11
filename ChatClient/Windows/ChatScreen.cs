@@ -11,7 +11,6 @@ namespace ChatClient.Windows
 {
     public class ChatScreen
     {
-
         private enum SelectedField { None, TypeWindow }
         private static SelectedField selected = SelectedField.None;
 
@@ -43,20 +42,20 @@ namespace ChatClient.Windows
             
             // TODO: Move rectVARIABLES to configuration classes?
 
+            // Rectangles
+            Rectangle typeWindow = new Rectangle(rectX + 50, rectY + 450, rectWidth + 550, rectHeight + 100);
+            Rectangle sendButtonRect = new Rectangle(rectX + 610, rectY + 450, rectWidth + 100, rectHeight + 100);
+            Rectangle chatWindow = new Rectangle(rectX + 50, rectY + 50, rectWidth + 550, rectHeight + 380);
 
             // ChatWindow
-            Rectangle chatWindow = new Rectangle(rectX + 50, rectY + 50, rectWidth + 550, rectHeight + 380);
             Raylib.DrawRectangleRounded(chatWindow, 0.1f, 10, Colors.HoverColor);
+            
 
             // TypeWindow
-            Rectangle typeWindow = new Rectangle(rectX + 50, rectY + 450, rectWidth + 550, rectHeight + 100);
-            Raylib.DrawRectangleRounded(typeWindow, 0.3f, 10, Colors.TextFieldColor);
+            //Raylib.DrawRectangleRounded(typeWindow, 0.3f, 10, Colors.TextFieldColor);
 
-            // SendButton rectangle
-            Rectangle sendButtonRect = new Rectangle(rectX + 610, rectY + 450, rectWidth + 100, rectHeight + 100);
-
-            // Create reusable Button and draw it
-            var sendButton = new Button(sendButtonRect, "Send", Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor);
+            // Send button
+            Button sendButton = new Button(sendButtonRect, "Send", Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor);
             sendButton.Draw();
 
             // Update and draw text field
@@ -64,10 +63,6 @@ namespace ChatClient.Windows
             textField.Draw();
 
             // Mouse Logic
-            bool hoverUser = MouseInput.IsHovered(typeWindow);
-            bool hoverSend = sendButton.IsHovered();
-            bool leftPressed = Raylib.IsMouseButtonPressed(MouseButton.Left);
-
             if (MouseInput.IsLeftClick(typeWindow))
             {
                 selected = SelectedField.TypeWindow;
@@ -96,21 +91,7 @@ namespace ChatClient.Windows
                     textField.Clear();                  // empty text field
                 }
              }
-            else if (leftPressed && !hoverUser && !hoverSend)
-            {
-                selected = SelectedField.None;
-            }
-
-            // Visual hover feedback (outline)
-            if (hoverUser)
-            {
-                Raylib.DrawRectangleRounded(typeWindow, 0.3f, 10, Colors.HoverColor);
-            }
-            //TODO: Text not visible when hovering
-
-            // Client Version
-            Raylib.DrawText("DuckLord v.0.0.1", 10, 580, 10, Colors.TextColor);
-
+            
             Raylib.EndDrawing();
 
          }

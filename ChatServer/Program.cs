@@ -94,7 +94,7 @@ app.MapPost("/update-user", (UpdateUserDTO dto) =>
   var updated = userStore.Update(dto.OldUsername, dto.NewUsername, dto.Password);
   if (!updated)
   {
-    return Results.BadRequest(new { Message = "Failed to update user. Old username may not exist or new username already taken." });
+    return Results.BadRequest(new { Message = "Failed to update user. Old username may not exist or new username already taken." }); // TODO: refine error messages in UserStore.Update to give more specific feedback, that is, if the old username does not exist, or if the new username is already taken specifically.
   }
 
   return Results.Ok(new { UpdatedUsername = dto.NewUsername, Message = "User updated successfully" });
