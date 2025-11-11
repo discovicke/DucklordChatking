@@ -23,7 +23,7 @@ public class Program
             bool mousePressed = Raylib.IsMouseButtonPressed(MouseButton.Left);
             
             // --- UI ---
-             StartScreen.Run();
+               StartScreen.Run();
             // RegisterScreen.Run();
             // ChatScreen.Run();
 
