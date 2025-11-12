@@ -34,6 +34,10 @@ namespace ChatClient.UI.Screens
             "Login", Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor
         );
 
+        private static OptionsButton Ducktions = new OptionsButton(
+            new Rectangle(500, 300, 150, 25)
+            );
+
         public static void Run()
         {
             Raylib.BeginDrawing();
@@ -54,6 +58,11 @@ namespace ChatClient.UI.Screens
                 AppState.CurrentScreen = Screen.Register;
                 Log.Info("User want to register, switching to register screen");
             }
+            if (MouseInput.IsLeftClick(Ducktions.Rect))
+            {
+                AppState.CurrentScreen = Screen.Options;
+                Log.Info("User pressed options / Ducktions screen ");
+            }
 
             // Update and draw fields/buttons
             userField.Update();
@@ -64,6 +73,7 @@ namespace ChatClient.UI.Screens
 
             registerButton.Draw();
             loginButton.Draw();
+            Ducktions.Draw();
 
             // Draw logo
             Raylib.DrawTextureEx(logo, new Vector2(300, 50), 0, 0.15f, Color.White);
