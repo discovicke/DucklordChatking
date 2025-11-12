@@ -5,7 +5,7 @@ using System.Numerics;
 using ChatClient.Configurations;
 using ChatClient.Data;
 using Raylib_cs;
-using static Raylib_cs.Raylib;
+
 
 
 namespace ChatClient.Windows
@@ -25,7 +25,7 @@ namespace ChatClient.Windows
         private static string userMessage = "";
 
         // Load logo
-        private static Texture2D logo = LoadTexture(@"Bilder/DuckLord1.0.png");
+        private static Texture2D logo = Raylib.LoadTexture(@"Bilder/DuckLord1.0.png");
 
         // Text field for user input
         private static TextField textField = new TextField(
@@ -33,6 +33,10 @@ namespace ChatClient.Windows
             Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor,
             allowMultiline: true
         );
+        
+        // Back button
+        private static BackButton backButton = new BackButton(new Rectangle(10, 10, 100, 30));
+
 
         // Adds a message sender to the text field
         private static MessageHandler? messageSender = new MessageHandler(new HttpClient
@@ -41,11 +45,11 @@ namespace ChatClient.Windows
         public static void Run()
         {
             // ChatWindow-test
-            BeginDrawing();
-            ClearBackground(Colors.BackgroundColor);
+            Raylib.BeginDrawing();
+            Raylib.ClearBackground(Colors.BackgroundColor);
 
             // Logo
-            DrawTextureEx(logo, new Vector2(620, 25), 0, 0.15f, Color.White);
+            Raylib.DrawTextureEx(logo, new Vector2(620, 25), 0, 0.15f, Color.White);
             var tillbakaknapp = new Rectangle(620, 25, 150, 250);
             if (MouseInput.IsLeftClick(tillbakaknapp))
             {
@@ -65,12 +69,12 @@ namespace ChatClient.Windows
             Rectangle chatWindow = new Rectangle(rectX + 50, rectY + 50, rectWidth + 550, rectHeight + 380);
 
             // ChatWindow
-            DrawRectangleRounded(chatWindow, 0.1f, 10, Colors.HoverColor);
+            Raylib.DrawRectangleRounded(chatWindow, 0.1f, 10, Colors.HoverColor);
 
-
-            // TypeWindow
-            //Raylib.DrawRectangleRounded(typeWindow, 0.3f, 10, Colors.TextFieldColor);
-
+            //Back button
+            backButton.Update();
+            backButton.Draw();
+            
             // Send button
             Button sendButton = new Button(sendButtonRect, "Send", Colors.TextFieldColor, Colors.HoverColor,
                 Colors.TextColor);
@@ -112,7 +116,7 @@ namespace ChatClient.Windows
                 }
             }
 
-            EndDrawing();
+            Raylib.EndDrawing();
         }
     }
 }

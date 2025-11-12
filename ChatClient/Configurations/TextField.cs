@@ -25,7 +25,8 @@ namespace ChatClient.Configurations
         // private bool IsPassword { get; } = isPassword;
         // private string PasswordMask { get; } = string.IsNullOrEmpty(passwordMask) ? "•" : passwordMask;
 
-        public TextField(Rectangle rect, Color backgroundColor, Color hoverColor, Color textColor, bool allowMultiline = false)
+        public TextField(Rectangle rect, Color backgroundColor, Color hoverColor, Color textColor,
+            bool allowMultiline = false)
         {
             Rect = rect;
             BackgroundColor = backgroundColor;
@@ -33,6 +34,7 @@ namespace ChatClient.Configurations
             TextColor = textColor;
             AllowMultiline = allowMultiline;
         }
+
         // TODO: Ctrl+A, Ctr+C, Ctr+V
         // TODO: Ctrl+ArrowKey to move cursor over words and not characters
         public override void Draw()
@@ -58,6 +60,7 @@ namespace ChatClient.Configurations
             {
                 DrawSingleLineText(textX, textY);
             }
+
             Raylib.EndScissorMode();
 
             if (IsSelected && CreatVisible)
