@@ -59,23 +59,21 @@ app.MapPost("/login", (UserDTO dto) =>
   // Validate input
   if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
   {
-    return Results.BadRequest(new ApiResponseFail("Username and password are required."));
+    return Results.BadRequest(new ApiFailResponse("Username and password are required."));
   }
 
   var user = userStore.GetByUsername(dto.Username);
 
   if (user != null && user.Password == dto.Password)
   {
-    return Results.Ok(new ApiResponseWithUsername(user.Username, "Login successful."));
+    return Results.Ok(new ApiSuccessResponseWithUsername(user.Username, "Login successful."));
   }
 
-  return Results.BadRequest(new ApiResponseFail("Invalid username or password."));
+  return Results.BadRequest(new ApiFailResponse("Invalid username or password."));
 })
 // API Docs through OpenAPI & ScalarUI
-.WithSummary("User Login")
-.WithDescription("Validates a `username` and `password`. If the credentials match a stored account, the server returns the user's username and confirms the login.")
-.Produces<ApiResponseWithUsername>(StatusCodes.Status200OK)
-.Produces<ApiResponseFail>(StatusCodes.Status400BadRequest)
+.Produces<ApiSuccessResponseWithUsername>(StatusCodes.Status200OK)
+.Produces<ApiFailResponse>(StatusCodes.Status400BadRequest)
 .WithSummary("User Login")
 .WithDescription("Validates username and password.");
 
@@ -84,36 +82,57 @@ app.MapPost("/register", (UserDTO dto) =>
   // Validate input
   if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
   {
-    return Results.BadRequest(new { Message = "Username and password are required" });
+    return Results.BadRequest(new ApiFailResponse("Username and password are required"));
   }
 
   // Attempt to add user
   if (!userStore.Add(dto.Username, dto.Password))
   {
-    return Results.BadRequest(new { Message = "Username already exists" });
+    return Results.BadRequest(new ApiFailResponse("Username already exists."));
   }
 
   var newUser = userStore.GetByUsername(dto.Username);
   if (newUser == null)
   {
-    return Results.BadRequest(new { Message = "Failed to add user" });
+    return Results.BadRequest(new ApiFailResponse("Failed to add user."));
   }
 
-  return Results.Ok(new { UserID = newUser.Id, Message = "Registration successful" }); // TODO: refactor the Add() in UserStore to return the User object, avoiding the issue here.
+  return Results.Ok(new ApiSuccessResponseWithUsername(newUser.Username, "Registration successful."));
 })
 // API Docs through OpenAPI & ScalarUI
+.Produces<ApiSuccessResponseWithUsername>(StatusCodes.Status200OK)
+.Produces<ApiFailResponse>(StatusCodes.Status400BadRequest)
 .WithSummary("Register User Account")
 .WithDescription("Creates a new user account using the provided `username` and `password`. The server stores the account and returns the assigned user ID on success.");
-// TODO: Implement .Produces
+
 
 app.MapGet("/users", () =>
 {
-  return Results.Ok(userStore.GetAllUsernames());
+  var usernames = userStore.GetAllUsernames();
+
+  // Validation and error handling
+  if (usernames == null)
+  {
+    return Results.BadRequest(
+        new ApiFailResponse("List of usernames could not be retrieved.")
+    );
+  }
+
+  if (!usernames.Any())
+  {
+    return Results.BadRequest(
+        new ApiFailResponse("No users in list.")
+    );
+  }
+
+  return Results.Ok(
+      new ApiSuccessResponseWithUsernameList(usernames, "Usernames retrieved successfully.")
+  );
 })
-// API Docs through OpenAPI & ScalarUI
+.Produces<ApiSuccessResponseWithUsernameList>(StatusCodes.Status200OK)
+.Produces<ApiFailResponse>(StatusCodes.Status400BadRequest)
 .WithSummary("List All Usernames")
-.WithDescription("Returns every registered username as a simple list of strings. The response does not include passwords or any other account information.");
-// TODO: Implement .Produces
+.WithDescription("Returns every registered username. If no users exist, returns an error.");
 
 
 app.MapPost("/user/update", (UpdateUserDTO dto) =>
@@ -121,21 +140,25 @@ app.MapPost("/user/update", (UpdateUserDTO dto) =>
   // Validate input
   if (string.IsNullOrWhiteSpace(dto.OldUsername) || string.IsNullOrWhiteSpace(dto.NewUsername))
   {
-    return Results.BadRequest(new { Message = "Old and new username are required." });
+    return Results.BadRequest(new ApiFailResponse("Old and new username are required."));
   }
 
   var updated = userStore.Update(dto.OldUsername, dto.NewUsername, dto.Password);
+
   if (!updated)
   {
-    return Results.BadRequest(new { Message = "Failed to update user. Old username may not exist or new username already taken." }); // TODO: refine error messages in UserStore.Update to give more specific feedback, that is, if the old username does not exist, or if the new username is already taken specifically.
+    return Results.BadRequest(new ApiFailResponse(
+        "Update failed. The old username might not exist or the new username is already taken."
+    ));
   }
 
-  return Results.Ok(new { UpdatedUsername = dto.NewUsername, Message = "User updated successfully" });
+  return Results.Ok(new ApiSuccessResponseWithUsername(dto.NewUsername, "User updated successfully."));
 })
 // API Docs through OpenAPI & ScalarUI
+.Produces<ApiSuccessResponseWithUsername>(StatusCodes.Status200OK)
+.Produces<ApiFailResponse>(StatusCodes.Status400BadRequest)
 .WithSummary("Update User Account")
 .WithDescription("Changes a user's account information. The request must include the current `OldUsername` and the desired `NewUsername`. If a `Password` is provided, it replaces the existing password. If `Password` is omitted, the existing password stays the same.");
-// TODO: Implement .Produces
 
 
 app.MapPost("/user/delete", (UserDTO dto) =>
@@ -143,68 +166,77 @@ app.MapPost("/user/delete", (UserDTO dto) =>
   // Validate input
   if (string.IsNullOrWhiteSpace(dto.Username))
   {
-    return Results.BadRequest(new { Message = "Username is required." });
+    return Results.BadRequest(new ApiFailResponse("Username is required."));
   }
   if (string.IsNullOrWhiteSpace(dto.Password))
   {
-    return Results.BadRequest(new { Message = "Password is required." });
+    return Results.BadRequest(new ApiFailResponse("Password is required."));
   }
 
   // Delete logic
   var deleted = userStore.Remove(dto.Username);
   if (!deleted)
   {
-    return Results.BadRequest(new { Message = "User not found or could not be deleted." });
+    return Results.BadRequest(new ApiFailResponse("User not found or could not be deleted."));
   }
 
-  return Results.Ok(new { Message = "User deleted successfully." });
+  return Results.Ok(new ApiSuccessResponse("User deleted successfully."));
 
 })
 // API Docs through OpenAPI & ScalarUI
+.Produces<ApiSuccessResponse>(StatusCodes.Status200OK)
+.Produces<ApiFailResponse>(StatusCodes.Status400BadRequest)
 .WithSummary("Delete User Account")
 .WithDescription("Deletes a user account based on the provided `username` and `password`. If the credentials match a stored account, the user is removed from the server and can no longer log in.");
-// TODO: Implement .Produces
 
 
 app.MapPost("/send-message", async (MessageDTO dto, IHubContext<ChatHub> hub) =>
 {
   // Validate basic input
   if (string.IsNullOrWhiteSpace(dto.Content))
-    return Results.BadRequest(new { Message = "Message content cannot be empty" });
+    return Results.BadRequest(new ApiFailResponse("Message content cannot be empty."));
 
   // Look up the user
   if (string.IsNullOrWhiteSpace(dto.Sender))
-    return Results.BadRequest(new { Message = "Sender cannot be empty" });
+    return Results.BadRequest(new ApiFailResponse("Sender cannot be empty."));
 
   // Add message to store (history and lookup)
   var added = messageStore.Add(dto.Sender, dto.Content);
   if (!added)
-    return Results.BadRequest(new { Message = "Failed to add message" }); // unlikely with current store, but safe
+    return Results.BadRequest(new ApiFailResponse("Failed to store message.")); // Unlikely to occur unless sender validation fails, but included for safety.
 
   // Broadcast to all SignalR Clients
   await hub.Clients.All.SendAsync("ReceiveMessage", dto.Sender, dto.Content);
 
 
-  return Results.Ok(new { Message = "Message stored" });
+  return Results.Ok(new ApiSuccessResponse("Message stored and broadcasted."));
 })
 // API Docs through OpenAPI & ScalarUI
+.Produces<ApiSuccessResponse>(StatusCodes.Status200OK)
+.Produces<ApiFailResponse>(StatusCodes.Status400BadRequest)
 .WithSummary("Send Message")
 .WithDescription("Sends a chat message through HTTP and broadcasts it to all connected SignalR clients via the `ReceiveMessage` hub method. The message is saved to the server history and becomes available through `/messages/history`.");
-// TODO: Implement .Produces
 
 
 app.MapGet("/messages/history", (int? take) =>
 {
-  return take.HasValue
-      ? Results.Ok(messageStore.GetLast(take.Value))
-      : Results.Ok(messageStore.GetAll());
+
+  // If take is provided, it must be a positive number
+  if (take.HasValue && take.Value <= 0)
+  {
+    return Results.BadRequest(new ApiFailResponse("Query parameter 'take' must be greater than 0."));
+  }
+
+  var messages = take.HasValue
+        ? messageStore.GetLast(take.Value)
+        : messageStore.GetAll();
+
+  return Results.Ok(new ApiSuccessResponseWithMessageList(messages, "Retrieved message history."));
 })
 // API Docs through OpenAPI & ScalarUI
+.Produces<ApiSuccessResponseWithMessageList>(StatusCodes.Status200OK)
 .WithSummary("Get Message History")
 .WithDescription("Returns chat messages in chronological order (oldest to newest). If the optional `take` query parameter is used, the server selects the newest messages first and then returns them in chronological order. For example, `GET /messages/history?take=10` returns the 10 most recent messages, ordered from oldest to newest.");
-// TODO: Implement .Produces
-
-
 
 
 // Map the SignalR ChatHub to the /chat endpoint
