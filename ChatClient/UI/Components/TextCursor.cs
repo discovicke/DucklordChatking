@@ -1,4 +1,4 @@
-namespace ChatClient.Configurations
+namespace ChatClient.UI.Components
 {
     public class TextCursor
     {

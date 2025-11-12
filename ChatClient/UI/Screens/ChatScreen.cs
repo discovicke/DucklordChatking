@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Numerics;
-using ChatClient.Configurations;
+using ChatClient.Core;
 using ChatClient.Data;
+using ChatClient.UI.Components;
 using Raylib_cs;
 using Shared;
 
 
-
-namespace ChatClient.Windows
+namespace ChatClient.UI.Screens
 {
     public class ChatScreen
     {
@@ -46,6 +46,7 @@ namespace ChatClient.Windows
         // Adds a message sender to the text field
         private static MessageHandler? messageSender = new MessageHandler(new HttpClient
         { BaseAddress = new Uri("http://192.168.20.17:5201/") });
+            { BaseAddress = new Uri("http://192.168.20.17:5201/scalar/") });
 
         public static void Run()
         {
@@ -105,7 +106,8 @@ namespace ChatClient.Windows
             {
                 selected = SelectedField.TypeWindow;
             }
-            else if (sendButton.IsClicked() || Raylib.IsKeyPressed(KeyboardKey.Enter) && !Raylib.IsKeyDown(KeyboardKey.LeftShift))
+            else if (sendButton.IsClicked() ||
+                     Raylib.IsKeyPressed(KeyboardKey.Enter) && !Raylib.IsKeyDown(KeyboardKey.LeftShift))
             {
                 Log.Info("Send button clicked");
                 if (!string.IsNullOrWhiteSpace(textField.Text))
@@ -139,10 +141,13 @@ namespace ChatClient.Windows
                     // Empty text field
                     textField.Clear();
                 }
+                    textField.Clear();
+
             }
 
             Raylib.EndDrawing();
-        }
-    }
+}
+
+
 }
 

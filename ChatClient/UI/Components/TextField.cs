@@ -1,6 +1,9 @@
-﻿using Raylib_cs;
+﻿using ChatClient.Core;
+using ChatClient.UI.Components;
+using ChatClient.UI.Rendering;
+using Raylib_cs;
 
-namespace ChatClient.Configurations
+namespace ChatClient.UI.Components
 {
     public class TextField : UIComponent
     {
@@ -70,6 +73,7 @@ namespace ChatClient.Configurations
                 {
                     InsertText(char.ConvertFromUtf32(key));
                 }
+
                 key = Raylib.GetCharPressed();
             }
 
@@ -138,5 +142,3 @@ namespace ChatClient.Configurations
         // TODO: Font?
     }
 }
-
-

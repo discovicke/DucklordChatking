@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using ChatClient.Configurations;
+using ChatClient.Core;
 using ChatClient.Data;
+using ChatClient.UI.Components;
 using Raylib_cs;
 
 
 
-namespace ChatClient.Windows
+namespace ChatClient.UI.Screens
 {
     public class RegisterScreen
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Raylib_cs;
 
-namespace ChatClient.Configurations
+namespace ChatClient.UI
 {
     public static class Colors
     {
