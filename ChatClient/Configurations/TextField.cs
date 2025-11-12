@@ -197,8 +197,10 @@ namespace ChatClient.Configurations
                 if (key >= 32)
                 {
                     // Converts to Unicode to accept all even åäö
-                    Text += char.ConvertFromUtf32(key);
-                    CursorPositon++;
+                    var s = char.ConvertFromUtf32(key);
+                    CursorPositon = Math.Clamp(CursorPositon, 0, Text.Length);
+                    Text = Text.Insert(CursorPositon, s);
+                    CursorPositon += s.Length;
                     CreatBlinkTimer = 0f;
                     CreatVisible = true;
                 }
@@ -207,12 +209,13 @@ namespace ChatClient.Configurations
             }
             //  Enter adds newline only if multiline
             if (AllowMultiline
-                && (Raylib.IsKeyDown(KeyboardKey.LeftShift) && Raylib.IsKeyPressed(KeyboardKey.Enter) || Raylib.IsKeyDown(KeyboardKey.RightShift))
-                && Raylib.IsKeyPressed(KeyboardKey.Enter))
+                 && (Raylib.IsKeyDown(KeyboardKey.LeftShift) || Raylib.IsKeyDown(KeyboardKey.RightShift))
+                 && Raylib.IsKeyPressed(KeyboardKey.Enter))
             {
+                CursorPositon = Math.Clamp(CursorPositon, 0, Text.Length);
                 Text = Text.Insert(CursorPositon, "\n");
-                CreatBlinkTimer = 0f;
                 CursorPositon++;
+                CreatBlinkTimer = 0f;
                 CreatVisible = true;
             }
 
@@ -221,7 +224,8 @@ namespace ChatClient.Configurations
             if (Raylib.IsKeyPressed(KeyboardKey.Backspace) && CursorPositon > 0 ||
                 Raylib.IsKeyPressedRepeat(KeyboardKey.Backspace) && CursorPositon > 0)
             {
-                Text = Text.Remove( CursorPositon - 1,1);
+                CursorPositon = Math.Clamp(CursorPositon, 0, Text.Length);
+                Text = Text.Remove(CursorPositon - 1, 1);
                 CreatBlinkTimer = 0f;
                 CursorPositon--;
                 CreatVisible = true;
@@ -234,6 +238,11 @@ namespace ChatClient.Configurations
             // TODO: Font?
         }
 
-        public void Clear() => Text = string.Empty;
+        public void Clear()
+        {
+            Text = string.Empty;
+            CursorPositon = 0;
+        }
+
     }
 }
