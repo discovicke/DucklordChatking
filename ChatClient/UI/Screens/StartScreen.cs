@@ -8,7 +8,8 @@ namespace ChatClient.UI.Screens
     public class StartScreen
     {
         private static Texture2D logo = Raylib.LoadTexture(@"Bilder/DuckLord1.0.png");
-
+        
+        // UI Components
         private static TextField userField = new TextField(
             new Rectangle(0, 0, 0, 0),
             Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor,
@@ -22,6 +23,7 @@ namespace ChatClient.UI.Screens
             isPassword: true
         );
 
+        // Buttons
         private static Button registerButton = new Button(
             new Rectangle(0, 0, 0, 0),
             "Register", Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor
@@ -35,15 +37,15 @@ namespace ChatClient.UI.Screens
         private static OptionsButton Ducktions = new OptionsButton(
             new Rectangle(0, 0, 0, 0)
         );
-
+        
+        
+        // Layout and state variables
         private static bool initialized = false;
-        private static Rectangle userRect;
-        private static Rectangle passRect;
-        private static float logoX;
-        private static float logoY;
-        private static float logoScale;
+        private static Rectangle userRect, passRect;
+        private static float logoX, logoY, logoScale;
         private static float screenHeight;
 
+        // Main function
         public static void Run()
         {
             if (!initialized)
@@ -55,29 +57,37 @@ namespace ChatClient.UI.Screens
             UpdateAndDraw();
         }
 
+        // UI Initialization (calculate positions and sizes)
+        // Updates when screen size changes
         private static void InitializeUI()
         {
             float screenWidth = Raylib.GetScreenWidth();
             screenHeight = Raylib.GetScreenHeight();
 
+            // Create UI wrapper for layout
+            // Covers full window
             var uiWrapper = new UIWrapper();
             uiWrapper.SetToFullWindow();
 
+            // Dynamic sizing based on screen dimensions
             float fieldWidth = screenWidth * 0.3f;
             float fieldHeight = screenHeight * 0.05f;
             float buttonWidth = screenWidth * 0.125f;
             float buttonHeight = screenHeight * 0.05f;
             float gap = screenHeight * 0.02f;
-
+            // Starting top position (Y axis) for first column
             float colTop = screenHeight * 0.45f;
 
+            // Calculate rectangles for each component
+            // Centered horizontally in the window
             userRect = uiWrapper.CenterHoriz(fieldWidth, fieldHeight, colTop);
             passRect = uiWrapper.CenterHoriz(fieldWidth, fieldHeight, colTop + fieldHeight + gap);
             var loginRect = uiWrapper.CenterHoriz(buttonWidth, buttonHeight, colTop + 2 * (fieldHeight + gap));
             var registerRect = uiWrapper.CenterHoriz(buttonWidth, buttonHeight, colTop + 3 * (fieldHeight + gap));
             var optionsRect = uiWrapper.CenterHoriz(buttonWidth, buttonHeight, colTop + 4 * (fieldHeight + gap));
 
-            // Use the safe setter
+            // Assigns the calculated rectangles to the UI components
+            // Aligns logics and methods with their visual representation
             userField.SetRect(userRect);
             passwordField.SetRect(passRect);
             loginButton.SetRect(loginRect);
@@ -91,17 +101,20 @@ namespace ChatClient.UI.Screens
             logoY = screenHeight * 0.10f;
         }
 
+        // Update and draw UI elements each frame
         public static void UpdateAndDraw()
         {
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Colors.BackgroundColor);
-
+            
+            // Draw labels for text fields
             int labelFont = 15;
             int labelYUser = (int)(userRect.Y + (userRect.Height - labelFont) / 2f);
             int labelYPass = (int)(passRect.Y + (passRect.Height - labelFont) / 2f);
             Raylib.DrawText("Username:", (int)(userRect.X - 110), labelYUser, labelFont, Colors.TextFieldColor);
             Raylib.DrawText("Password:", (int)(passRect.X - 110), labelYPass, labelFont, Colors.TextFieldColor);
 
+            // Button logic (screen changes)
             if (MouseInput.IsLeftClick(loginButton.Rect) || Raylib.IsKeyPressed(KeyboardKey.Enter))
             {
                 AppState.CurrentScreen = Screen.Chat;
@@ -125,7 +138,8 @@ namespace ChatClient.UI.Screens
                 passwordField.Clear();
                 userField.Clear();
             }
-
+            
+            // Update and draw fields/buttons
             userField.Update();
             userField.Draw();
 
@@ -136,8 +150,8 @@ namespace ChatClient.UI.Screens
             loginButton.Draw();
             Ducktions.Draw();
 
+            // Draw logo & version text
             Raylib.DrawTextureEx(logo, new Vector2(logoX, logoY), 0, logoScale, Color.White);
-
             Raylib.DrawText("DuckLord v.0.0.2", 10, (int)(screenHeight - 20), 10, Colors.TextColor);
             Raylib.EndDrawing();
         }

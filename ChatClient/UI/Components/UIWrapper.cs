@@ -7,8 +7,6 @@ class UIWrapper
     public float X, Y;
 
     public float Width, Height;
-    // Optional: container children if you need it later
-    //public List<UIElement> Children = new();
 
     public Rectangle Bounds => new Rectangle(X, Y, Width, Height);
 
@@ -36,21 +34,4 @@ class UIWrapper
     {
         return new Rectangle(X + x, Y + y, w, h);
     }
-
-    // Existing helpers
-   /* public void Draw()
-    {
-        foreach (var child in Children)
-        {
-            child.DrawAt(X + child.OffsetX, Y + child.OffsetY);
-        }
-    }
-
-    public void CenterChildrenHorizontally()
-    {
-        foreach (var child in Children)
-        {
-            child.OffsetX = (Width - child.Width) / 2f;
-        }
-    }*/
 }
