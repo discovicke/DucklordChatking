@@ -5,7 +5,7 @@ using System.Numerics;
 using ChatClient.Configurations;
 using ChatClient.Data;
 using Raylib_cs;
-using static Raylib_cs.Raylib;
+
 
 
 namespace ChatClient.Windows
@@ -51,10 +51,10 @@ namespace ChatClient.Windows
             Raylib.ClearBackground(Colors.BackgroundColor);
 
             // Draw text 
-            DrawText("Register ID:", 160, 305, 15, Colors.TextFieldColor);
-            DrawText("New username:", 160, 355, 15, Colors.TextFieldColor);
-            DrawText("New password:", 160, 405, 15, Colors.TextFieldColor);
-            DrawText("Confirm password:", 160, 455, 15, Colors.TextFieldColor);
+            Raylib.DrawText("Register ID:", 160, 305, 15, Colors.TextFieldColor);
+            Raylib.DrawText("New username:", 160, 355, 15, Colors.TextFieldColor);
+            Raylib.DrawText("New password:", 160, 405, 15, Colors.TextFieldColor);
+            Raylib.DrawText("Confirm password:", 160, 455, 15, Colors.TextFieldColor);
 
             // Button
             if (MouseInput.IsLeftClick(registerButton.Rect))
@@ -79,9 +79,9 @@ namespace ChatClient.Windows
             registerButton.Draw();
 
             // Logo
-            DrawTextureEx(logo, new Vector2(300, 50), 0, 0.15f, Color.White);
+            Raylib.DrawTextureEx(logo, new Vector2(300, 50), 0, 0.15f, Color.White);
 
-            EndDrawing();
+            Raylib.EndDrawing();
         }
     }
 }
