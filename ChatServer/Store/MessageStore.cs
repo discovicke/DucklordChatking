@@ -138,4 +138,25 @@ public class MessageStore(UserStore userStore)
   }
   #endregion
 
+  #region CLEAR ALL MESSAGES
+  /// <summary>
+  /// Clears all stored messages from both the message list and ID dictionary.
+  /// </summary>
+  /// <returns>
+  /// <c>true</c> if both collections were successfully cleared;
+  /// <c>false</c> if either collection is uninitialized (<c>null</c>).
+  /// </returns>
+  public bool ClearAll()
+  {
+    if (messages == null || messagesById == null)
+    {
+      return false;
+    }
+
+    messages.Clear();
+    messagesById.Clear();
+    return true;
+  }
+  #endregion
+
 }
