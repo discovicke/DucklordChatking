@@ -10,6 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSignalR(); // Register the SignalR service
 builder.Services.AddOpenApi(options =>
 {
+  // add Scalar transformers
+  options.AddScalarTransformers();
+
   // add metadata to the OpenAPI document
   options.AddDocumentTransformer((document, context, ct) =>
   {
