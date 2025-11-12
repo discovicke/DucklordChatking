@@ -101,6 +101,33 @@ namespace ChatClient.Configurations
             }
         }
 
+        private void AdjustScrollForCaretSingleLine()
+        {
+            if (AllowMultiline) return;
+
+            int availableWidth = (int)Rect.Width - Padding * 2;
+            int textWidth = Raylib.MeasureText(Text, FontSize);
+            int maxScroll = Math.Max(0, textWidth - availableWidth);
+
+            string left = CursorPositon > 0 ? Text.Substring(0, CursorPositon) : "";
+            int leftWidth = Raylib.MeasureText(left, FontSize);
+
+            int caretXLocal = leftWidth - scrollOffset;
+
+            // Ensure caret stays visible
+            if (caretXLocal < 0)
+            {
+                // Scroll so caret is slightly inside view
+                scrollOffset = Math.Max(0, leftWidth - 8);
+            }
+            else if (caretXLocal > availableWidth)
+            {
+                scrollOffset = Math.Min(maxScroll, leftWidth - availableWidth + 8);
+            }
+
+            scrollOffset = Math.Clamp(scrollOffset, 0, maxScroll);
+        }
+
 
         //---
         //private void DrawSingleLineText(int textX, int textY)
@@ -291,12 +318,33 @@ namespace ChatClient.Configurations
                 CursorPositon--;
                 CreatVisible = true;
             }
+            if (!AllowMultiline)
+            {
+                if (Raylib.IsKeyPressed(KeyboardKey.Left) || Raylib.IsKeyPressedRepeat(KeyboardKey.Left))
+                    MoveCursorLeft();
 
-            // TODO: Text row break when hitting border
+                if (Raylib.IsKeyPressed(KeyboardKey.Right) || Raylib.IsKeyPressedRepeat(KeyboardKey.Right))
+                    MoveCursorRight();
 
-            // TODO: Scroll logicZ
+                if (Raylib.IsKeyPressed(KeyboardKey.Home))
+                {
+                    CursorPositon = 0;
+                    ResetCaretBlink();
+                }
 
-            // TODO: Font?
+                if (Raylib.IsKeyPressed(KeyboardKey.End))
+                {
+                    CursorPositon = Text.Length;
+                    ResetCaretBlink();
+                }
+                AdjustScrollForCaretSingleLine();
+
+                // TODO: Text row break when hitting border
+
+                // TODO: Scroll logicZ
+
+                // TODO: Font?
+            }
         }
 
         public void Clear()
