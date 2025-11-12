@@ -58,6 +58,7 @@ namespace ChatClient.Configurations
             }
             else
             {
+                // TODO add arrows left and right to follow the text array
                 DrawSingleLineText(textX, textY);
             }
 
@@ -71,24 +72,36 @@ namespace ChatClient.Configurations
 
         private void DrawSingleLineText(int textX, int textY)
         {
-            // Count text width and scroll if needed
-            int textWidth = Raylib.MeasureText(Text, FontSize);
             int availableWidth = (int)Rect.Width - Padding * 2;
-
-            if (textWidth > availableWidth)
-            {
-                scrollOffset = textWidth - availableWidth;
-            }
-            else
-            {
-                scrollOffset = 0;
-            }
-
+            int textWidth = Raylib.MeasureText(Text, FontSize);
+            int maxScroll = Math.Max(0, textWidth - availableWidth);
+            scrollOffset = Math.Clamp(scrollOffset, 0, maxScroll);
             Raylib.DrawText(Text, textX - scrollOffset, textY, FontSize, TextColor);
         }
 
+        
+
+        //---
+        //private void DrawSingleLineText(int textX, int textY)
+        //{
+        //    // Count text width and scroll if needed
+        //    int textWidth = Raylib.MeasureText(Text, FontSize);
+        //    int availableWidth = (int)Rect.Width - Padding * 2;
+        //
+        //    if (textWidth > availableWidth)
+        //    {
+        //        scrollOffset = textWidth - availableWidth;
+        //    }
+        //    else
+        //    {
+        //        scrollOffset = 0;
+        //    }
+        //
+        //    Raylib.DrawText(Text, textX - scrollOffset, textY, FontSize, TextColor);
+        //}
+        //-----
+
         // Responsible for drawing multiline text with rowbreak
-        // TODO: Rowbreak logic with Shift+Enter
         private void DrawMultilineText(int textX, int textY)
         {
             var lines = WrapText(Text, (int)Rect.Width - Padding * 2);
@@ -136,6 +149,7 @@ namespace ChatClient.Configurations
 
             return lines.Count > 0 ? lines : new List<string> { "" };
         }
+        // TODO bugg Fix for text sta in the chat box
         private (int caretX, int caretY) GetCaretPixelPosition(int textX, int textY)
         {
             int cursor = Math.Clamp(CursorPositon, 0, Text.Length);
