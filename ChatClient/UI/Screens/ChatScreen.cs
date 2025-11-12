@@ -41,7 +41,7 @@ namespace ChatClient.UI.Screens
 
         // Adds a message sender to the text field
         private static MessageHandler? messageSender = new MessageHandler(new HttpClient
-            { BaseAddress = new Uri("http://192.168.20.17:5201/") });
+        { BaseAddress = new Uri("https://ducklord-server.onrender.com/") });
 
         public static void Run()
         {
