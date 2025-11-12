@@ -16,7 +16,7 @@ builder.Services.AddOpenApi(options =>
     document.Info = new()
     {
       Title = "Ducklord Chatking's Super Secure Server API Docs",
-      Version = "v0.0.0.1",
+      Version = "v0.0.2",
       Description = "Backend for a lightweight chat system. Supports account creation, login, updating and deleting users, " +
     "sending chat messages, retrieving message history, and real-time broadcasting through SignalR."
     };
