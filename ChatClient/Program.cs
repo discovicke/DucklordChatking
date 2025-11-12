@@ -14,7 +14,7 @@ public class Program
     // TODO: What happens when connection to server is lost?
     public static void Main()
     {
-        Raylib.InitWindow(800, 600, "DuckLord 0.0.1");
+        Raylib.InitWindow(800, 600, "DuckLord v.0.0.1");
         Console.WriteLine($"Log path: {AppDomain.CurrentDomain.BaseDirectory}log.txt");
         Log.Write("Program started.");
         
