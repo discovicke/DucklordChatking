@@ -8,7 +8,7 @@ namespace ChatClient.UI.Screens
     public class StartScreen
     {
         // Load logo
-        private static Texture2D logo = Raylib.LoadTexture(@"Bilder/DuckLord1.0.png");
+        private static Texture2D logo = Raylib.LoadTexture(@"Bilder/DuckLord logo fixed.png");
 
         // Create text fields and buttons
         private static TextField userField = new TextField(
@@ -51,17 +51,23 @@ namespace ChatClient.UI.Screens
             {
                 AppState.CurrentScreen = Screen.Chat;
                 Log.Info("User logged in, switching to chat screen");
+                passwordField.Clear();
+                userField.Clear();
             }
 
             if (MouseInput.IsLeftClick(registerButton.Rect))
             {
                 AppState.CurrentScreen = Screen.Register;
                 Log.Info("User want to register, switching to register screen");
+                passwordField.Clear();
+                userField.Clear();
             }
             if (MouseInput.IsLeftClick(Ducktions.Rect))
             {
                 AppState.CurrentScreen = Screen.Options;
                 Log.Info("User pressed options / Ducktions screen ");
+                passwordField.Clear();
+                userField.Clear();
             }
 
             // Update and draw fields/buttons

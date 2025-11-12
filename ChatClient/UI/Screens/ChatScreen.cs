@@ -91,6 +91,10 @@ namespace ChatClient.UI.Screens
 
             //Back button
             backButton.Update();
+            if (backButton.IsClicked())
+            {
+                textField.Clear();
+            }
             backButton.Draw();
 
             // Send button
