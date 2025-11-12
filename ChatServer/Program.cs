@@ -126,7 +126,7 @@ app.MapGet("/users", () =>
   }
 
   return Results.Ok(
-      new ApiSuccessResponseWithUsernameList(usernames, "Usernames retrieved successfully.")
+      new ApiSuccessResponseWithUsernameList(usernames)
   );
 })
 .Produces<ApiSuccessResponseWithUsernameList>(StatusCodes.Status200OK)

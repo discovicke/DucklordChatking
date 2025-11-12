@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Json;
+using ChatClient.Core;
 using Shared;
 
 namespace ChatClient.Data
@@ -56,7 +57,7 @@ namespace ChatClient.Data
             }
         }
 
-        public bool ReceiveHistory(int? take = null)
+        public List<MessageDTO>? ReceiveHistory(int? take = null)
         {
             try
             {
@@ -64,31 +65,22 @@ namespace ChatClient.Data
                     ? $"/messages/history?take={take}"
                     : "/messages/history";
 
-                // Blockera tills resultatet kommer
                 var response = httpClient.GetAsync(url).GetAwaiter().GetResult();
 
                 if (!response.IsSuccessStatusCode)
-                    return false;
+                    return null;
 
                 var messages = response.Content
                     .ReadFromJsonAsync<List<MessageDTO>>()
                     .GetAwaiter()
                     .GetResult();
 
-                if (messages == null)
-                    return false;
-
-                foreach (var msg in messages)
-                {
-                    Console.WriteLine($"[{msg.Timestamp}] {msg.Sender}: {msg.Content}");
-                }
-
-                return true;
+                return messages;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error while receiving history: {ex.Message}");
-                return false;
+                Console.WriteLine($"Error receiving history: {ex.Message}");
+                return null;
             }
         }
 

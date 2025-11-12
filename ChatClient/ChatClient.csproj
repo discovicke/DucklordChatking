@@ -8,13 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Windows\StartScreen.cs" />
     <None Update="Bilder\DuckLordsmall.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="log.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="UI\Screens\StartScreen.cs" />
   </ItemGroup>
 
   <ItemGroup>

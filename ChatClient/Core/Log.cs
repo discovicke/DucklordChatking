@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace ChatClient
+namespace ChatClient.Core
 {
     public enum LogLevel
     {

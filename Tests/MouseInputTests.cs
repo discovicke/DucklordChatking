@@ -1,6 +1,6 @@
-using ChatClient.Configurations;
 using Raylib_cs;
 using System.Numerics;
+using ChatClient.Core;
 using Xunit;
 
 public class MouseInputTests
