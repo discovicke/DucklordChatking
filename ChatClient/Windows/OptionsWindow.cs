@@ -8,6 +8,9 @@ namespace ChatClient.Windows
 {
     public class OptionsWindow
     {
+        public void Run() 
+        {
 
+        }
     }
 }
