@@ -220,14 +220,23 @@ app.MapPost("/send-message", async (MessageDTO dto, IHubContext<ChatHub> hub) =>
 
 app.MapGet("/messages/history", (int? take) =>
 {
-  return take.HasValue
-      ? Results.Ok(messageStore.GetLast(take.Value))
-      : Results.Ok(messageStore.GetAll());
+
+  // If take is provided, it must be a positive number
+  if (take.HasValue && take.Value <= 0)
+  {
+    return Results.BadRequest(new ApiFailResponse("Query parameter 'take' must be greater than 0."));
+  }
+
+  var messages = take.HasValue
+        ? messageStore.GetLast(take.Value)
+        : messageStore.GetAll();
+
+  return Results.Ok(new ApiSuccessResponseWithMessageList(messages, "Retrieved message history."));
 })
 // API Docs through OpenAPI & ScalarUI
+.Produces<ApiSuccessResponseWithMessageList>(StatusCodes.Status200OK)
 .WithSummary("Get Message History")
 .WithDescription("Returns chat messages in chronological order (oldest to newest). If the optional `take` query parameter is used, the server selects the newest messages first and then returns them in chronological order. For example, `GET /messages/history?take=10` returns the 10 most recent messages, ordered from oldest to newest.");
-// TODO: Implement .Produces
 
 
 // Map the SignalR ChatHub to the /chat endpoint
