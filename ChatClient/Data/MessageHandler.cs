@@ -55,5 +55,37 @@ namespace ChatClient.Data
                 return false;
             }
         }
+
+        public async Task<bool> ReceiveHistory(int? take = null)
+        {
+            try
+            {
+                var url = take.HasValue
+                    ? $"/messages/history?take={take}"
+                    : "/messages/history";
+
+                var response = await httpClient.GetAsync(url);
+
+                if (!response.IsSuccessStatusCode)
+                    return false;
+
+                var messages = await response.Content.ReadFromJsonAsync<List<MessageDTO>>();
+
+                if (messages == null)
+                    return false;
+
+                foreach (var msg in messages)
+                {
+                    Console.WriteLine($"[{msg.Timestamp}] {msg.Sender}: {msg.Content}");
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error while receiving history: {ex.Message}");
+                return false;
+            }
+        }
     }
 }
