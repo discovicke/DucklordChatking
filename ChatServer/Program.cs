@@ -194,27 +194,28 @@ app.MapPost("/send-message", async (MessageDTO dto, IHubContext<ChatHub> hub) =>
 {
   // Validate basic input
   if (string.IsNullOrWhiteSpace(dto.Content))
-    return Results.BadRequest(new { Message = "Message content cannot be empty" });
+    return Results.BadRequest(new ApiFailResponse("Message content cannot be empty."));
 
   // Look up the user
   if (string.IsNullOrWhiteSpace(dto.Sender))
-    return Results.BadRequest(new { Message = "Sender cannot be empty" });
+    return Results.BadRequest(new ApiFailResponse("Sender cannot be empty."));
 
   // Add message to store (history and lookup)
   var added = messageStore.Add(dto.Sender, dto.Content);
   if (!added)
-    return Results.BadRequest(new { Message = "Failed to add message" }); // unlikely with current store, but safe
+    return Results.BadRequest(new ApiFailResponse("Failed to store message.")); // Unlikely to occur unless sender validation fails, but included for safety.
 
   // Broadcast to all SignalR Clients
   await hub.Clients.All.SendAsync("ReceiveMessage", dto.Sender, dto.Content);
 
 
-  return Results.Ok(new { Message = "Message stored" });
+  return Results.Ok(new ApiSuccessResponse("Message stored and broadcasted."));
 })
 // API Docs through OpenAPI & ScalarUI
+.Produces<ApiSuccessResponse>(StatusCodes.Status200OK)
+.Produces<ApiFailResponse>(StatusCodes.Status400BadRequest)
 .WithSummary("Send Message")
 .WithDescription("Sends a chat message through HTTP and broadcasts it to all connected SignalR clients via the `ReceiveMessage` hub method. The message is saved to the server history and becomes available through `/messages/history`.");
-// TODO: Implement .Produces
 
 
 app.MapGet("/messages/history", (int? take) =>
