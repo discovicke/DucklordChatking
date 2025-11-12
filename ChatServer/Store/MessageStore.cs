@@ -21,7 +21,6 @@ public class MessageStore(UserStore userStore)
   /// True if the message was successfully added.
   /// False if <paramref name="user"/> is null or <paramref name="messageContent"/> is invalid.
   /// </returns>
-  #endregion
   public bool Add(string username, string messageContent)
   {
     if (string.IsNullOrEmpty(username) || string.IsNullOrWhiteSpace(messageContent)) // Validate message sender and content
@@ -43,6 +42,7 @@ public class MessageStore(UserStore userStore)
     messagesById.Add(newMessage.Id, newMessage);
     return true;
   }
+  #endregion
 
   #region GET ALL MESSAGES
   /// <summary>
@@ -55,7 +55,6 @@ public class MessageStore(UserStore userStore)
   /// <returns>
   /// A read-only list of <see cref="MessageDTO"/> representing the full chat history.
   /// </returns>
-  #endregion
   public IReadOnlyList<MessageDTO> GetAll()
   {
     var result = new List<MessageDTO>();
@@ -75,7 +74,7 @@ public class MessageStore(UserStore userStore)
 
     return result;
   }
-
+  #endregion
 
   #region GET LAST MESSAGES
   /// <summary>
@@ -89,7 +88,6 @@ public class MessageStore(UserStore userStore)
   /// A read-only list of <see cref="MessageDTO"/> representing the latest messages in the store. The list contains the
   /// newest messages based on insertion order, formatted for client use.
   /// </returns>
-  #endregion
   public IReadOnlyList<MessageDTO> GetLast(int count)
   {
     if (count <= 0)
@@ -116,7 +114,7 @@ public class MessageStore(UserStore userStore)
 
     return result;
   }
-
+  #endregion
 
   #region REMOVE MESSAGE BY ID
   /// <summary>
@@ -127,7 +125,6 @@ public class MessageStore(UserStore userStore)
   /// True if the message was found and removed.
   /// False if no message with the given <paramref name="messageId"/> exists.
   /// </returns>
-  #endregion
   public bool RemoveById(int messageId)
   {
     if (messagesById.TryGetValue(messageId, out var message))
@@ -139,5 +136,6 @@ public class MessageStore(UserStore userStore)
 
     return false;
   }
+  #endregion
 
 }
