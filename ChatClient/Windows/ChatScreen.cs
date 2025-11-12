@@ -132,7 +132,7 @@ namespace ChatClient.Windows
                             {
                                 Sender = "DuckLord", // Change to real user later
                                 Content = textField.Text,
-                                Timestamp = DateTime.UtcNow
+                                Timestamp = DateTime.Now,
                             });
                         }
 
