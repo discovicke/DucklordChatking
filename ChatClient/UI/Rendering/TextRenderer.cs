@@ -4,25 +4,18 @@ using ChatClient.UI.Components;
 
 namespace ChatClient.UI.Rendering
 {
-    public class TextRenderer
+    public class TextRenderer(Rectangle bounds, Color textColor, bool isPassword, bool allowMultiline)
     {
         private const int FontSize = 20;
         private const int Padding = 4;
         private const int LineSpacing = 2;
 
         private int scrollOffset;
-        private readonly Rectangle bounds;
-        private readonly Color textColor;
-        private readonly bool isPassword;
-        private readonly bool allowMultiline;
 
 
-        public TextRenderer(Rectangle bounds, Color textColor, bool isPassword, bool allowMultiline)
+        public void UpdateBounds(Rectangle newBounds)
         {
-            this.bounds = bounds;
-            this.textColor = textColor;
-            this.isPassword = isPassword;
-            this.allowMultiline = allowMultiline;
+            bounds = newBounds;
         }
 
         public void Draw(string text, TextCursor cursor, bool isSelected)
@@ -52,7 +45,7 @@ namespace ChatClient.UI.Rendering
         private void DrawSingleLineText(string text, int textX, int textY, TextCursor cursor)
         {
             string displayText = isPassword ? new string('*', text.Length) : text;
-            AdjustScrollForCaret(text, cursor);
+            AdjustScrollForCaret(displayText, cursor);
             Raylib.DrawText(displayText, textX - scrollOffset, textY, FontSize, textColor);
         }
 

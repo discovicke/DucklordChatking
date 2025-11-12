@@ -9,14 +9,11 @@ namespace ChatClient.UI.Components
             : base(rect, "Ducktions", Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor)
         {
         }
-        
+
 
         public override void Draw()
         {
-               base.Draw();
-            
+            base.Draw();
         }
-
-      
     }
 }

@@ -53,11 +53,12 @@ namespace ChatClient.UI.Components
             }
 
             if (!IsSelected) return;
-
+            
             cursor.Update(Raylib.GetFrameTime());
 
             HandleTextInput();
-            HandleNavigation();
+                HandleNavigation();
+                
         }
 
         private void HandleTextInput()
@@ -130,6 +131,12 @@ namespace ChatClient.UI.Components
         {
             return (Raylib.IsKeyDown(KeyboardKey.LeftShift) || Raylib.IsKeyDown(KeyboardKey.RightShift))
                    && Raylib.IsKeyPressed(KeyboardKey.Enter);
+        }
+        
+        public void SetRect(Rectangle rect)
+        {
+            Rect = rect;
+            renderer.UpdateBounds(rect);
         }
 
         public void Clear()
