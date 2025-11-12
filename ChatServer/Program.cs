@@ -140,21 +140,25 @@ app.MapPost("/user/update", (UpdateUserDTO dto) =>
   // Validate input
   if (string.IsNullOrWhiteSpace(dto.OldUsername) || string.IsNullOrWhiteSpace(dto.NewUsername))
   {
-    return Results.BadRequest(new { Message = "Old and new username are required." });
+    return Results.BadRequest(new ApiFailResponse("Old and new username are required."));
   }
 
   var updated = userStore.Update(dto.OldUsername, dto.NewUsername, dto.Password);
+
   if (!updated)
   {
-    return Results.BadRequest(new { Message = "Failed to update user. Old username may not exist or new username already taken." }); // TODO: refine error messages in UserStore.Update to give more specific feedback, that is, if the old username does not exist, or if the new username is already taken specifically.
+    return Results.BadRequest(new ApiFailResponse(
+        "Update failed. The old username might not exist or the new username is already taken."
+    ));
   }
 
-  return Results.Ok(new { UpdatedUsername = dto.NewUsername, Message = "User updated successfully" });
+  return Results.Ok(new ApiSuccessResponseWithUsername(dto.NewUsername, "User updated successfully."));
 })
 // API Docs through OpenAPI & ScalarUI
+.Produces<ApiSuccessResponseWithUsername>(StatusCodes.Status200OK)
+.Produces<ApiFailResponse>(StatusCodes.Status400BadRequest)
 .WithSummary("Update User Account")
 .WithDescription("Changes a user's account information. The request must include the current `OldUsername` and the desired `NewUsername`. If a `Password` is provided, it replaces the existing password. If `Password` is omitted, the existing password stays the same.");
-// TODO: Implement .Produces
 
 
 app.MapPost("/user/delete", (UserDTO dto) =>
