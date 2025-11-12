@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using ChatClient.Configurations;
+using ChatClient.Core;
 using ChatClient.Data;
+using ChatClient.UI.Components;
 using Raylib_cs;
 using Shared;
 
 
-
-namespace ChatClient.Windows
+namespace ChatClient.UI.Screens
 {
     public class ChatScreen
     {
@@ -38,7 +38,7 @@ namespace ChatClient.Windows
             Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor,
             allowMultiline: true
         );
-        
+
         // Back button
         private static BackButton backButton = new BackButton(new Rectangle(10, 10, 100, 30));
 
@@ -80,7 +80,7 @@ namespace ChatClient.Windows
             //Back button
             backButton.Update();
             backButton.Draw();
-            
+
             // Send button
             Button sendButton = new Button(sendButtonRect, "Send", Colors.TextFieldColor, Colors.HoverColor,
                 Colors.TextColor);
@@ -108,7 +108,8 @@ namespace ChatClient.Windows
             {
                 selected = SelectedField.TypeWindow;
             }
-            else if (sendButton.IsClicked() || Raylib.IsKeyPressed(KeyboardKey.Enter) && !Raylib.IsKeyDown(KeyboardKey.LeftShift))
+            else if (sendButton.IsClicked() ||
+                     Raylib.IsKeyPressed(KeyboardKey.Enter) && !Raylib.IsKeyDown(KeyboardKey.LeftShift))
             {
                 Log.Info("Send button clicked");
                 // Click on Send: save message and clear input field
@@ -135,20 +136,14 @@ namespace ChatClient.Windows
                                 Timestamp = DateTime.Now,
                             });
                         }
-
                     }
-
                 }
 
-                    // Empty text field
-                    textField.Clear();
-                
+                // Empty text field
+                textField.Clear();
             }
 
             Raylib.EndDrawing();
         }
-
     }
-
 }
-  

@@ -1,6 +1,7 @@
-﻿using ChatClient.Configurations;
+﻿using ChatClient.Core;
 using ChatClient.Data;
-using ChatClient.Windows;
+using ChatClient.UI;
+using ChatClient.UI.Screens;
 using Raylib_cs;
 
 

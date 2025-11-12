@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Json;
+using ChatClient.Core;
 using Shared;
 
 namespace ChatClient.Data

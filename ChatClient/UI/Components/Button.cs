@@ -1,7 +1,8 @@
 ﻿using System.Numerics;
+using ChatClient.Core;
 using Raylib_cs;
 
-namespace ChatClient.Configurations
+namespace ChatClient.UI.Components
 {
     // Simpel UI-button that handles drawing, hover color and click detection.
     // Uses Raylib for drawing and existing MouseInput for position/click.

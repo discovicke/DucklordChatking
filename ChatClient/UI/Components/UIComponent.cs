@@ -1,6 +1,8 @@
-﻿using Raylib_cs;
+﻿using ChatClient.Core;
+using Raylib_cs;
 
-namespace ChatClient.Configurations;
+namespace ChatClient.UI.Components;
+
 
 public abstract class UIComponent
 {
