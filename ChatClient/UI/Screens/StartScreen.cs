@@ -8,7 +8,7 @@ namespace ChatClient.UI.Screens
     public class StartScreen
     {
         // Load logo
-        private static Texture2D logo = Raylib.LoadTexture(@"Bilder/DuckLord logo fixed.png");
+        private static Texture2D logo = Raylib.LoadTexture(@"Bilder/DuckLord1.0.png");
 
         // Create text fields and buttons
         private static TextField userField = new TextField(
@@ -82,7 +82,7 @@ namespace ChatClient.UI.Screens
             Ducktions.Draw();
 
             // Draw logo
-            Raylib.DrawTextureEx(logo, new Vector2(300, 50), 0, 0.15f, Color.White);
+            Raylib.DrawTextureEx(logo, new Vector2(300, 0), 0, 0.15f, Color.White);
 
             Raylib.EndDrawing();
         }

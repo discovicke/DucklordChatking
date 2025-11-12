@@ -71,8 +71,16 @@ namespace ChatClient.UI.Screens
                 userField.Clear();
                 idField.Clear();
             }
-            
-            //Back button
+
+            if (MouseInput.IsLeftClick(backButton.Rect))
+            {
+                passwordField.Clear();
+                passwordFieldC.Clear();
+                userField.Clear();
+                idField.Clear();
+            }
+
+        //Back button
             backButton.Update();
             backButton.Draw();
 

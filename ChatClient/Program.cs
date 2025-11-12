@@ -11,6 +11,7 @@ namespace ChatClient;
 
 public class Program
 {
+    // TODO: Add relative spacing to window size
     // TODO: What happens when connection to server is lost?
     public static void Main()
     {
