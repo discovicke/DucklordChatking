@@ -9,8 +9,11 @@ namespace ChatClient.UI
 {
     public static class Fonts
     {
+
+        public static Font extraLightFont;
         public static Font lightFont;
         public static Font mediumFont;
+        public static Font regularFont;
         public static Font boldFont;
 
         static Fonts()
@@ -23,9 +26,11 @@ namespace ChatClient.UI
             // Support for ÅÄÖ etc
             for (int i = 192; i <= 255; i++) chars.Add(i);
 
-            lightFont = Raylib.LoadFontEx("Resources/JetBrainsMono-Light.ttf", 32, chars.ToArray(), chars.Count);
-            mediumFont = Raylib.LoadFontEx("Resources/JetBrainsMono-Medium.ttf", 32, chars.ToArray(), chars.Count);
-            boldFont = Raylib.LoadFontEx("Resources/JetBrainsMono-Bold.ttf", 32, chars.ToArray(), chars.Count);
+            extraLightFont = Raylib.LoadFontEx("Resources/CascadiaCode-ExtraLight.ttf", 20, chars.ToArray(), chars.Count);
+            lightFont = Raylib.LoadFontEx("Resources/CascadiaCode-Light.ttf", 20, chars.ToArray(), chars.Count);
+            mediumFont = Raylib.LoadFontEx("Resources/CascadiaCode-Medium.ttf", 20, chars.ToArray(), chars.Count);
+            regularFont = Raylib.LoadFontEx("Resources/CascadiaCode-Regular.ttf", 20, chars.ToArray(), chars.Count);
+            boldFont = Raylib.LoadFontEx("Resources/CascadiaCode-Bold.ttf", 20, chars.ToArray(), chars.Count);
 
         }
 
