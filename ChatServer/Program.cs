@@ -79,37 +79,43 @@ app.MapPost("/login", (UserDTO dto) =>
 .Produces(StatusCodes.Status400BadRequest)
 .Produces(StatusCodes.Status401Unauthorized)
 .WithSummary("User Login")
-.WithDescription("Validates username and password and returns 401 if credentials are invalid, or 400 if the request shape is invalid.");
+.WithDescription("Validates username and password and returns 401 if credentials are invalid, or 400 for invalid input.");
 #endregion
 
 #region REGISTER
 app.MapPost("/register", (UserDTO dto) =>
 {
-  // Validate input
+  // 400: invalid request shape
   if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
   {
-    return Results.BadRequest(new ApiFailResponse("Username and password are required"));
+    return Results.BadRequest();
   }
 
-  // Attempt to add user
+  // 409: username already exists
   if (!userStore.Add(dto.Username, dto.Password))
   {
-    return Results.BadRequest(new ApiFailResponse("Username already exists."));
+    return Results.Conflict();
   }
 
+  // Just in case something unexpected happened
   var newUser = userStore.GetByUsername(dto.Username);
   if (newUser == null)
   {
-    return Results.BadRequest(new ApiFailResponse("Failed to add user."));
+    return Results.StatusCode(StatusCodes.Status500InternalServerError);
   }
 
-  return Results.Ok(new ApiSuccessResponseWithUsername(newUser.Username, "Registration successful."));
+  // 201: created, return the username
+  return Results.Created("/register", newUser.Username);
 })
-// API Docs through OpenAPI & ScalarUI
-.Produces<ApiSuccessResponseWithUsername>(StatusCodes.Status200OK)
-.Produces<ApiFailResponse>(StatusCodes.Status400BadRequest)
+.Produces(StatusCodes.Status201Created)
+.Produces(StatusCodes.Status400BadRequest)
+.Produces(StatusCodes.Status409Conflict)
+.Produces(StatusCodes.Status500InternalServerError)
 .WithSummary("Register User Account")
-.WithDescription("Creates a new user account using the provided `username` and `password`. The server stores the account and returns the assigned user ID on success.");
+.WithDescription(
+    "Creates a new user account. Returns `201` with the username as content when the account is successfully created. " +
+    "Returns `409` when the provided username already exists. Returns `400` when the request content is missing a username or password."
+);
 #endregion
 
 #region LIST USERS
