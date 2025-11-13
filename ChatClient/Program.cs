@@ -30,17 +30,29 @@ public class Program
             // Calls on class for mouse interact (always on top)
             MouseInput.Update();
             
+            // --- Begin Frame ---
+            Raylib.BeginDrawing();
+            Raylib.ClearBackground(Colors.BackgroundColor);
+            
             // --- UI ---
             // Tracks current screen and runs it.
             ScreenRouter.RunCurrent();
 
+            // Version text in bottom-left corner (always on top, updates on window resize)
+            int screenHeight = Raylib.GetScreenHeight();
+            int fontSize = 20;
+            int padding = 10;
+            
             Raylib.DrawTextEx(
                 Fonts.regularFont,
                 $"{appVersion}",
-                new Vector2(10, 580),
-                20,
+                new Vector2(padding, screenHeight - fontSize - padding),
+                fontSize,
                 1,
                 Colors.TextColor);
+            
+            // --- End Frame ---
+            Raylib.EndDrawing();
         }
 
         Raylib.CloseWindow();

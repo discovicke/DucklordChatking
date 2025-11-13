@@ -99,13 +99,13 @@ namespace ChatClient.UI.Components
                 key = Raylib.GetCharPressed();
             }
 
-            bool backspacePressed = Raylib.IsKeyPressed(KeyboardKey.Backspace) 
+            bool backspacePressed = (Raylib.IsKeyPressed(KeyboardKey.Backspace) && !backspaceHandledThisFrame) 
                                     || Raylib.IsKeyPressedRepeat(KeyboardKey.Backspace);
 
-            if (backspacePressed && !backspaceHandledThisFrame)
+            if (backspacePressed)
             {
                 DeleteCharacter();
-                backspaceHandledThisFrame = false;
+                backspaceHandledThisFrame = true;
             }
             else if (!backspacePressed)
             {

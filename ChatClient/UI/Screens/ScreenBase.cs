@@ -46,15 +46,7 @@ namespace ChatClient.UI.Screens
             }
 
             logic?.HandleInput();
-            RenderFrame();
-        }
-
-        private void RenderFrame()
-        {
-            Raylib.BeginDrawing();
-            Raylib.ClearBackground(Colors.BackgroundColor);
             RenderContent();
-            Raylib.EndDrawing();
         }
 
         // Optional helper to re-calc layout when window size changes
