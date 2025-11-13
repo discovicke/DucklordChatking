@@ -291,24 +291,25 @@ app.MapPost("/messages/clear", () =>
   // Attempt to clear all stored messages
   var cleared = messageStore.ClearAll();
 
+  // 500: unexpected failure
   if (!cleared)
   {
-    return Results.BadRequest(
-      new ApiFailResponse("Message history could not be cleared. The store may be uninitialized.")
-    );
+    return Results.StatusCode(StatusCodes.Status500InternalServerError);
   }
 
-  return Results.Ok(
-    new ApiSuccessResponse("All messages have been successfully cleared.")
-  );
+  // 204: success, no content
+  return Results.NoContent();
 })
-// API Docs through OpenAPI & ScalarUI
 .WithBadge("Danger Zone", BadgePosition.Before, "#ff3b30")
-.Produces<ApiSuccessResponse>(StatusCodes.Status200OK)
-.Produces<ApiFailResponse>(StatusCodes.Status400BadRequest)
+.Produces(StatusCodes.Status204NoContent)
+.Produces(StatusCodes.Status500InternalServerError)
 .WithSummary("Clear Message History")
-.WithDescription("Deletes all stored chat messages from the server's history. This action cannot be undone and affects all users.");
+.WithDescription(
+    "Clears all stored chat messages. Returns `204` when the message history is successfully cleared. " +
+    "Returns `500` when the server is unable to clear the message store."
+);
 #endregion
+
 
 #region HEALTH CHECK
 app.MapGet("health", () => Results.Ok("OK"))
