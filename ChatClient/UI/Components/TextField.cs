@@ -7,6 +7,13 @@ namespace ChatClient.UI.Components
 {
     public class TextField : UIComponent
     {
+        // TODO:
+        // - Add scroll logic
+        // - Add copy/paste support (Ctrl + C / Ctrl + V)
+        // - Add cut support (Ctrl + X)
+        // - Add undo/redo support (Ctrl + Z / Ctrl + Y)
+        // - Add text selection support (Mouse drag || shift key)
+        // - Add font support
         public string Text { get; private set; } = string.Empty;
 
         private bool IsSelected { get; set; }
@@ -31,9 +38,11 @@ namespace ChatClient.UI.Components
         public override void Draw()
         {
             var fill = MouseInput.IsHovered(Rect) ? HoverColor : BackgroundColor;
+            if (IsSelected)
+                fill = HoverColor;
             Raylib.DrawRectangleRounded(Rect, 0.3f, 10, fill);
 
-            if (MouseInput.IsHovered(Rect))
+            if (MouseInput.IsHovered(Rect) || IsSelected)
             {
                 Raylib.DrawRectangleRoundedLinesEx(Rect, 0.3f, 10, 2, Color.Black);
             }
@@ -59,7 +68,7 @@ namespace ChatClient.UI.Components
             cursor.Update(Raylib.GetFrameTime());
 
             HandleTextInput();
-                HandleNavigation();
+            HandleNavigation();
                 
         }
 

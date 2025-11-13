@@ -8,6 +8,7 @@ namespace ChatClient.UI.Screens;
 
 public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
 {
+    // TODO: Add content loader
     private readonly Texture2D logo = Raylib.LoadTexture(@"Resources/DuckLord1.2.png");
 
     private readonly TextField inputField = new(new Rectangle(), 
@@ -26,7 +27,8 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
         logic = new ChatScreenLogic(inputField, sendButton, backButton, SendMessage);
     }
 
-    protected override ChatScreenLayout.LayoutData CalculateLayout() => ChatScreenLayout.Calculate(logo.Width);
+    protected override ChatScreenLayout.LayoutData CalculateLayout() 
+        => ChatScreenLayout.Calculate(logo.Width);
 
     protected override void ApplyLayout(ChatScreenLayout.LayoutData layout)
     {
@@ -55,6 +57,8 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
             if (list != null && list.Any()) messages = list.ToList();
         }
 
+        // TODO: Add scrollbar
+        // TODO: Add Message Wrapping
         // Draw messages
         int startX = (int)layout.ChatRect.X + 10;
         int startY = (int)layout.ChatRect.Y + 10;

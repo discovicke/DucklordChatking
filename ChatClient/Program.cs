@@ -12,6 +12,7 @@ public class Program
 {
     // TODO: Add relative spacing to window size
     // TODO: What happens when connection to server is lost?
+    // TODO: Tab & Ctrl + Tab for switching between fields
     public static void Main()
     {
         string appVersion = "DuckLord v.0.0.2";
