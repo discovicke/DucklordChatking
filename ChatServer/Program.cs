@@ -28,8 +28,8 @@ builder.Services.AddOpenApi(options =>
 var app = builder.Build();
 
 // Redirect root && /docs → /scalar/
-app.MapGet("/", () => Results.Redirect("/scalar/", permanent: false));
-app.MapGet("/docs", () => Results.Redirect("/scalar/", permanent: false));
+app.MapGet("/", () => Results.Redirect("/scalar/", permanent: false)).ExcludeFromApiReference();
+app.MapGet("/docs", () => Results.Redirect("/scalar/", permanent: false)).ExcludeFromApiReference();
 
 // Configure the server to listen on all network interfaces on port 5201,
 // so other devices on the local network can connect using the server machine's IP.
