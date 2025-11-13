@@ -123,30 +123,31 @@ app.MapGet("/users", () =>
 {
   var usernames = userStore.GetAllUsernames();
 
-  // Validation and error handling
+  // 500: unexpected storage failure
   if (usernames == null)
   {
-    return Results.BadRequest(
-        new ApiFailResponse("List of usernames could not be retrieved.")
-    );
+    return Results.StatusCode(StatusCodes.Status500InternalServerError);
   }
 
+  // 204: no users
   if (!usernames.Any())
   {
-    return Results.BadRequest(
-        new ApiFailResponse("No users in list.")
-    );
+    return Results.NoContent();
   }
 
-  return Results.Ok(
-      new ApiSuccessResponseWithUsernames(usernames)
-  );
+  // 200: return list of usernames
+  return Results.Ok(usernames);
 })
-.Produces<ApiSuccessResponseWithUsernames>(StatusCodes.Status200OK)
-.Produces<ApiFailResponse>(StatusCodes.Status400BadRequest)
+.Produces<IEnumerable<string>>(StatusCodes.Status200OK)
+.Produces(StatusCodes.Status204NoContent)
+.Produces(StatusCodes.Status500InternalServerError)
 .WithSummary("List All Usernames")
-.WithDescription("Returns every registered username. If no users exist, returns an error.");
+.WithDescription(
+    "Returns `200` with a list of usernames when the list contains users. " +
+    "Returns `204` when the list is empty. Returns `500` when the list of usernames cannot be retrieved (would be a server-side issue)."
+);
 #endregion
+
 
 #region UPDATE USER CREDENTIALS
 app.MapPost("/user/update", (UpdateUserDTO dto) =>
