@@ -7,7 +7,15 @@ namespace ChatClient.UI.Components
 {
     public class TextField : UIComponent
     {
+        // TODO:
+        // - Add scroll logic
+        // - Add copy/paste support (Ctrl + C / Ctrl + V)
+        // - Add cut support (Ctrl + X)
+        // - Add undo/redo support (Ctrl + Z / Ctrl + Y)
+        // - Add text selection support (Mouse drag || shift key)
+        // - Add font support
         public string Text { get; private set; } = string.Empty;
+        private string FieldName { get; set; } = "TextField";
 
         private bool IsSelected { get; set; }
         private readonly bool AllowMultiline;
@@ -17,12 +25,13 @@ namespace ChatClient.UI.Components
 
 
         public TextField(Rectangle rect, Color backgroundColor, Color hoverColor, Color textColor,
-            bool allowMultiline = false, bool isPassword = false)
+            bool allowMultiline = false, bool isPassword = false, string fieldName = "TextField")
         {
             Rect = rect;
             BackgroundColor = backgroundColor;
             HoverColor = hoverColor;
             AllowMultiline = allowMultiline;
+            FieldName = fieldName;
 
             cursor = new TextCursor();
             renderer = new TextRenderer(rect, textColor, isPassword, allowMultiline);
@@ -31,9 +40,11 @@ namespace ChatClient.UI.Components
         public override void Draw()
         {
             var fill = MouseInput.IsHovered(Rect) ? HoverColor : BackgroundColor;
+            if (IsSelected)
+                fill = HoverColor;
             Raylib.DrawRectangleRounded(Rect, 0.3f, 10, fill);
 
-            if (MouseInput.IsHovered(Rect))
+            if (MouseInput.IsHovered(Rect) || IsSelected)
             {
                 Raylib.DrawRectangleRoundedLinesEx(Rect, 0.3f, 10, 2, Color.Black);
             }
@@ -45,11 +56,19 @@ namespace ChatClient.UI.Components
         {
             if (MouseInput.IsLeftClick(Rect))
             {
+                if (!IsSelected)
+                {
+                    Log.Info($"[{FieldName}] Field selected");
+                }
                 IsSelected = true;
                 cursor.ResetBlink();
             }
             else if (Raylib.IsMouseButtonPressed(MouseButton.Left) && !MouseInput.IsHovered(Rect))
             {
+                if (IsSelected)
+                {
+                    Log.Info($"[{FieldName}] Field deselected - Final text: '{Text}'");
+                }
                 IsSelected = false;
                 cursor.ResetInvisible();
             }
@@ -59,7 +78,7 @@ namespace ChatClient.UI.Components
             cursor.Update(Raylib.GetFrameTime());
 
             HandleTextInput();
-                HandleNavigation();
+            HandleNavigation();
                 
         }
 
@@ -123,6 +142,9 @@ namespace ChatClient.UI.Components
             Text = Text.Insert(cursor.Position, s);
             cursor.Position += s.Length;
             cursor.ResetBlink();
+            
+            string displayChar = s == "\n" ? "\\n" : s;
+            Log.Info($"[{FieldName}] Text inserted: '{displayChar}' - Current text: '{Text.Replace("\n", "\\n")}'");
         }
 
         private void DeleteCharacter()
@@ -130,9 +152,13 @@ namespace ChatClient.UI.Components
             if (cursor.Position > 0 && Text.Length > 0)
             {
                 int removeIndex = Math.Clamp(cursor.Position - 1, 0, Text.Length - 1);
+                char deletedChar = Text[removeIndex];
                 Text = Text.Remove(removeIndex, 1);
                 cursor.Position = removeIndex;
                 cursor.ResetBlink();
+                
+                string displayChar = deletedChar == '\n' ? "\\n" : deletedChar.ToString();
+                Log.Info($"[{FieldName}] Character deleted: '{displayChar}' - Current text: '{Text.Replace("\n", "\\n")}'");
             }
         }
 
@@ -150,6 +176,7 @@ namespace ChatClient.UI.Components
 
         public void Clear()
         {
+            Log.Info($"[{FieldName}] Field cleared - Previous text: '{Text.Replace("\n", "\\n")}'");
             Text = string.Empty;
             cursor.Reset();
         }

@@ -12,10 +12,13 @@ public class Program
 {
     // TODO: Add relative spacing to window size
     // TODO: What happens when connection to server is lost?
+    // TODO: Tab & Ctrl + Tab for switching between fields
     public static void Main()
     {
         string appVersion = "DuckLord v.0.0.2";
+        Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
 
+        
         Raylib.InitWindow(800, 600, appVersion);
         Raylib.SetTargetFPS(60);
         Console.WriteLine($"Log path: {AppDomain.CurrentDomain.BaseDirectory}log.txt");
