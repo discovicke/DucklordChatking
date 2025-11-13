@@ -8,7 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="Bilder\DuckLordsmall.png">
+    <None Remove="Resources\DuckLord1.2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\DuckLord1.2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\DuckLordsmall.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="log.txt">
@@ -16,9 +26,6 @@
     </None>
     <None Include="UI\Screens\StartScreen.cs" />
     <None Update="Bilder\DuckLord logo fixed.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Bilder\DuckLord1.2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Bilder\DuckLord1.3.png">
@@ -35,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Bilder\DuckLord1.0.png">
+    <None Update="Resources\DuckLord1.0.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Bilder\DuckLord2.png">

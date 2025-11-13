@@ -4,12 +4,13 @@ using Raylib_cs;
 
 namespace ChatClient.UI.Screens
 {
+    // "How should all fields and buttons behave?"
     public class StartScreenLogic(
         TextField userField,
         TextField passwordField,
         Button loginButton,
         Button registerButton,
-        OptionsButton optionsButton)
+        OptionsButton optionsButton) : IScreenLogic
     {
         public void HandleInput()
         {

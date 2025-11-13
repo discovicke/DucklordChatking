@@ -74,7 +74,7 @@ namespace ChatClient.UI.Rendering
         private (int x, int y) GetCaretPixelPosition(string text, int textX, int textY, TextCursor cursor)
         {
             int pos = Math.Clamp(cursor.Position, 0, text.Length);
-    
+
             string displayText = isPassword ? new string('*', text.Length) : text;
 
             if (!allowMultiline)
@@ -139,13 +139,29 @@ namespace ChatClient.UI.Rendering
 
             foreach (var word in words)
             {
-                var testLine = string.IsNullOrEmpty(currentLine) ? word : currentLine + " " + word;
+                var testLine = string.IsNullOrEmpty(currentLine)
+                    ? word
+                    : currentLine + " " + word;
                 int lineWidth = Raylib.MeasureText(testLine, FontSize);
 
-                if (lineWidth > maxWidth && !string.IsNullOrEmpty(currentLine))
+                if (lineWidth > maxWidth)
                 {
-                    lines.Add(currentLine);
-                    currentLine = word;
+                    if (!string.IsNullOrEmpty(currentLine))
+                    {
+                        lines.Add(currentLine);
+                        currentLine = word;
+                    }
+
+                    if (Raylib.MeasureText(word, FontSize) > maxWidth)
+                    {
+                        var splitWordLines = SplitLongWord(word, maxWidth);
+                        lines.AddRange(splitWordLines.GetRange(0, splitWordLines.Count - 1));
+                        currentLine = splitWordLines[^1];
+                    }
+                    else
+                    {
+                        currentLine = word;
+                    }
                 }
                 else
                 {
@@ -159,6 +175,34 @@ namespace ChatClient.UI.Rendering
             }
 
             return lines.Count > 0 ? lines : new List<string> { "" };
+        }
+
+        private List<string> SplitLongWord(string word, int maxWidth)
+        {
+            var lines = new List<string>();
+            string currentLine = "";
+
+            foreach (char c in word)
+            {
+                string test = currentLine + c;
+
+                int testWidth = Raylib.MeasureText(test + "-", FontSize);
+
+                if (testWidth > maxWidth)
+                {
+                    lines.Add(currentLine + "-");
+                    currentLine = c.ToString();
+                }
+                else
+                {
+                    currentLine = test;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(currentLine))
+                lines.Add(currentLine);
+
+            return lines;
         }
     }
 }
