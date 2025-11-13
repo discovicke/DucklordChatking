@@ -20,5 +20,8 @@ namespace ChatClient.UI
 
         // Color of text by user
         public static Color TextColor = Color.Black;
+
+        // Subtle text color that blends in with the background
+        public static Color SubtleText = new Color(10, 70, 95);
     }
 }

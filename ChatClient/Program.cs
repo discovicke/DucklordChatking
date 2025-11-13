@@ -38,10 +38,10 @@ public class Program
             // Tracks current screen and runs it.
             ScreenRouter.RunCurrent();
 
-            // Version text in bottom-left corner (always on top, updates on window resize)
+            // Version text in bottom-left corner (always on top, updates position on window resize)
             int screenHeight = Raylib.GetScreenHeight();
-            int fontSize = 20;
-            int padding = 10;
+            const int fontSize = 13; // Constant font size - does not scale with window
+            const int padding = 10;
             
             Raylib.DrawTextEx(
                 Fonts.regularFont,
@@ -49,7 +49,7 @@ public class Program
                 new Vector2(padding, screenHeight - fontSize - padding),
                 fontSize,
                 1,
-                Colors.TextColor);
+                Colors.SubtleText);
             
             // --- End Frame ---
             Raylib.EndDrawing();
