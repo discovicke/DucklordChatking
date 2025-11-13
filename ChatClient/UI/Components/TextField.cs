@@ -86,7 +86,7 @@ namespace ChatClient.UI.Components
             if (backspacePressed && !backspaceHandledThisFrame)
             {
                 DeleteCharacter();
-                backspaceHandledThisFrame = false;
+                backspaceHandledThisFrame = true;
             }
             else if (!backspacePressed)
             {
