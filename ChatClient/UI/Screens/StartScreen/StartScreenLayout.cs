@@ -3,6 +3,7 @@ using ChatClient.UI.Components;
 
 namespace ChatClient.UI.Screens
 {
+    // "Where should all fields be placed?""
     public static class StartScreenLayout
     {
         public struct LayoutData
