@@ -4,7 +4,7 @@ using ChatClient.UI;
 using ChatClient.UI.Components;
 using ChatClient.UI.Screens;
 using Raylib_cs;
-
+using System.Numerics;
 
 namespace ChatClient;
 
@@ -31,7 +31,13 @@ public class Program
             // Tracks current screen and runs it.
             ScreenRouter.RunCurrent();
 
-            Raylib.DrawText($"{appVersion}", 10, 580, 10, Colors.TextColor);
+            Raylib.DrawTextEx(
+                Fonts.regularFont,
+                $"{appVersion}",
+                new Vector2(10, 580),
+                20,
+                1,
+                Colors.TextColor);
         }
 
         Raylib.CloseWindow();

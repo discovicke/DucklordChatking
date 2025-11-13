@@ -57,8 +57,6 @@ public class StartScreen : ScreenBase<StartScreenLayout.LayoutData>
         Raylib.DrawTextureEx(logo, 
             new Vector2(layout.LogoX, layout.LogoY), 
             0f, layout.LogoScale, Color.White);
-        Raylib.DrawText("DuckLord v.0.0.2", 10, 
-            (int)(layout.ScreenHeight - 20), 
-            10, Colors.TextColor);
+
     }
 }
