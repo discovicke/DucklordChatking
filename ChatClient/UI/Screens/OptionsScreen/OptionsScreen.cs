@@ -14,7 +14,7 @@ public class OptionsScreen : ScreenBase<OptionsScreenLayout.LayoutData>
         Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor, false, true);
     private readonly TextField confirmPassword = new(new Rectangle(), 
         Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor, false, true);
-
+    
     private readonly Button confirmButton = new(new Rectangle(), "Confirm", 
         Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor);
     private readonly BackButton backButton = new(new Rectangle(10, 10, 100, 30));

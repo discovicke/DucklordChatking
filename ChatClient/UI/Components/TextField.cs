@@ -153,7 +153,6 @@ namespace ChatClient.UI.Components
             Text = string.Empty;
             cursor.Reset();
         }
-        // TODO: Text row break when hitting border
 
         // TODO: Scroll logicZ
 
