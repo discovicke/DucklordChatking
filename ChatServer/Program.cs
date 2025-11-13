@@ -58,26 +58,28 @@ userStore.Add("Ducklord", "chatking");
 #region LOGIN
 app.MapPost("/login", (UserDTO dto) =>
 {
-  // Validate input
+  // 400: invalid request shape
   if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
   {
-    return Results.BadRequest(new ApiFailResponse("Username and password are required."));
+    return Results.BadRequest();
   }
 
   var user = userStore.GetByUsername(dto.Username);
 
-  if (user != null && user.Password == dto.Password)
+  // 401: credentials invalid
+  if (user == null || user.Password != dto.Password)
   {
-    return Results.Ok(new ApiSuccessResponseWithUsername(user.Username, "Login successful."));
+    return Results.Unauthorized();
   }
 
-  return Results.BadRequest(new ApiFailResponse("Invalid username or password."));
+  // 200: success
+  return Results.Ok();
 })
-// API Docs through OpenAPI & ScalarUI
-.Produces<ApiSuccessResponseWithUsername>(StatusCodes.Status200OK)
-.Produces<ApiFailResponse>(StatusCodes.Status400BadRequest)
+.Produces(StatusCodes.Status200OK)
+.Produces(StatusCodes.Status400BadRequest)
+.Produces(StatusCodes.Status401Unauthorized)
 .WithSummary("User Login")
-.WithDescription("Validates username and password.");
+.WithDescription("Validates username and password and returns 401 if credentials are invalid, or 400 if the request shape is invalid.");
 #endregion
 
 #region REGISTER
