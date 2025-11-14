@@ -28,14 +28,14 @@ public class UserStore
   /// True when creation succeeds. False when a user with the same username already exists.
   /// </returns>
   #endregion
-  public bool Add(string username, string password)
+  public bool Add(string username, string password, bool isAdmin = false)
   {
     if (usersByUsername.ContainsKey(username))
     {
       return false;
     }
 
-    User newUser = new(username, password)
+    User newUser = new(username, password, isAdmin)
     {
       Id = nextId++
     };
