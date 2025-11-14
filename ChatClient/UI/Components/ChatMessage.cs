@@ -13,6 +13,7 @@ public class ChatMessage
     private readonly List<string> wrappedLines;
 
     public float Height { get; private set; }
+    public float Width { get; private set; } 
     private const float Padding = 10f;
     private const float LineSpacing = 18f;
     private const float FontSize = 14f;
@@ -35,6 +36,17 @@ public class ChatMessage
         wrappedLines.AddRange(WrapText(message.Content ?? "", ResourceLoader.RegularFont));
 
         // Total height
+        float maxLineWidth = 0f;
+        int headerLines = WrapText(header, ResourceLoader.BoldFont).Count;
+
+        for (int i = 0; i < wrappedLines.Count; i++)
+        {
+            var font = i < headerLines ? ResourceLoader.BoldFont : ResourceLoader.RegularFont;
+            var lineWidth = Raylib.MeasureTextEx(font, wrappedLines[i], FontSize, 0.5f).X;
+            maxLineWidth = Math.Max(maxLineWidth, lineWidth);
+        }
+
+        Width = maxLineWidth + (Padding * 2);
         Height = wrappedLines.Count * LineSpacing + (Padding * 2);
     }
 
@@ -61,21 +73,22 @@ public class ChatMessage
         }
 
         if (!string.IsNullOrEmpty(currentLine))
+        {
             lines.Add(currentLine);
+        }
 
         return lines;
     }
     public void Draw(float x, float y)
     {
         // Draw bubble bakgrund
-        var bubbleRect = new Rectangle(x, y, maxWidth + (Padding * 2), Height);
-        Raylib.DrawRectangleRounded(bubbleRect, 0.1f, 8, Colors.PanelColor);
-        Raylib.DrawRectangleRoundedLinesEx(bubbleRect, 0.1f, 8, 1, Colors.OutlineColor);
+        var bubbleRect = new Rectangle(x, y, Width, Height);
+        Raylib.DrawRectangleRounded(bubbleRect, 0.15f, 8, Colors.PanelColor);
+        Raylib.DrawRectangleRoundedLinesEx(bubbleRect, 0.15f, 8, 1, Colors.OutlineColor);
 
         // Draw text
         float textY = y + Padding;
-        bool isHeader = true;
-
+        
         string sender = string.IsNullOrWhiteSpace(message.Sender) ? "Unknown Duck" : message.Sender;
         string timestamp = message.Timestamp.ToLocalTime().ToString("HH:mm");
         string header = $"{timestamp} - {sender}:";
@@ -88,7 +101,7 @@ public class ChatMessage
 
             Raylib.DrawTextEx(font, wrappedLines[i],
                 new Vector2(x + Padding, textY), FontSize, 0.5f, color);
-            
+
             textY += LineSpacing;
         }
     }
