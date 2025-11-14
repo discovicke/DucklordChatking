@@ -75,10 +75,10 @@ auth.MapPost("/login", (UserDTO dto) =>
   }
 
   // Update the auth token
-  user.SessionAuthToken = Guid.NewGuid().ToString();
+  var token = userStore.AssignNewSessionAuthToken(user);
 
   // 200: success
-  return Results.Ok(user.SessionAuthToken);
+  return Results.Ok(token);
 })
 .Produces(StatusCodes.Status200OK)
 .Produces(StatusCodes.Status400BadRequest)
