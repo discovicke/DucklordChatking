@@ -25,24 +25,18 @@ public static class MessageEndpoints
 
       // 400: missing sender or content
       if (string.IsNullOrWhiteSpace(dto.Content) || string.IsNullOrWhiteSpace(dto.Sender))
-      {
         return Results.BadRequest();
-      }
 
       // 403: sender must match authenticated user
       if (!AuthRules.IsSelf(caller, dto.Sender))
-      {
         return Results.StatusCode(StatusCodes.Status403Forbidden);
-      }
 
       // Attempt to store the message
       var added = messageStore.Add(dto.Sender, dto.Content);
 
       // 500: something unexpected went wrong storing the message
       if (!added)
-      {
         return Results.StatusCode(StatusCodes.Status500InternalServerError);
-      }
 
       // Broadcast to all SignalR clients
       await hub.Clients.All.SendAsync("ReceiveMessage", dto.Sender, dto.Content);
@@ -70,15 +64,11 @@ public static class MessageEndpoints
     {
       // 401: authentication required
       if (!AuthUtils.TryAuthenticate(context.Request, userStore, out var caller) || caller == null)
-      {
         return Results.Unauthorized();
-      }
 
       // 400: invalid query parameter
       if (take.HasValue && take.Value <= 0)
-      {
         return Results.BadRequest();
-      }
 
       var messages = take.HasValue
           ? messageStore.GetLast(take.Value)
@@ -104,9 +94,7 @@ public static class MessageEndpoints
     {
       // 401: authentication required
       if (!AuthUtils.TryAuthenticate(context.Request, userStore, out var caller) || caller == null)
-      {
         return Results.Unauthorized();
-      }
 
       // 403: authorization, admin-only operation
       if (!caller.IsAdmin)
@@ -117,9 +105,7 @@ public static class MessageEndpoints
 
       // 500: unexpected failure
       if (!cleared)
-      {
         return Results.StatusCode(StatusCodes.Status500InternalServerError);
-      }
 
       // 204: success, no content
       return Results.NoContent();

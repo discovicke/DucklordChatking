@@ -16,17 +16,13 @@ public static class AuthEndpoints
     {
       // 400: invalid request shape
       if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
-      {
         return Results.BadRequest();
-      }
 
       var user = userStore.GetByUsername(dto.Username);
 
       // 401: credentials invalid
       if (user == null || user.Password != dto.Password)
-      {
         return Results.Unauthorized();
-      }
 
       // Update the auth token
       var token = userStore.AssignNewSessionAuthToken(user);
@@ -48,22 +44,16 @@ public static class AuthEndpoints
     {
       // 400: invalid request shape
       if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
-      {
         return Results.BadRequest();
-      }
 
       // 409: username already exists
       if (!userStore.Add(dto.Username, dto.Password))
-      {
         return Results.Conflict();
-      }
 
       // Just in case something unexpected happened
       var newUser = userStore.GetByUsername(dto.Username);
       if (newUser == null)
-      {
         return Results.StatusCode(StatusCodes.Status500InternalServerError);
-      }
 
       // 201: created, return the username
       return Results.Created("", dto.Username);

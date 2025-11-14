@@ -25,15 +25,11 @@ public static class UserEndpoints
 
       // 500: unexpected storage failure
       if (usernames == null)
-      {
         return Results.StatusCode(StatusCodes.Status500InternalServerError);
-      }
 
       // 204: no users
       if (!usernames.Any())
-      {
         return Results.NoContent();
-      }
 
       // 200: return list of usernames
       return Results.Ok(usernames);
@@ -61,9 +57,7 @@ public static class UserEndpoints
 
       // 400: invalid input
       if (string.IsNullOrWhiteSpace(dto.OldUsername) || string.IsNullOrWhiteSpace(dto.NewUsername))
-      {
         return Results.BadRequest();
-      }
 
       // 403: authorization (self or admin)
       if (!AuthRules.IsSelfOrAdmin(caller, dto.OldUsername))
@@ -75,9 +69,7 @@ public static class UserEndpoints
 
       // TODO: break this up so what the conflict issue is becomes clear
       if (!updated)
-      {
         return Results.Conflict(); // 409: conflict (old username missing or new one already taken)
-      }
 
       // 204: update succeeded, no body needed
       return Results.NoContent();
@@ -114,9 +106,7 @@ public static class UserEndpoints
 
       // 401: Verify credentials before deletion
       if (targetUser == null || targetUser.Password != dto.Password)
-      {
         return Results.Unauthorized(); // 401: wrong credentials or no such user
-      }
 
       // 403: authorization (self or admin)
       if (!AuthRules.IsSelfOrAdmin(caller, dto.Username))
@@ -127,9 +117,7 @@ public static class UserEndpoints
 
       // 500: unexpected failure
       if (!deleted)
-      {
         return Results.StatusCode(StatusCodes.Status500InternalServerError);
-      }
 
       // 204: deletion successful, no content needed
       return Results.NoContent();
