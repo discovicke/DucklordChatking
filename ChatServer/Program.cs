@@ -211,8 +211,12 @@ users.MapPost("/update", (HttpContext context, UpdateUserDTO dto) =>
 #endregion
 
 #region DELETE USER
-users.MapPost("/delete", (UserDTO dto) =>
+users.MapPost("/delete", (HttpContext context, UserDTO dto) =>
 {
+  // 401: authentication required
+  if (!AuthUtils.TryAuthenticate(context.Request, userStore, out var caller) || caller == null)
+    return Results.Unauthorized();
+
   // 400: invalid input
   if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
   {
@@ -220,11 +224,16 @@ users.MapPost("/delete", (UserDTO dto) =>
   }
 
   // 401: Verify credentials before deletion
-  var user = userStore.GetByUsername(dto.Username);
-  if (user == null || user.Password != dto.Password)
+  // Lookup target user
+  var targetUser = userStore.GetByUsername(dto.Username);
+  if (targetUser == null || targetUser.Password != dto.Password)
   {
-    return Results.Unauthorized();
+    return Results.Unauthorized(); // 401: wrong credentials or no such user
   }
+
+  // 403: authorization (self or admin)
+  if (!AuthRules.IsSelfOrAdmin(caller, dto.Username))
+    return Results.Forbid();
 
   // Attempt deletion
   var deleted = userStore.Remove(dto.Username);
@@ -241,14 +250,15 @@ users.MapPost("/delete", (UserDTO dto) =>
 .Produces(StatusCodes.Status204NoContent)
 .Produces(StatusCodes.Status400BadRequest)
 .Produces(StatusCodes.Status401Unauthorized)
+.Produces(StatusCodes.Status403Forbidden)
 .Produces(StatusCodes.Status500InternalServerError)
 .WithSummary("Delete User Account")
 .WithDescription(
-    "Deletes a user account. Returns `204` when the account is successfully deleted. " +
-    "Returns `401` when the provided credentials do not match any stored user. " +
-    "Returns `400` when the request content is missing a username or password. " +
-    "Returns `500` when the user could not be deleted after successful credential verification."
-);
+    "Authenticated users may delete their own account, while administrators may remove any account. " +
+    "A successful deletion returns `204`. Invalid credentials result in `401`, insufficient permissions in `403`, " +
+    "and unexpected storage failures in `500`."
+)
+.WithBadge("🔐 Auth Required", BadgePosition.Before, "#ffd966");
 #endregion
 
 #region SEND MESSAGE
