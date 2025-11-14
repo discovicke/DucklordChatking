@@ -13,9 +13,26 @@ builder.Services.AddCustomOpenApi(); // Register the OpenAPI custom configuratio
 
 var app = builder.Build();
 
+// Stores
+UserStore userStore = new();
+MessageStore messageStore = new(userStore);
+
+// Add one user for general testing
+userStore.Add("Ducklord", "chatking", isAdmin: true);
+
+// This user is used to allow Scalar UI to send test requests
+userStore.Add("Scalar", "APIDOCS", isAdmin: true);
+Console.WriteLine(userStore.GetByUsername("Scalar")?.SessionAuthToken ?? "Token retrieval error: user not found or no token assigned. Ask server admin to generate one"); // Debug token print
+
 // Redirect root && /docs → /scalar/
 app.MapGet("/", () => Results.Redirect("/scalar/", permanent: false)).ExcludeFromApiReference();
 app.MapGet("/docs", () => Results.Redirect("/scalar/", permanent: false)).ExcludeFromApiReference();
+
+// Endpoint grouping
+var auth = app.MapGroup("/auth").WithTags("Authentication");
+var users = app.MapGroup("/users").WithTags("Users");
+var messages = app.MapGroup("/messages").WithTags("Messages");
+var system = app.MapGroup("/system").WithTags("System");
 
 // Configure the server to listen on all network interfaces on port 5201,
 // so other devices on the local network can connect using the server machine's IP.
@@ -27,20 +44,16 @@ app.MapScalarApiReference(opt => // exposes visual UI at /scalar
 {
   opt.Title = "Ducklord's Server API Docs";
   opt.Theme = ScalarTheme.Default;
+
+  // Automatically pick as the active scheme
+  opt.AddPreferredSecuritySchemes("SessionAuth");
+  opt.AddApiKeyAuthentication("SessionAuth", apiKey =>
+  {
+    apiKey.Name = "AuthSessionToken";
+    apiKey.Value = userStore.GetByUsername("Scalar")?.SessionAuthToken
+                   ?? "Token retrieval error: user not found or no token assigned. Ask server admin to generate one";
+  });
 });
-
-// Stores
-UserStore userStore = new();
-MessageStore messageStore = new(userStore);
-
-// Add one user for testing
-userStore.Add("Ducklord", "chatking", isAdmin: true);
-
-// Endpoint grouping
-var auth = app.MapGroup("/auth").WithTags("Authentication");
-var users = app.MapGroup("/users").WithTags("Users");
-var messages = app.MapGroup("/messages").WithTags("Messages");
-var system = app.MapGroup("/system").WithTags("System");
 
 
 // ENDPOINTS
