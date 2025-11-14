@@ -109,9 +109,10 @@ public static class UserEndpoints
         return Results.BadRequest();
       }
 
-      // 401: Verify credentials before deletion
       // Lookup target user
       var targetUser = userStore.GetByUsername(dto.Username);
+
+      // 401: Verify credentials before deletion
       if (targetUser == null || targetUser.Password != dto.Password)
       {
         return Results.Unauthorized(); // 401: wrong credentials or no such user

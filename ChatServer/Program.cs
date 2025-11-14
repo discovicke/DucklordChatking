@@ -36,7 +36,7 @@ app.MapScalarApiReference(opt => // exposes visual UI at /scalar
   opt.AddPreferredSecuritySchemes("SessionAuth");
   opt.AddApiKeyAuthentication("SessionAuth", apiKey =>
   {
-    apiKey.Name = "AuthSessionToken";
+    apiKey.Name = "SessionAuthToken";
     apiKey.Value = userStore.GetByUsername("Scalar")?.SessionAuthToken
                    ?? "Token retrieval error: user not found or no token assigned. Ask server admin to generate one";
   });

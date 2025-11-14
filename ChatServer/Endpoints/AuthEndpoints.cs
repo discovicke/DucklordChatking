@@ -1,5 +1,4 @@
 using ChatServer.Store;
-using ChatServer.Auth;
 using Shared;
 
 namespace ChatServer.Endpoints;
@@ -67,7 +66,7 @@ public static class AuthEndpoints
       }
 
       // 201: created, return the username
-      return Results.Created("", newUser.Username);
+      return Results.Created("", dto.Username);
     })
     .Produces(StatusCodes.Status201Created)
     .Produces(StatusCodes.Status400BadRequest)

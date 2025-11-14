@@ -29,7 +29,7 @@ public static class OpenApiConfiguration
                 document.Components.SecuritySchemes[schemeKey] = new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.ApiKey,
-                    Name = "AuthSessionToken",
+                    Name = "SessionAuthToken",
                     In = ParameterLocation.Header,
                     Description = "Session auth token which is normally returned in the server response when user logs in (/auth/login/)."
                 };

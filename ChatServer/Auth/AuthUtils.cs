@@ -9,7 +9,7 @@ public static class AuthUtils
   {
     user = null;
 
-    if (!req.Headers.TryGetValue("AuthSessionToken", out var raw))
+    if (!req.Headers.TryGetValue("SessionAuthToken", out var raw))
       return false;
 
     string token = raw.ToString().Trim();
