@@ -262,12 +262,22 @@ users.MapPost("/delete", (HttpContext context, UserDTO dto) =>
 #endregion
 
 #region SEND MESSAGE
-messages.MapPost("/send", async (MessageDTO dto, IHubContext<ChatHub> hub) =>
+messages.MapPost("/send", async (HttpContext context, MessageDTO dto, IHubContext<ChatHub> hub) =>
 {
+  // 401: authentication required
+  if (!AuthUtils.TryAuthenticate(context.Request, userStore, out var caller) || caller == null)
+    return Results.Unauthorized();
+
   // 400: missing sender or content
   if (string.IsNullOrWhiteSpace(dto.Content) || string.IsNullOrWhiteSpace(dto.Sender))
   {
     return Results.BadRequest();
+  }
+
+  // 403: sender must match authenticated user
+  if (!AuthRules.IsSelf(caller, dto.Sender))
+  {
+    return Results.Forbid();
   }
 
   // Attempt to store the message
@@ -287,14 +297,17 @@ messages.MapPost("/send", async (MessageDTO dto, IHubContext<ChatHub> hub) =>
 })
 .Produces(StatusCodes.Status204NoContent)
 .Produces(StatusCodes.Status400BadRequest)
+.Produces(StatusCodes.Status401Unauthorized)
+.Produces(StatusCodes.Status403Forbidden)
 .Produces(StatusCodes.Status500InternalServerError)
 .WithSummary("Send Message")
 .WithDescription(
-    "Stores a chat message and broadcasts it to all connected SignalR clients. " +
-    "Returns `204` when the message is successfully stored and broadcasted. " +
-    "Returns `400` when the request content lacks a sender or message text. " +
-    "Returns `500` when the message cannot be stored."
-);
+    "Handles the submission of a new chat message from an authenticated caller. " +
+    "A valid request stores the message, broadcasts it to all connected clients, and concludes with `204`. " +
+    "Missing fields lead to `400`, unauthenticated attempts receive `401`, and a sender mismatch produces `403`. " +
+    "Unexpected storage issues return `500`."
+)
+.WithBadge("🔐 Auth Required", BadgePosition.Before, "#ffd966");
 #endregion
 
 #region GET MESSAGE HISTORY (WITH OPTIONAL TAKE PARAMETER)
