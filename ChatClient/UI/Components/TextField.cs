@@ -132,7 +132,31 @@ namespace ChatClient.UI.Components
                 }
             }
 
-        
+            // Paste: Ctrl + V
+           
+
+            if (ctrlDown && Raylib.IsKeyPressed(KeyboardKey.V))
+            {
+                try
+                {
+                    string clipboard = Raylib.GetClipboardText_();
+                    if (!string.IsNullOrEmpty(clipboard))
+                    {
+                        InsertText(clipboard);
+                        Log.Info($"[{FieldName}] Pasted from clipboard - Text length: {clipboard.Length}");
+                    }
+                    else
+                    {
+                        Log.Info($"[{FieldName}] Clipboard empty on paste");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Info($"[{FieldName}] Paste failed: {ex.Message}");
+                }
+            }
+
+
         }
 
         private void HandleNavigation()
