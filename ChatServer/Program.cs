@@ -76,10 +76,10 @@ auth.MapPost("/login", (UserDTO dto) =>
   }
 
   // Update the auth token
-  user.AuthToken = Guid.NewGuid().ToString();
+  user.SessionAuthToken = Guid.NewGuid().ToString();
 
   // 200: success
-  return Results.Ok(user.AuthToken);
+  return Results.Ok(user.SessionAuthToken);
 })
 .Produces(StatusCodes.Status200OK)
 .Produces(StatusCodes.Status400BadRequest)
