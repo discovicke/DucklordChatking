@@ -17,6 +17,8 @@ namespace ChatClient.UI.Screens
         private const bool DEV_MODE_ENABLED = true;
         
         private readonly UserAuth userAuth = new UserAuth(ServerConfig.CreateHttpClient());
+        public readonly FeedbackBox FeedbackBox = new();
+
         
         // Feedback state
         public string FeedbackMessage { get; private set; } = "";
@@ -68,34 +70,32 @@ namespace ChatClient.UI.Screens
 
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             {
-                ShowFeedback("Please enter username and password!", false);
-                Log.Info("[StartScreenLogic] Login failed - Username or password empty");
+                FeedbackBox.Show("Please enter duckname and password!", false);
+                Log.Info("[StartScreenLogic] Login failed - duckname or password empty");
                 return;
             }
 
-            Log.Info($"[StartScreenLogic] Login attempt - Username: '{username}'");
+            Log.Info($"[StartScreenLogic] Login attempt - duckname: '{username}'");
 
             // Authenticate with server
             bool success = userAuth.Login(username, password);
 
             if (success)
             {
-                Log.Success($"[StartScreenLogic] Login successful for user '{username}'");
-                AppState.LoggedInUsername = username; // Store logged in user
-                ShowFeedback($"✓ Welcome back, {username}!", true);
-                
-                // Navigate to chat after short delay
-                System.Threading.Tasks.Task.Delay(1000).ContinueWith(_ =>
+                Log.Success($"[StartScreenLogic] Login successful for duck '{username}'");
+                AppState.LoggedInUsername = username;
+                FeedbackBox.Show($"Welcome back, {username}!", true);
+
+                Task.Delay(3000).ContinueWith(_ =>
                 {
                     AppState.CurrentScreen = Screen.Chat;
                     ClearFields();
-                    FeedbackMessage = "";
                 });
             }
             else
             {
-                Log.Error($"[StartScreenLogic] Login failed for user '{username}' - Invalid credentials");
-                ShowFeedback("✗ Login failed! Check your credentials.", false);
+                Log.Error($"[StartScreenLogic] Login failed for duck '{username}' - Invalid credentials");
+                FeedbackBox.Show("DUCK! Login failed, check your credentials.", false);
             }
         }
 

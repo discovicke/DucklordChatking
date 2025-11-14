@@ -67,20 +67,9 @@ public class StartScreen : ScreenBase<StartScreenLayout.LayoutData>
             new Vector2(layout.LogoX, layout.LogoY),
             0f, layout.LogoScale, Color.White);
 
-        // Display feedback message if present
+        // Draw feedback box
         var startLogic = logic as StartScreenLogic;
-        if (startLogic != null && !string.IsNullOrEmpty(startLogic.FeedbackMessage))
-        {
-            Color feedbackColor = startLogic.IsFeedbackSuccess ? new Color(46, 204, 113, 255) : new Color(231, 76, 60, 255);
-            float feedbackY = layout.LoginRect.Y + layout.LoginRect.Height + 20;
-            
-            // Measure text to center it
-            Vector2 textSize = Raylib.MeasureTextEx(ResourceLoader.MediumFont, startLogic.FeedbackMessage, 16, 0.5f);
-            float feedbackX = (Raylib.GetScreenWidth() - textSize.X) / 2;
-            
-            Raylib.DrawTextEx(ResourceLoader.MediumFont, startLogic.FeedbackMessage, 
-                new Vector2(feedbackX, feedbackY), 16, 0.5f, feedbackColor);
-        }
+        startLogic?.FeedbackBox.Draw();
 
         // DEV MODE indicator (remove before production)
 #if DEBUG
