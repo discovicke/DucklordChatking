@@ -311,8 +311,14 @@ messages.MapPost("/send", async (HttpContext context, MessageDTO dto, IHubContex
 #endregion
 
 #region GET MESSAGE HISTORY (WITH OPTIONAL TAKE PARAMETER)
-messages.MapGet("/history", (int? take) =>
+messages.MapGet("/history", (HttpContext context, int? take) =>
 {
+  // 401: authentication required
+  if (!AuthUtils.TryAuthenticate(context.Request, userStore, out var caller) || caller == null)
+  {
+    return Results.Unauthorized();
+  }
+
   // 400: invalid query parameter
   if (take.HasValue && take.Value <= 0)
   {
@@ -328,13 +334,14 @@ messages.MapGet("/history", (int? take) =>
 })
 .Produces<IEnumerable<MessageDTO>>(StatusCodes.Status200OK)
 .Produces(StatusCodes.Status400BadRequest)
+.Produces(StatusCodes.Status401Unauthorized)
 .WithSummary("Get Message History")
 .WithDescription(
-    "Returns `200` with the list of stored messages as content. " +
-    "Returns `400` when the `take` query parameter is present but not greater than zero. " +
-    "If `take` is omitted, the entire message history is returned. " +
-    "If `take` is provided, the server selects the newest messages first and returns them in chronological order."
-);
+   "Provides access to the stored chat history for authenticated callers. " +
+   "A successful retrieval returns `200` with the messages, while invalid query values result in `400`. " +
+   "Unauthenticated requests receive `401`."
+)
+.WithBadge("🔐 Auth Required", BadgePosition.Before, "#ffd966");
 #endregion
 
 #region CLEAR MESSAGE HISTORY
