@@ -44,6 +44,7 @@ public class UserStore
     usersById.Add(newUser.Id, newUser);
     return true;
   }
+  #endregion
 
   #region UPDATE USER
   /// <summary>
@@ -62,7 +63,6 @@ public class UserStore
   /// <returns>
   /// True when the update succeeds. False when the old username is not found or the new one is already taken.
   /// </returns>
-  #endregion
   public bool Update(string oldUsername, string newUsername, string? newPassword = null)
   {
     if (!usersByUsername.TryGetValue(oldUsername, out var user)) { return false; } // If the old username does not exist, the update cannot continue.
@@ -80,6 +80,7 @@ public class UserStore
 
     return true;
   }
+  #endregion
 
   #region REMOVE USER (by USERNAME)
   /// <summary>
@@ -92,7 +93,6 @@ public class UserStore
   /// <returns>
   /// True when a user with the specified username existed and was removed. False when no such user was found.
   /// </returns>
-  #endregion
   public bool Remove(string username)
   {
     if (!usersByUsername.TryGetValue(username, out var user))
@@ -106,6 +106,7 @@ public class UserStore
 
     return true;
   }
+  #endregion
 
   #region REMOVE USER (by ID)
   /// <summary>
@@ -118,7 +119,6 @@ public class UserStore
   /// <returns>
   /// True when a user with the specified ID existed and was removed. False when no such user was found.
   /// </returns>
-  #endregion
   public bool Remove(int id)
   {
     if (!usersById.TryGetValue(id, out var user))
@@ -133,6 +133,7 @@ public class UserStore
 
     return true;
   }
+  #endregion
 
   #region GET USER (by USERNAME)
   /// <summary>
@@ -144,12 +145,13 @@ public class UserStore
   /// <returns>
   /// The matching user when found, otherwise null.
   /// </returns>
-  #endregion
+
   public User? GetByUsername(string username)
   {
     usersByUsername.TryGetValue(username, out var user);
     return user;
   }
+  #endregion
 
   #region GET USER (by ID)
   /// <summary>
@@ -161,18 +163,27 @@ public class UserStore
   /// <returns>
   /// The matching user when found, otherwise null.
   /// </returns>
-  #endregion
   public User? GetById(int id)
   {
     usersById.TryGetValue(id, out var user);
     return user;
   }
+  #endregion
 
+  #region GET USER (by SESSION AUTH TOKEN)
+  /// <summary>
+  /// Retrieves the user associated with the given session authentication token.
+  /// </summary>
+  /// <param name="token">The session token issued at login.</param>
+  /// <returns>
+  /// The matching <see cref="User"/> instance if the token exists, otherwise <c>null</c>.
+  /// </returns>
   public User? GetBySessionAuthToken(string token)
   {
     usersBySessionAuthToken.TryGetValue(token, out var user);
     return user;
   }
+  #endregion
 
   #region GET ALL USER[NAMES]
   /// <summary>
@@ -182,12 +193,24 @@ public class UserStore
   /// <returns>
   /// An enumerable sequence of every username in the store.
   /// </returns>
-  #endregion
   public IEnumerable<string> GetAllUsernames()
   {
     return usersByUsername.Keys;
   }
+  #endregion
 
+  #region ASSIGN NEW SESSION AUTH TOKEN
+  /// <summary>
+  /// Generates a new session authentication token for the specified user
+  /// and updates the internal token-to-user mapping accordingly.
+  /// </summary>
+  /// <param name="user">The user who is receiving a new session token.</param>
+  /// <returns>
+  /// The newly generated session authentication token.
+  /// </returns>
+  /// <remarks>
+  /// Any existing token assigned to the user is removed before the new one is created.
+  /// </remarks>
   public string AssignNewSessionAuthToken(User user)
   {
     // Remove old token if one exists
@@ -205,6 +228,6 @@ public class UserStore
 
     return newToken;
   }
-
+  #endregion
 
 }
