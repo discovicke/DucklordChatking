@@ -67,7 +67,8 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
         foreach (var m in messages)
         {
             string sender = string.IsNullOrWhiteSpace(m.Sender) ? "Unknown Duck" : m.Sender;
-            string text = $"{m.Timestamp}  -  {sender} :  {m.Content}";
+            string startText = $"{m.Timestamp} - {sender}:";
+            string text = $"{startText}\n{m.Content}";
             Raylib.DrawTextEx(ResourceLoader.RegularFont, text, 
                 new Vector2(startX, startY), 15, 0.5f, Colors.TextColor);
             startY += lineH;
@@ -128,7 +129,7 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
         {
             Raylib.DrawCircle((int)x + 5, (int)y + 7, 4f, Colors.AccentColor);
             Raylib.DrawTextEx(ResourceLoader.RegularFont, user, 
-                new Vector2(x + 15, y), fontSize, 0.5f, Colors.TextColor);
+                new Vector2(x + 15, y), fontSize, 0.5f, Colors.UiText);
             y += lineH;
         }
 
