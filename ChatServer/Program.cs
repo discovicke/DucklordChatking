@@ -127,8 +127,12 @@ auth.MapPost("/register", (UserDTO dto) =>
 #endregion
 
 #region LIST USERS
-users.MapGet("", () =>
+users.MapGet("", (HttpContext context) =>
 {
+  // 401: authentication required
+  if (!AuthUtils.TryAuthenticate(context.Request, userStore, out var user))
+    return Results.Unauthorized();
+
   var usernames = userStore.GetAllUsernames();
 
   // 500: unexpected storage failure
@@ -147,13 +151,16 @@ users.MapGet("", () =>
   return Results.Ok(usernames);
 })
 .Produces<IEnumerable<string>>(StatusCodes.Status200OK)
+.Produces(StatusCodes.Status401Unauthorized)
 .Produces(StatusCodes.Status204NoContent)
 .Produces(StatusCodes.Status500InternalServerError)
 .WithSummary("List All Usernames")
 .WithDescription(
-    "Returns `200` with a list of usernames when the list contains users. " +
-    "Returns `204` when the list is empty. Returns `500` when the list of usernames cannot be retrieved from storage."
-);
+    "Provides the complete list of registered usernames for authenticated callers. " +
+    "A successful lookup yields a `200` response with the usernames, or `204` when the store is empty. " +
+    "Unauthenticated requests receive `401`, and any internal retrieval failure results in `500`."
+)
+.WithBadge("🔐 Auth Required", BadgePosition.Before, "#ffd966");
 #endregion
 
 #region UPDATE USER CREDENTIALS
