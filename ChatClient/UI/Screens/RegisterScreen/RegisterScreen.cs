@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using ChatClient.Core;
 using ChatClient.UI.Components;
 using Raylib_cs;
 
@@ -6,19 +7,21 @@ namespace ChatClient.UI.Screens;
 
 public class RegisterScreen : ScreenBase<RegisterScreenLayout.LayoutData>
 {
-    private readonly Texture2D logo = Raylib.LoadTexture(@"Resources/DuckLord1.2.png");
-
     private readonly TextField idField = new(new Rectangle(), 
-        Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor, false);
+        Colors.TextFieldUnselected, Colors.TextFieldHovered, Colors.TextColor, 
+        false, false, "RegisterScreen_ID", "Enter registration ID...");
     private readonly TextField userField = new(new Rectangle(), 
-        Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor, false);
+        Colors.TextFieldUnselected, Colors.TextFieldHovered, Colors.TextColor, 
+        false, false, "RegisterScreen_Username", "Choose username...");
     private readonly TextField passField = new(new Rectangle(), 
-        Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor, false, true);
+        Colors.TextFieldUnselected, Colors.TextFieldHovered, Colors.TextColor, 
+        false, true, "RegisterScreen_Password", "Choose password...");
     private readonly TextField passConfirmField = new(new Rectangle(), 
-        Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor, false, true);
+        Colors.TextFieldUnselected, Colors.TextFieldHovered, Colors.TextColor, 
+        false, true, "RegisterScreen_PasswordConfirm", "Confirm password...");
 
     private readonly Button registerButton = new(new Rectangle(), "Register", 
-        Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor);
+        Colors.ButtonDefault, Colors.ButtonHovered, Colors.TextColor);
     private readonly BackButton backButton = new(new Rectangle(10, 10, 100, 30));
 
     public RegisterScreen()
@@ -26,7 +29,7 @@ public class RegisterScreen : ScreenBase<RegisterScreenLayout.LayoutData>
         logic = new RegisterScreenLogic(idField, userField, passField, passConfirmField, registerButton, backButton);
     }
 
-    protected override RegisterScreenLayout.LayoutData CalculateLayout() => RegisterScreenLayout.Calculate(logo.Width);
+    protected override RegisterScreenLayout.LayoutData CalculateLayout() => RegisterScreenLayout.Calculate(ResourceLoader.LogoTexture.Width);
 
     protected override void ApplyLayout(RegisterScreenLayout.LayoutData layout)
     {
@@ -40,22 +43,20 @@ public class RegisterScreen : ScreenBase<RegisterScreenLayout.LayoutData>
 
     public override void RenderContent()
     {
-        Raylib.DrawText("Register ID:", 
-            (int)(layout.IdRect.X - 145), 
-            (int)(layout.IdRect.Y + 5), 
-            15, Colors.TextFieldColor);
-        Raylib.DrawText("New username:", 
-            (int)(layout.UserRect.X - 145), 
-            (int)(layout.UserRect.Y + 5), 
-            15, Colors.TextFieldColor);
-        Raylib.DrawText("New password:", 
-            (int)(layout.PassRect.X - 145), 
-            (int)(layout.PassRect.Y + 5), 
-            15, Colors.TextFieldColor);
-        Raylib.DrawText("Confirm password:", 
-            (int)(layout.PassConfirmRect.X - 165), 
-            (int)(layout.PassConfirmRect.Y + 5), 
-            15, Colors.TextFieldColor);
+        const float labelFont = 15;
+        
+        Raylib.DrawTextEx(ResourceLoader.RegularFont, "Register ID:", 
+            new Vector2(layout.IdRect.X - 145, layout.IdRect.Y + 5), 
+            labelFont, 0.5f, Colors.TextColor);
+        Raylib.DrawTextEx(ResourceLoader.RegularFont, "New username:", 
+            new Vector2(layout.UserRect.X - 145, layout.UserRect.Y + 5), 
+            labelFont, 0.5f, Colors.TextColor);
+        Raylib.DrawTextEx(ResourceLoader.RegularFont, "New password:", 
+            new Vector2(layout.PassRect.X - 145, layout.PassRect.Y + 5), 
+            labelFont, 0.5f, Colors.TextColor);
+        Raylib.DrawTextEx(ResourceLoader.RegularFont, "Confirm password:", 
+            new Vector2(layout.PassConfirmRect.X - 165, layout.PassConfirmRect.Y + 5), 
+            labelFont, 0.5f, Colors.TextColor);
 
         idField.Draw();
         userField.Draw();
@@ -65,7 +66,7 @@ public class RegisterScreen : ScreenBase<RegisterScreenLayout.LayoutData>
         registerButton.Draw();
         backButton.Draw();
 
-        Raylib.DrawTextureEx(logo, 
+        Raylib.DrawTextureEx(ResourceLoader.LogoTexture, 
             new Vector2(layout.LogoX, layout.LogoY), 
             0f, layout.LogoScale, Color.White);
     }

@@ -1,4 +1,4 @@
-using Raylib_cs;
+﻿using Raylib_cs;
 
 namespace ChatClient.UI.Screens
 {
@@ -7,7 +7,11 @@ namespace ChatClient.UI.Screens
     {
         protected TLayout layout;
         private bool initialized = false;
-        protected IScreenLogic logic;
+        protected IScreenLogic? logic;
+        
+        // Track last window size to detect resize
+        private int lastWidth = 0;
+        private int lastHeight = 0;
 
         // Called once when the screen is first shown to compute positions/sizes
         protected abstract TLayout CalculateLayout();
@@ -26,18 +30,23 @@ namespace ChatClient.UI.Screens
                 layout = CalculateLayout();
                 ApplyLayout(layout);
                 initialized = true;
+                
+                lastWidth = Raylib.GetScreenWidth();
+                lastHeight = Raylib.GetScreenHeight();
+            }
+            
+            // Detect resize and recalculate layout
+            int w = Raylib.GetScreenWidth();
+            int h = Raylib.GetScreenHeight();
+            if (w != lastWidth || h != lastHeight)
+            {
+                lastWidth = w;
+                lastHeight = h;
+                RecalculateIfNeeded();
             }
 
             logic?.HandleInput();
-            RenderFrame();
-        }
-
-        private void RenderFrame()
-        {
-            Raylib.BeginDrawing();
-            Raylib.ClearBackground(Colors.BackgroundColor);
             RenderContent();
-            Raylib.EndDrawing();
         }
 
         // Optional helper to re-calc layout when window size changes

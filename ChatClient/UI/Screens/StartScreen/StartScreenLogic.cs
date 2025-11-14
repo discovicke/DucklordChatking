@@ -1,4 +1,5 @@
-using ChatClient.Core;
+﻿using ChatClient.Core;
+using ChatClient.Data;
 using ChatClient.UI.Components;
 using Raylib_cs;
 
@@ -12,8 +13,22 @@ namespace ChatClient.UI.Screens
         Button registerButton,
         OptionsButton optionsButton) : IScreenLogic
     {
+        // DEV MODE: Set to false before production release
+        private const bool DEV_MODE_ENABLED = true;
+        
+        private readonly UserAuth userAuth = new UserAuth(ServerConfig.CreateHttpClient());
         public void HandleInput()
         {
+            // DEV MODE: Ctrl+Shift+D for instant dev login
+            if (DEV_MODE_ENABLED && 
+                Raylib.IsKeyDown(KeyboardKey.LeftControl) && 
+                Raylib.IsKeyDown(KeyboardKey.LeftShift) && 
+                Raylib.IsKeyPressed(KeyboardKey.D))
+            {
+                DevLogin();
+                return;
+            }
+
             userField.Update();
             passwordField.Update();
 
@@ -35,30 +50,60 @@ namespace ChatClient.UI.Screens
 
         private void Login()
         {
-            // TODO: Add authentication logic here
-            // if (string.IsNullOrWhiteSpace(userField.Text)) return;
-            
+            string username = userField.Text.Trim();
+            string password = passwordField.Text;
+
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            {
+                Log.Info("[StartScreenLogic] Login failed - Username or password empty");
+                return;
+            }
+
+            Log.Info($"[StartScreenLogic] Login attempt - Username: '{username}'");
+
+            // Authenticate with server
+            bool success = userAuth.Login(username, password);
+
+            if (success)
+            {
+                Log.Success($"[StartScreenLogic] Login successful for user '{username}'");
+                AppState.LoggedInUsername = username; // Store logged in user
+                AppState.CurrentScreen = Screen.Chat;
+                ClearFields();
+            }
+            else
+            {
+                Log.Error($"[StartScreenLogic] Login failed for user '{username}' - Invalid credentials");
+                // TODO: Show error message to user in UI
+            }
+        }
+
+        // DEV MODE: Quick login for development (bypasses server authentication)
+        private void DevLogin()
+        {
+            Log.Info("[StartScreenLogic] DEV MODE: Quack login activated (Ctrl+Shift+D)");
+            AppState.LoggedInUsername = "DevUser";
             AppState.CurrentScreen = Screen.Chat;
-            Log.Info("User logged in, switching to chat screen");
             ClearFields();
         }
 
         private void NavigateToRegister()
         {
+            Log.Info("[StartScreenLogic] Navigating to register screen");
             AppState.CurrentScreen = Screen.Register;
-            Log.Info("User wants to register, switching to register screen");
             ClearFields();
         }
 
         private void NavigateToOptions()
         {
+            Log.Info("[StartScreenLogic] Navigating to options screen");
             AppState.CurrentScreen = Screen.Options;
-            Log.Info("User pressed options / Ducktions screen");
             ClearFields();
         }
 
         private void ClearFields()
         {
+            Log.Info("[StartScreenLogic] Clearing all fields");
             userField.Clear();
             passwordField.Clear();
         }

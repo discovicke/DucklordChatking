@@ -9,6 +9,7 @@ namespace ChatClient.UI.Components
         private string Text;
         private Color NormalColor;
         private Color HoverColorButton;
+        private Color PressedColorButton;
         private Color TextColorButton;
         private float Rounds = 0.3f;
         private int Segments = 10;
@@ -19,24 +20,76 @@ namespace ChatClient.UI.Components
             Text = text;
             NormalColor = normalColor;
             HoverColorButton = hoverColor;
+            PressedColorButton = Colors.ButtonPressed; // Add pressed state
             TextColorButton = textColor;
+        }
+
+        // Simplified constructor using Colors.cs defaults
+        public Button(Rectangle rect, string text)
+        {
+            Rect = rect;
+            Text = text;
+            NormalColor = Colors.ButtonDefault;
+            HoverColorButton = Colors.ButtonHovered;
+            PressedColorButton = Colors.ButtonPressed;
+            TextColorButton = Colors.TextColor;
         }
 
         public override void Draw()
         {
-            var fill = MouseInput.IsHovered(Rect) ? HoverColorButton : NormalColor;
+            bool isHovered = MouseInput.IsHovered(Rect);
+            bool isPressed = isHovered && Raylib.IsMouseButtonDown(MouseButton.Left);
+            
+            // Determine fill color based on state
+            Color fill;
+            if (isPressed)
+                fill = PressedColorButton;
+            else if (isHovered)
+                fill = HoverColorButton;
+            else
+                fill = NormalColor;
+            
+            // Draw button background
             Raylib.DrawRectangleRounded(Rect, Rounds, Segments, fill);
 
-            if (MouseInput.IsHovered(Rect))
+            // Draw border/outline - accent color on hover, outline when pressed
+            if (isPressed)
             {
-                Raylib.DrawRectangleRoundedLinesEx(Rect, Rounds, Segments, 2, TextColorButton);
+                Raylib.DrawRectangleRoundedLinesEx(Rect, Rounds, Segments, 3, Colors.OutlineColor);
+            }
+            else if (isHovered)
+            {
+                Raylib.DrawRectangleRoundedLinesEx(Rect, Rounds, Segments, 3, Colors.AccentColor);
+            }
+            else
+            {
+                Raylib.DrawRectangleRoundedLinesEx(Rect, Rounds, Segments, 2, Colors.OutlineColor);
             }
 
-            int fontSize = 20;
-            int textWidth = Raylib.MeasureText(Text, fontSize);
-            int x = (int)(Rect.X + (Rect.Width - textWidth) / 2);
-            int y = (int)(Rect.Y + (Rect.Height - fontSize) / 2);
-            Raylib.DrawText(Text, x, y, fontSize, TextColorButton);
+            // Dynamic font size - scale down if text doesn't fit
+            const int maxFontSize = 20;
+            const int minFontSize = 8;
+            const int padding = 10; // Padding inside button
+            
+            int fontSize = maxFontSize;
+            
+            // Measure text with custom BoldFont and reduced spacing (0.5)
+            Vector2 textSize = Raylib.MeasureTextEx(ResourceLoader.BoldFont, Text, fontSize, 0.5f);
+            float availableWidth = Rect.Width - (padding * 2);
+            float availableHeight = Rect.Height - (padding * 2);
+            
+            // Scale down font if text is too wide
+            while (fontSize > minFontSize && (textSize.X > availableWidth || textSize.Y > availableHeight))
+            {
+                fontSize--;
+                textSize = Raylib.MeasureTextEx(ResourceLoader.BoldFont, Text, fontSize, 0.5f);
+            }
+            
+            // Center text in button
+            float x = Rect.X + (Rect.Width - textSize.X) / 2;
+            float y = Rect.Y + (Rect.Height - textSize.Y) / 2;
+            
+            Raylib.DrawTextEx(ResourceLoader.BoldFont, Text, new Vector2(x, y), fontSize, 0.5f, TextColorButton);
         }
 
         public bool IsHovered() => MouseInput.IsHovered(Rect);
@@ -45,9 +98,23 @@ namespace ChatClient.UI.Components
         {
             bool hovered = IsHovered();
             bool pressed = Raylib.IsMouseButtonPressed(MouseButton.Left);
-            return hovered && pressed;
+            bool clicked = hovered && pressed;
+            
+            if (clicked)
+            {
+                Log.Info($"[Button] '{Text}' clicked");
+
+                // Duck sound
+                Raylib.PlaySound(ResourceLoader.ButtonSound);
+
+            }
+
+            return clicked;
         }
 
         public override void Update() { }
     }
+
+
+    // TODO: add button for exit application
 }

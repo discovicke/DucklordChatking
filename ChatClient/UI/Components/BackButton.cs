@@ -1,4 +1,4 @@
-using ChatClient.Core;
+﻿using ChatClient.Core;
 using Raylib_cs;
 
 namespace ChatClient.UI.Components
@@ -6,24 +6,17 @@ namespace ChatClient.UI.Components
     public class BackButton : Button
     {
         public BackButton(Rectangle rect)
-            : base(rect, "← Back", Colors.TextFieldColor, Colors.HoverColor, Colors.TextColor)
+            : base(rect, "← Back", Colors.ButtonDefault, Colors.ButtonHovered, Colors.TextColor)
         {
-        }
-
-        public override void Draw()
-        {
-            if (AppState.CanGoBack)
-            {
-                base.Draw();
-            }
         }
 
         public override void Update()
         {
             if (AppState.CanGoBack && IsClicked())
             {
+                Log.Info($"[BackButton] Navigating back from {AppState.CurrentScreen}");
                 AppState.GoBack();
-                Log.Info($"Navigated back to {AppState.CurrentScreen}");
+                Log.Info($"[BackButton] Navigated to {AppState.CurrentScreen}");
             }
         }
     }
