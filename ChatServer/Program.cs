@@ -159,7 +159,7 @@ users.MapGet("", (HttpContext context) =>
     "A successful lookup yields a `200` response with the usernames, or `204` when the store is empty. " +
     "Unauthenticated requests receive `401`, and any internal retrieval failure results in `500`."
 )
-.WithBadge("🔐 Auth Required", BadgePosition.Before, "#ffd966");
+.WithBadge("Auth Required 🔐", BadgePosition.Before, "#ffec72");
 #endregion
 
 #region UPDATE USER CREDENTIALS
@@ -204,7 +204,7 @@ users.MapPost("/update", (HttpContext context, UpdateUserDTO dto) =>
     "Successful updates return `204`. Conflicts in username availability yield `409`, " +
     "and callers without the right permissions receive `403`."
 )
-.WithBadge("🔐 Auth Required", BadgePosition.Before, "#ffd966");
+.WithBadge("Auth Required 🔐", BadgePosition.Before, "#ffec72");
 #endregion
 
 #region DELETE USER
@@ -230,7 +230,7 @@ users.MapPost("/delete", (HttpContext context, UserDTO dto) =>
 
   // 403: authorization (self or admin)
   if (!AuthRules.IsSelfOrAdmin(caller, dto.Username))
-    return Results.Forbid();
+    return Results.StatusCode(StatusCodes.Status403Forbidden);
 
   // Attempt deletion
   var deleted = userStore.Remove(dto.Username);
@@ -255,7 +255,7 @@ users.MapPost("/delete", (HttpContext context, UserDTO dto) =>
     "A successful deletion returns `204`. Invalid credentials result in `401`, insufficient permissions in `403`, " +
     "and unexpected storage failures in `500`."
 )
-.WithBadge("🔐 Auth Required", BadgePosition.Before, "#ffd966");
+.WithBadge("Auth Required 🔐", BadgePosition.Before, "#ffec72");
 #endregion
 
 #region SEND MESSAGE
@@ -274,7 +274,7 @@ messages.MapPost("/send", async (HttpContext context, MessageDTO dto, IHubContex
   // 403: sender must match authenticated user
   if (!AuthRules.IsSelf(caller, dto.Sender))
   {
-    return Results.Forbid();
+    return Results.StatusCode(StatusCodes.Status403Forbidden);
   }
 
   // Attempt to store the message
@@ -304,7 +304,7 @@ messages.MapPost("/send", async (HttpContext context, MessageDTO dto, IHubContex
     "Missing fields lead to `400`, unauthenticated attempts receive `401`, and a sender mismatch produces `403`. " +
     "Unexpected storage issues return `500`."
 )
-.WithBadge("🔐 Auth Required", BadgePosition.Before, "#ffd966");
+.WithBadge("Auth Required 🔐", BadgePosition.Before, "#ffec72");
 #endregion
 
 #region GET MESSAGE HISTORY (WITH OPTIONAL TAKE PARAMETER)
@@ -338,7 +338,7 @@ messages.MapGet("/history", (HttpContext context, int? take) =>
    "A successful retrieval returns `200` with the messages, while invalid query values result in `400`. " +
    "Unauthenticated requests receive `401`."
 )
-.WithBadge("🔐 Auth Required", BadgePosition.Before, "#ffd966");
+.WithBadge("Auth Required 🔐", BadgePosition.Before, "#ffec72");
 #endregion
 
 #region CLEAR MESSAGE HISTORY
@@ -378,7 +378,7 @@ messages.MapPost("/clear", (HttpContext context) =>
     "while callers lacking administrative privileges receive `403`. " +
     "Unexpected storage failures result in `500`."
 )
-.WithBadge("🔐 Admin Only", BadgePosition.Before, "#ff8585");
+.WithBadge("Admin Only 🔐", BadgePosition.Before, "#707fff");
 #endregion
 
 #region HEALTH CHECK
