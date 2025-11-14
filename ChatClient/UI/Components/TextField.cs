@@ -42,10 +42,10 @@ namespace ChatClient.UI.Components
             var fill = MouseInput.IsHovered(Rect) ? HoverColor : BackgroundColor;
             if (IsSelected)
                 fill = HoverColor;
-            Raylib.DrawRectangleRounded(Rect, 0.3f, 10, fill);
+            Raylib.DrawRectangleRounded(Rect, 0.1f, 10, fill);
 
             // Text field outline
-            Raylib.DrawRectangleRoundedLinesEx(Rect, 0.3f, 10, 1, Color.Black);
+            Raylib.DrawRectangleRoundedLinesEx(Rect, 0.1f, 10, 1, Color.Black);
 
 
             renderer.Draw(Text, cursor, IsSelected);

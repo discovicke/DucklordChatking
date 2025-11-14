@@ -7,6 +7,7 @@ namespace ChatClient.UI.Screens;
 
 public class ChatScreenLogic(
     TextField inputField,
+    TextField chatField,
     Button sendButton,
     BackButton backButton,
     Action<string> onSend
