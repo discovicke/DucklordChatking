@@ -24,6 +24,10 @@ namespace ChatClient.UI.Components
         private readonly TextRenderer renderer;
         private bool backspaceHandledThisFrame;
 
+        // Undo stack + clipboard helper
+        private readonly Stack<string> undoStack = new();
+        private const int MaxUndoEntries = 100;
+        private readonly ClipboardActions clipboardActions;
 
         public TextField(Rectangle rect, Color backgroundColor, Color hoverColor, Color textColor,
             bool allowMultiline = false, bool isPassword = false, string fieldName = "TextField", string placeholderText = "")
@@ -37,6 +41,42 @@ namespace ChatClient.UI.Components
 
             cursor = new TextCursor();
             renderer = new TextRenderer(rect, textColor, isPassword, allowMultiline);
+
+            // Clipboard helper to inject delegates
+            var ctx = new ClipboardContext
+            {
+                GetText = () => Text,
+                SetText = s => Text = s,
+                InsertText = s => InsertText(s),
+                SaveStateForUndo = SaveStateForUndo,
+                UndoStack = undoStack,
+                ResetCursorToStart = () => cursor.Position = 0,
+                ResetCursorBlink = () => cursor.ResetBlink(),
+                FieldName = FieldName
+            };
+            clipboardActions = new ClipboardActions(ctx);
+
+
+        }
+
+        private void SaveStateForUndo()
+        {
+            // snapshot current text
+            string snapshot = Text ?? string.Empty;
+
+            // avoid pushing duplicate consecutive states
+            if (undoStack.Count > 0 && undoStack.Peek() == snapshot) return;
+
+            // if at capacity, remove the oldest entry (bottom of the stack)
+            if (undoStack.Count >= MaxUndoEntries)
+            {
+                var keep = undoStack.Reverse().Skip(1).Reverse().ToArray();
+                undoStack.Clear();
+                foreach (var item in keep) undoStack.Push(item);
+            }
+
+            undoStack.Push(snapshot);
+            Log.Info($"[{FieldName}] Saved state for undo - Stack size: {undoStack.Count}");
         }
 
         // TODO: Manage corner roundness
@@ -50,7 +90,7 @@ namespace ChatClient.UI.Components
                 fill = Colors.TextFieldHovered;
             else
                 fill = Colors.TextFieldUnselected;
-            
+
             // Draw background
             Raylib.DrawRectangleRounded(Rect, 0.1f, 10, fill);
 
@@ -71,10 +111,10 @@ namespace ChatClient.UI.Components
                 // Draw placeholder text (always shown when text is empty) - smaller font size
                 float textX = Rect.X + 4;
                 float textY = Rect.Y + 4;
-                Raylib.DrawTextEx(ResourceLoader.RegularFont, PlaceholderText, 
+                Raylib.DrawTextEx(ResourceLoader.RegularFont, PlaceholderText,
                     new System.Numerics.Vector2(textX, textY), 18, 0.5f, Colors.PlaceholderText);
             }
-            
+
             // Always draw actual text and cursor if there is text or field is selected
             if (!string.IsNullOrEmpty(Text) || IsSelected)
             {
@@ -104,12 +144,12 @@ namespace ChatClient.UI.Components
             }
 
             if (!IsSelected) return;
-            
+
             cursor.Update(Raylib.GetFrameTime());
 
             HandleTextInput();
             HandleNavigation();
-                
+
         }
 
         private void HandleTextInput()
@@ -144,10 +184,12 @@ namespace ChatClient.UI.Components
                 backspaceHandledThisFrame = false;
             }
 
+            clipboardActions.Process();
+
             // Clipboard / copy-paste / cut handling
             bool ctrlDown = Raylib.IsKeyDown(KeyboardKey.LeftControl) || Raylib.IsKeyDown(KeyboardKey.RightControl);
 
-       
+
             // Copy: Ctrl + C
             if (ctrlDown && Raylib.IsKeyPressed(KeyboardKey.C))
             {
@@ -163,7 +205,7 @@ namespace ChatClient.UI.Components
             }
 
             // Paste: Ctrl + V
-           
+
 
             if (ctrlDown && Raylib.IsKeyPressed(KeyboardKey.V))
             {
@@ -243,7 +285,7 @@ namespace ChatClient.UI.Components
             Text = Text.Insert(cursor.Position, s);
             cursor.Position += s.Length;
             cursor.ResetBlink();
-            
+
             string displayChar = s == "\n" ? "\\n" : s;
             Log.Info($"[{FieldName}] Text inserted: '{displayChar}' - Current text: '{Text.Replace("\n", "\\n")}'");
         }
@@ -257,7 +299,7 @@ namespace ChatClient.UI.Components
                 Text = Text.Remove(removeIndex, 1);
                 cursor.Position = removeIndex;
                 cursor.ResetBlink();
-                
+
                 string displayChar = deletedChar == '\n' ? "\\n" : deletedChar.ToString();
                 Log.Info($"[{FieldName}] Character deleted: '{displayChar}' - Current text: '{Text.Replace("\n", "\\n")}'");
             }
@@ -268,7 +310,7 @@ namespace ChatClient.UI.Components
             return (Raylib.IsKeyDown(KeyboardKey.LeftShift) || Raylib.IsKeyDown(KeyboardKey.RightShift))
                    && Raylib.IsKeyPressed(KeyboardKey.Enter);
         }
-        
+
         public void SetRect(Rectangle rect)
         {
             Rect = rect;
