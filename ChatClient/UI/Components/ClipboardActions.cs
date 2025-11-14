@@ -22,13 +22,13 @@ namespace ChatClient.UI.Components
     // Keeps ClipboardActions ctor simple and the dependency surface explicit.
     public sealed record ClipboardContext
     {
-        public Func<string>? GetText { get; init; }
-        public Action<string>? SetText { get; init; }
-        public Action<string>? InsertText { get; init; }
-        public Action? SaveStateForUndo { get; init; }
-        public Stack<string>? UndoStack { get; init; }
-        public Action? ResetCursorToStart { get; init; }
-        public Action? ResetCursorBlink { get; init; }
+        public Func<string> GetText { get; init; } = default!;
+        public Action<string> SetText { get; init; } = default!;
+        public Action<string> InsertText { get; init; } = default!;
+        public Action SaveStateForUndo { get; init; } = default!;
+        public Stack<string> UndoStack { get; init; } = default!;
+        public Action ResetCursorToStart { get; init; } = default!;
+        public Action ResetCursorBlink { get; init; } = default!;
         public string FieldName { get; init; } = "TextField";
     }
 
@@ -65,12 +65,88 @@ namespace ChatClient.UI.Components
             else if (Raylib.IsKeyPressed(KeyboardKey.X)) action = ClipboardAction.Cut;
             else if (Raylib.IsKeyPressed(KeyboardKey.Z)) action = ClipboardAction.Undo;
 
+            switch (action)
+            {
+                case ClipboardAction.Copy:
+                    try
+                    {
+                        Raylib.SetClipboardText(ctx.GetText() ?? string.Empty);
+                        Log.Info($"[{ctx.FieldName}] Copied to clipboard - Length: {(ctx.GetText()?.Length ?? 0)}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Info($"[{ctx.FieldName}] Copy failed: {ex.Message}");
+                    }
+                    break;
 
+                case ClipboardAction.Paste:
+                    try
+                    {
+                        string clipboard = Raylib.GetClipboardText_();
+                        if (!string.IsNullOrEmpty(clipboard))
+                        {
+                            ctx.SaveStateForUndo();
+                            ctx.InsertText(clipboard);
+                            Log.Info($"[{ctx.FieldName}] Pasted from clipboard - Text length: {clipboard.Length}");
+                        }
+                        else
+                        {
+                            Log.Info($"[{ctx.FieldName}] Clipboard empty on paste");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Info($"[{ctx.FieldName}] Paste failed: {ex.Message}");
+                    }
+                    break;
 
+                case ClipboardAction.Cut:
+                    try
+                    {
+                        var current = ctx.GetText();
+                        if (!string.IsNullOrEmpty(current))
+                        {
+                            ctx.SaveStateForUndo();
+                            Raylib.SetClipboardText(current);
+                            Log.Info($"[{ctx.FieldName}] Cut to clipboard - Previous text: '{current.Replace("\n", "\\n")}'");
+                            ctx.SetText(string.Empty);
+                            ctx.ResetCursorToStart();
+                            ctx.ResetCursorBlink();
+                        }
+                        else
+                        {
+                            Log.Info($"[{ctx.FieldName}] Cut requested but field is empty");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Info($"[{ctx.FieldName}] Cut failed: {ex.Message}");
+                    }
+                    break;
+
+                case ClipboardAction.Undo:
+                    if (ctx.UndoStack!.Count > 0)
+                    {
+                        string previous = ctx.UndoStack.Pop();
+                        ctx.SetText(previous ?? string.Empty);
+                        ctx.ResetCursorBlink();
+                        Log.Info($"[{ctx.FieldName}] Undo performed - Current text: '{(previous ?? string.Empty).Replace("\n", "\\n")}'");
+                    }
+                    else
+                    {
+                        Log.Info($"[{ctx.FieldName}] Undo requested but no history");
+                    }
+                    break;
+
+                case ClipboardAction.None:
+                default:
+                    break;
+
+            }
         }
+
+
     }
-
-
 }
 
 
