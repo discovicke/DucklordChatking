@@ -60,5 +60,11 @@ public class StartScreen : ScreenBase<StartScreenLayout.LayoutData>
             new Vector2(layout.LogoX, layout.LogoY), 
             0f, layout.LogoScale, Color.White);
 
+        // DEV MODE indicator (remove before production)
+        #if DEBUG
+        int screenHeight = (int)layout.ScreenHeight;
+        Raylib.DrawText("DEV: Ctrl+Shift+D = Quack Login", 
+            10, screenHeight - 40, 10, Colors.SubtleText);
+        #endif
     }
 }

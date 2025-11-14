@@ -17,8 +17,7 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
         Colors.ButtonDefault, Colors.ButtonHovered, Colors.TextColor);
     private readonly BackButton backButton = new(new Rectangle(10, 10, 100, 30));
 
-    private readonly MessageHandler? messageSender = new
-        (new HttpClient { BaseAddress = new System.Uri("https://ducklord-server.onrender.com/") });
+    private readonly MessageHandler? messageSender = new(ServerConfig.CreateHttpClient());
     private List<MessageDTO> messages = new();
     private double lastUpdateTime = 0;
 
@@ -83,6 +82,14 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
     private void SendMessage(string text)
     {
         if (messageSender == null) return;
+        
+        // Use logged in username or default to "Anonymous"
+        string sender = !string.IsNullOrEmpty(AppState.LoggedInUsername) 
+            ? AppState.LoggedInUsername 
+            : "Anonymous";
+        
+        Log.Info($"[ChatScreen] Sending message as '{sender}': {text}");
+        
         bool ok = messageSender.SendMessage(text);
         var list = messageSender.ReceiveHistory();
         if (ok && list != null && list.Any())
