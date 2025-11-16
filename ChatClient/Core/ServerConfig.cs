@@ -7,10 +7,10 @@ namespace ChatClient.Core;
 
 public static class ServerConfig
 {
-    // private const string SERVER_URL = "https://ducklord-server.onrender.com/";
+    private const string SERVER_URL = "https://ducklord-server.onrender.com/";
 
     // Alternative URLs for easy switching if server down:
-    private const string SERVER_URL = "http://localhost:5201/";
+    // private const string SERVER_URL = "http://localhost:5201/";
 
     private static readonly HttpClient sharedClient = new()
     {
