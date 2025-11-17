@@ -32,6 +32,8 @@ namespace ChatClient.UI.Components
         private const int MaxUndoEntries = 100;
         private readonly ClipboardActions clipboardActions;
 
+        private bool movedThisFrame = false;
+
         public TextField(Rectangle rect, Color backgroundColor, Color hoverColor, Color textColor,
             bool allowMultiline = false, bool isPassword = false, string fieldName = "TextField", string placeholderText = "")
         {
@@ -127,6 +129,7 @@ namespace ChatClient.UI.Components
 
         public override void Update()
         {
+
             if (MouseInput.IsLeftClick(Rect))
             {
                 if (!IsSelected)
@@ -152,6 +155,7 @@ namespace ChatClient.UI.Components
 
             HandleTextInput();
             HandleNavigation();
+            
 
         }
 
@@ -189,33 +193,52 @@ namespace ChatClient.UI.Components
 
 
             clipboardActions.Process();
-            
+
 
         }
 
-        // TODO Double jump on singleline text, dont know why... Bool as backspace maybe?
+        private void TryPress(KeyboardKey key, Action action)
+        {
+            if (Raylib.IsKeyPressed(key))
+            {
+                action();
+            }
+        }
+
         private void HandleNavigation()
         {
-            if (Raylib.IsKeyPressed(KeyboardKey.Left) || Raylib.IsKeyPressedRepeat(KeyboardKey.Left))
-            {
-                cursor.MoveLeft(Text.Length);
-            }
-
-            if (Raylib.IsKeyPressed(KeyboardKey.Right) || Raylib.IsKeyPressedRepeat(KeyboardKey.Right))
-            {
-                cursor.MoveRight(Text.Length);
-            }
-
-            if (Raylib.IsKeyPressed(KeyboardKey.Home))
-            {
-                cursor.MoveToStart();
-            }
-
-            if (Raylib.IsKeyPressed(KeyboardKey.End))
-            {
-                cursor.MoveToEnd(Text.Length);
-            }
+            TryPress(KeyboardKey.Left, () => cursor.MoveLeft(Text.Length));
+            TryPress(KeyboardKey.Right, () => cursor.MoveRight(Text.Length));
+            TryPress(KeyboardKey.Home, () => cursor.MoveToStart());
+            TryPress(KeyboardKey.End, () => cursor.MoveToEnd(Text.Length));
         }
+        
+
+
+        // TODO Double jump on singleline text, dont know why... Bool as backspace maybe?
+       
+        //private void HandleNavigation()
+        //{
+        //    if (Raylib.IsKeyPressed(KeyboardKey.Left) || Raylib.IsKeyPressedRepeat(KeyboardKey.Left))
+        //    {
+        //        cursor.MoveLeft(Text.Length);
+        //    }
+        //
+        //    if (Raylib.IsKeyPressed(KeyboardKey.Right) || Raylib.IsKeyPressedRepeat(KeyboardKey.Right))
+        //    {
+        //        cursor.MoveRight(Text.Length);
+        //    }
+        //
+        //    if (Raylib.IsKeyPressed(KeyboardKey.Home))
+        //    {
+        //        cursor.MoveToStart();
+        //    }
+        //
+        //    if (Raylib.IsKeyPressed(KeyboardKey.End))
+        //    {
+        //        cursor.MoveToEnd(Text.Length);
+        //    }
+        //}
 
         private void InsertText(string s)
         {
@@ -263,7 +286,6 @@ namespace ChatClient.UI.Components
         }
         // TODO: Mouse click to get position in text
         // TODO: Crtl backspace to  delete one word
-        // TODO: Scroll logicZ
         // TODO: Font?
     }
 }
