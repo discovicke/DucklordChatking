@@ -75,38 +75,17 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
 
     public override void RenderContent()
     {
-        // SAFETY GUARD:
-        // The ChatScreen can still receive a final RenderContent() call during or
-        // immediately after a screen transition. Without this guard, that extra render
-        // frame would re-trigger polling logic even after the user has left the chat,
-        // causing a new polling task to start in the background.
-        // Checking that the current screen is still Chat ensures that no rendering or
-        // background tasks continue after navigating away.
-        if (AppState.CurrentScreen != Screen.Chat)
-            return;
+        if (!CanRender()) return;
 
         // 1. Make sure chat is initialized
-        if (!hasLoadedInitialMessageHistory)
-        {
-            _ = LoadChatHistoryAsync();
-            return;
-        }
+        if (!EnsureHistoryLoaded()) return;
 
         // 2. Start polling only after initialization
-        if (!isPolling && layout.ChatRect.Width > 0)
-        {
-            isPolling = true;
-            pollingCts = new CancellationTokenSource();
-            _ = Task.Run(() => PollMessagesAsync(pollingCts.Token));
-        }
+        StartPollingIfNeeded();
 
         // 3. Handle incoming queued messages (unchanged)
-        while (incomingMessages.TryDequeue(out var msg))
-        {
-            messages.Add(msg);
-            latestReceivedMessageId = Math.Max(latestReceivedMessageId, msg.Id);
-            chatMessageBubbles.Add(new ChatMessage(msg, layout.ChatRect.Width - 20));
-        }
+        ProcessIncomingMessages();
+
 
         // Logo
         Raylib.DrawTextureEx(ResourceLoader.LogoTexture,
@@ -251,8 +230,6 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
     /// </summary>
     private async void SendMessageAsync(string text)
     {
-        if (messageHandler == null) return;
-
         string sender = !string.IsNullOrEmpty(AppState.LoggedInUsername)
             ? AppState.LoggedInUsername
             : "Anonymous Duck";
@@ -337,4 +314,58 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
         }
     }
     #endregion
+
+    #region Methods: Render Pipeline Helpers
+    /// <summary>
+    /// Ensures RenderContent() only runs while the Chat screen is active.
+    /// Prevents accidental rendering during or after a screen transition,
+    /// which would otherwise restart polling or create message bubbles
+    /// after the user has left the chat.
+    /// </summary>
+    private static bool CanRender() => AppState.CurrentScreen == Screen.Chat;
+
+    /// <summary>
+    /// Loads recent chat history the first time the screen renders.
+    /// If history is not yet available, triggers an async load and
+    /// halts rendering for this frame.
+    /// </summary>
+    private bool EnsureHistoryLoaded()
+    {
+        if (hasLoadedInitialMessageHistory)
+            return true;
+
+        _ = LoadChatHistoryAsync();
+        return false;
+    }
+
+    /// <summary>
+    /// Starts the background polling loop once the layout is ready
+    /// and history has been loaded. Ensures polling is only started once.
+    /// </summary>
+    private void StartPollingIfNeeded()
+    {
+        if (isPolling || layout.ChatRect.Width <= 0)
+            return;
+
+        isPolling = true;
+        pollingCts = new CancellationTokenSource();
+        _ = Task.Run(() => PollMessagesAsync(pollingCts.Token));
+    }
+
+    /// <summary>
+    /// Moves any messages retrieved by the background polling loop
+    /// into the main message lists and converts them into renderable
+    /// chat bubbles for the UI.
+    /// </summary>
+    private void ProcessIncomingMessages()
+    {
+        while (incomingMessages.TryDequeue(out var msg))
+        {
+            messages.Add(msg);
+            latestReceivedMessageId = Math.Max(latestReceivedMessageId, msg.Id);
+            chatMessageBubbles.Add(new ChatMessage(msg, layout.ChatRect.Width - 20));
+        }
+    }
+    #endregion
+
 }
