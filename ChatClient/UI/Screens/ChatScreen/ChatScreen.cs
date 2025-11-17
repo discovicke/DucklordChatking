@@ -62,6 +62,21 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
 
     public override void RenderContent()
     {
+// Start polling only once layout is valid
+        if (!pollingStarted && layout.ChatRect.Width > 0)
+        {
+            pollingStarted = true;
+            cts = new CancellationTokenSource();
+            _ = Task.Run(() => PollMessagesAsync(cts.Token));
+        }
+
+        // Pull messages from queue and create chat bubbles
+        while (incomingMessages.TryDequeue(out var msg))
+        {
+            messages.Add(msg);
+            lastMessageId = Math.Max(lastMessageId, msg.Id);
+            chatMessageBubbles.Add(new ChatMessage(msg, layout.ChatRect.Width - 20));
+        }
 
         // Logo
         Raylib.DrawTextureEx(ResourceLoader.LogoTexture,
