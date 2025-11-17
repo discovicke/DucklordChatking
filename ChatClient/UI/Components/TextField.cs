@@ -122,7 +122,6 @@ namespace ChatClient.UI.Components
 
         public override void Update()
         {
-            movedThisFrame = false;
 
             if (MouseInput.IsLeftClick(Rect))
             {
