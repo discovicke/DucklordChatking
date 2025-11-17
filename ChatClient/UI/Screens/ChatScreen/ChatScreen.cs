@@ -70,22 +70,6 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
         // Chat window background
         Raylib.DrawRectangleRounded(layout.ChatRect, 0.08f, 10, Colors.TextFieldUnselected);
         Raylib.DrawRectangleRoundedLinesEx(layout.ChatRect, 0.08f, 10, 1, Colors.OutlineColor);
-
-        // Pull history ~1/s
-        double t = Raylib.GetTime();
-        if (t - lastUpdateTime >= 1.0)
-        {
-            lastUpdateTime = t;
-            var list = messageHandler?.ReceiveHistory();
-            messageHandler.SendHeartbeat();
-            if (list != null && list.Any())
-            {
-                messages = list.ToList();
-                chatMessageBubbles = messages
-                    .Select(m => new ChatMessage(m, layout.ChatRect.Width - 20))
-                    .ToList();
-            }
-        }
         
         // Draw messages
         float totalChatHeight = chatMessageBubbles.Sum(m => m.Height + 8f);
