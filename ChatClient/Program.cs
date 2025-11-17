@@ -1,10 +1,9 @@
-﻿using ChatClient.Core;
-using ChatClient.Data;
-using ChatClient.UI;
-using ChatClient.UI.Components;
-using ChatClient.UI.Screens;
-using Raylib_cs;
+﻿using Raylib_cs;
 using System.Numerics;
+using ChatClient.Core.Infrastructure;
+using ChatClient.Core.Input;
+using ChatClient.UI.Screens.Common;
+using ChatClient.UI.Theme;
 
 namespace ChatClient;
 

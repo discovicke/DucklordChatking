@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using ChatClient.Data;
+using ChatClient.Data.Services;
 using ChatClient.Tests.Helpers;
 using ChatServer.Models;
 using Shared;

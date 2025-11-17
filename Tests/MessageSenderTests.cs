@@ -2,6 +2,8 @@ using System;
 using System.Net;
 using System.Net.Http;
 using ChatClient.Data;
+using ChatClient.Data.Models;
+using ChatClient.Data.Services;
 using ChatClient.Tests.Helpers;
 using Xunit;
 

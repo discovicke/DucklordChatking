@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Numerics;
 using ChatClient.Core;
+using ChatClient.Core.Infrastructure;
 using ChatClient.UI.Components;
+using ChatClient.UI.Components.Text;
 
 namespace ChatClient.UI.Rendering
 {
