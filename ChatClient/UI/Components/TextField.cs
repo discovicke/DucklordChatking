@@ -8,7 +8,6 @@ namespace ChatClient.UI.Components
     public class TextField : UIComponent
     {
         // TODO Bugg FIX!!! ctrl + z should return to last text state
-        // TODO Ctrl+c and Ctrl+ v write text and adds the copyed text. it should only paste the current text.
 
         // TODO:
         // - Add scroll logic
@@ -34,6 +33,8 @@ namespace ChatClient.UI.Components
         private readonly Stack<string> undoStack = new();
         private const int MaxUndoEntries = 100;
         private readonly ClipboardActions clipboardActions;
+
+        private bool movedThisFrame = false;
 
         public TextField(Rectangle rect, Color backgroundColor, Color hoverColor, Color textColor,
             bool allowMultiline = false, bool isPassword = false, string fieldName = "TextField", string placeholderText = "")
@@ -130,6 +131,7 @@ namespace ChatClient.UI.Components
 
         public override void Update()
         {
+
             if (MouseInput.IsLeftClick(Rect))
             {
                 if (!IsSelected)
@@ -156,6 +158,7 @@ namespace ChatClient.UI.Components
 
             HandleTextInput();
             HandleNavigation();
+
 
         }
 
@@ -214,30 +217,39 @@ namespace ChatClient.UI.Components
             return char.IsWhiteSpace(Text[idx]);
         }
 
-        // TODO Double jump on singleline text, dont know why... Bool as backspace maybe?
-        private void HandleNavigation()
+        //  Navigation for arrow keys
+        private bool TryPress(KeyboardKey key, Action action)
         {
+            if (movedThisFrame) // to block out dubble left frame action
             bool navigated = false;
             
             if (Raylib.IsKeyPressed(KeyboardKey.Left) || Raylib.IsKeyPressedRepeat(KeyboardKey.Left))
             {
+                return false;
                 cursor.MoveLeft(Text.Length);
                 navigated = true;
             }
 
-            if (Raylib.IsKeyPressed(KeyboardKey.Right) || Raylib.IsKeyPressedRepeat(KeyboardKey.Right))
+            if (Raylib.IsKeyPressed(key))
             {
-                cursor.MoveRight(Text.Length);
-                navigated = true;
+                action();
+                movedThisFrame = true;
+                return true;
             }
-
-            if (Raylib.IsKeyPressed(KeyboardKey.Home))
-            {
-                cursor.MoveToStart();
-                navigated = true;
-            }
-
-            if (Raylib.IsKeyPressed(KeyboardKey.End))
+            return false;
+        }
+        // Method for arrow Navigation with Lamda
+        private void HandleNavigation()
+        {
+            TryPress(KeyboardKey.Left, () => cursor.MoveLeft(Text.Length));
+            TryPress(KeyboardKey.Right, () => cursor.MoveRight(Text.Length));
+            TryPress(KeyboardKey.Home, () => cursor.MoveToStart());
+            TryPress(KeyboardKey.End, () => cursor.MoveToEnd(Text.Length));
+            
+            if (!Raylib.IsKeyDown(KeyboardKey.Left) &&
+                !Raylib.IsKeyDown(KeyboardKey.Right) &&
+                !Raylib.IsKeyDown(KeyboardKey.Home) &&
+                !Raylib.IsKeyDown(KeyboardKey.End))
             {
                 cursor.MoveToEnd(Text.Length);
                 navigated = true;
@@ -248,6 +260,8 @@ namespace ChatClient.UI.Components
                 isTypingWord = false;
             }
         }
+
+
 
         private void InsertText(string s)
         {
@@ -311,7 +325,6 @@ namespace ChatClient.UI.Components
         }
         // TODO: Mouse click to get position in text
         // TODO: Crtl backspace to  delete one word
-        // TODO: Scroll logicZ
         // TODO: Font?
     }
 }
