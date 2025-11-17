@@ -44,6 +44,40 @@ public class MessageStore(UserStore userStore)
   }
   #endregion
 
+  #region GET MESSAGES AFTER ID
+  /// <summary>
+  /// Returns all messages with Id greater than the specified lastMessageId.
+  /// </summary>
+  /// <param name="lastMessageId">The last message ID that the client has seen.</param>
+  /// <returns>
+  /// A read-only list of MessageDTO representing all messages newer than lastMessageId.
+  /// </returns>
+  public IReadOnlyList<MessageDTO> GetMessagesAfter(int lastMessageId)
+  {
+    var result = new List<MessageDTO>();
+
+    // Messages are stored in chronological order, so we can scan forward.
+    foreach (var m in messages)
+    {
+      if (m.Id > lastMessageId)
+      {
+        var user = userStore.GetById(m.SenderId)
+                   ?? throw new InvalidOperationException(
+                      $"Message with ID {m.Id} references a missing user");
+
+        result.Add(new MessageDTO
+        {
+          Sender = user.Username,
+          Content = m.Content,
+          Timestamp = m.Timestamp // timestamp automatically set when message was created
+        });
+      }
+    }
+
+    return result;
+  }
+  #endregion
+
   #region GET ALL MESSAGES
   /// <summary>
   /// Retrieves every stored chat message and returns them in the order they were added.
