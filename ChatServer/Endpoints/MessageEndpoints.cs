@@ -55,6 +55,48 @@ public static class MessageEndpoints
     .WithBadge("Auth Required 🔐", BadgePosition.Before, "#ffec72");
     #endregion
 
+    #region GET MESSAGE UPDATES (LONG POLLING)
+    messages.MapGet("/updates", async (HttpContext context, int lastId) =>
+    {
+      // 401: authentication required
+      if (!AuthUtils.TryAuthenticate(context.Request, userStore, out var caller) || caller == null)
+        return Results.Unauthorized();
+
+      // 400: invalid lastId
+      if (lastId < 0)
+        return Results.BadRequest();
+
+      const int timeoutMs = 25000;     // total wait before returning empty
+      const int sleepMs = 200;         // minimum wait between checks ( to avoid heavy load if server is busy )
+      int waited = 0;
+
+      // long polling loop
+      while (waited < timeoutMs)
+      {
+        var updates = messageStore.GetMessagesAfter(lastId);
+
+        if (updates.Count > 0)
+          return Results.Ok(updates); // 200: new messages available
+
+        await Task.Delay(sleepMs);
+        waited += sleepMs;
+      }
+
+      // timeout reached, return empty list
+      return Results.Ok(new List<MessageDTO>()); // 200: no new messages
+    })
+    .Produces<IEnumerable<MessageDTO>>(StatusCodes.Status200OK)
+    .Produces(StatusCodes.Status400BadRequest)
+    .Produces(StatusCodes.Status401Unauthorized)
+    .WithSummary("Get Message Updates (Long Polling)")
+    .WithDescription(
+        "Long-polling endpoint that waits for new messages after the given lastId. " +
+        "Returns immediately if updates exist, otherwise waits up to 25 seconds before returning an empty list."
+    )
+    .WithBadge("Auth Required 🔐", BadgePosition.Before, "#ffec72");
+    #endregion
+
+
     #region GET MESSAGE HISTORY (WITH OPTIONAL TAKE PARAMETER)
     messages.MapGet("/history", (HttpContext context, int? take) =>
     {
