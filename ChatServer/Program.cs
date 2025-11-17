@@ -1,5 +1,4 @@
 ﻿using ChatServer.Store;
-using ChatServer.Hubs;
 using Scalar.AspNetCore;
 using ChatServer.Configuration;
 using ChatServer.Endpoints;
@@ -9,7 +8,6 @@ UserStore userStore = new();
 MessageStore messageStore = new(userStore);
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddSignalR(); // Register the SignalR service
 builder.Services.AddCustomOpenApi(); // Register the OpenAPI custom configuration which is found in the OpenApiConfiguration.cs Class
 var app = builder.Build();
 
@@ -52,8 +50,6 @@ app.MapSystemEndpoints();
 app.MapGet("/", () => Results.Redirect("/scalar/", permanent: false)).ExcludeFromApiReference();
 app.MapGet("/docs", () => Results.Redirect("/scalar/", permanent: false)).ExcludeFromApiReference();
 
-// Real-time chat endpoint (SignalR hub)
-app.MapHub<ChatHub>("/chat");
 
 app.Run();
 

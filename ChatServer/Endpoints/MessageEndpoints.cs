@@ -1,6 +1,5 @@
 using ChatServer.Store;
 using ChatServer.Auth;
-using ChatServer.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Shared;
 using Scalar.AspNetCore;
@@ -17,7 +16,7 @@ public static class MessageEndpoints
     var messages = app.MapGroup("/messages").WithTags("Messages");
 
     #region SEND MESSAGE
-    messages.MapPost("/send", async (HttpContext context, MessageDTO dto, IHubContext<ChatHub> hub) =>
+    messages.MapPost("/send", async (HttpContext context, MessageDTO dto) =>
     {
       // 401: authentication required
       if (!AuthUtils.TryAuthenticate(context.Request, userStore, out var caller) || caller == null)
@@ -37,9 +36,6 @@ public static class MessageEndpoints
       // 500: something unexpected went wrong storing the message
       if (!added)
         return Results.StatusCode(StatusCodes.Status500InternalServerError);
-
-      // Broadcast to all SignalR clients
-      await hub.Clients.All.SendAsync("ReceiveMessage", dto.Sender, dto.Content);
 
       // 204: message stored & broadcasted, no response body needed
       return Results.NoContent();
