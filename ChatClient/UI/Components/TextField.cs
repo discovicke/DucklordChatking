@@ -35,8 +35,6 @@ namespace ChatClient.UI.Components
         private readonly ClipboardActions clipboardActions;
 
         private bool movedThisFrame = false;
-        private readonly HashSet<KeyboardKey> handledKeysThisFrame = new(); // ✅ Lägg till
-
 
         public TextField(Rectangle rect, Color backgroundColor, Color hoverColor, Color textColor,
             bool allowMultiline = false, bool isPassword = false, string fieldName = "TextField", string placeholderText = "")
@@ -124,8 +122,6 @@ namespace ChatClient.UI.Components
 
         public override void Update()
         {
-            movedThisFrame = false;
-            handledKeysThisFrame.Clear();
 
             if (MouseInput.IsLeftClick(Rect))
             {
@@ -213,13 +209,12 @@ namespace ChatClient.UI.Components
         //  Navigation for arrow keys
         private bool TryPress(KeyboardKey key, Action action)
         {
-            if (handledKeysThisFrame.Contains(key)) // block duplicate action within same press/frame
+            if (movedThisFrame) // block duplicate action within same press/frame
                 return false;
 
             if (Raylib.IsKeyPressed(key))
             {
                 action();
-                handledKeysThisFrame.Add(key);
                 movedThisFrame = true;
                 return true;
             }
