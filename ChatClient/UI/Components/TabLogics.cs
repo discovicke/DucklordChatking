@@ -3,6 +3,10 @@ using Raylib_cs;
 
 namespace ChatClient.UI.Components
 {
+    /// <summary>
+    /// Responsible for: managing tab navigation between multiple text fields.
+    /// Handles Tab key press to cycle focus forward and Shift+Tab to cycle backward through registered fields.
+    /// </summary>
     // Simple Tab navigation between registered TextFields
     public class TabLogics
     {

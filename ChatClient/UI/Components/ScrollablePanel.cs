@@ -3,6 +3,10 @@ using Raylib_cs;
 
 namespace ChatClient.UI.Components;
 
+/// <summary>
+/// Responsible for: managing scrollable content areas with mouse wheel support and optional scrollbar rendering.
+/// Handles DPI-aware scissor clipping, scroll offset calculation, and visibility checking for content optimization.
+/// </summary>
 public class ScrollablePanel
 {
     private Rectangle bounds;

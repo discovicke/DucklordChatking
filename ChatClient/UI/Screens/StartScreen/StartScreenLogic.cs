@@ -1,10 +1,14 @@
-﻿using ChatClient.Core;
+﻿﻿using ChatClient.Core;
 using ChatClient.Data;
 using ChatClient.UI.Components;
 using Raylib_cs;
 
 namespace ChatClient.UI.Screens
 {
+    /// <summary>
+    /// Responsible for: handling user input and navigation logic for the start/login screen.
+    /// Manages login button clicks, field updates, tab navigation, and transitions to register/options/chat screens.
+    /// </summary>
     public class StartScreenLogic(
         TextField userField,
         TextField passwordField,

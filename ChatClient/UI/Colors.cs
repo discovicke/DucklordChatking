@@ -2,6 +2,10 @@
 
 namespace ChatClient.UI
 {
+    /// <summary>
+    /// Responsible for: defining the global color palette for the entire application UI.
+    /// Provides consistent colors for backgrounds, buttons, text fields, and status indicators (success/fail/accent).
+    /// </summary>
     public static class Colors
     {
         // App background color

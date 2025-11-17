@@ -4,7 +4,10 @@ using Shared;
 
 namespace ChatClient.Data
 {
-    // Responsible for sending messages to server via HTTP
+    /// <summary>
+    /// Responsible for: sending and receiving chat messages via HTTP/REST API.
+    /// Handles async message history retrieval, updates polling, and sending messages with heartbeat support.
+    /// </summary>
     public class MessageHandler(HttpClient httpClient)
     {
         private readonly HttpClient httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));

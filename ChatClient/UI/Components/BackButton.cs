@@ -3,6 +3,10 @@ using Raylib_cs;
 
 namespace ChatClient.UI.Components
 {
+    /// <summary>
+    /// Responsible for: providing a pre-configured "Back" navigation button with arrow icon.
+    /// Extends Button with default styling and text for consistent back navigation across screens.
+    /// </summary>
     public class BackButton : Button
     {
         public BackButton(Rectangle rect)

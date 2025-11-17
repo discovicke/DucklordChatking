@@ -1,7 +1,11 @@
-﻿using Raylib_cs;
+﻿﻿using Raylib_cs;
 
 namespace ChatClient.UI.Screens
 {
+    /// <summary>
+    /// Responsible for: providing base functionality for all screens with layout recalculation and render lifecycle.
+    /// Abstract base class that handles window resize detection, layout application, and delegated input/render logic.
+    /// </summary>
     public abstract class ScreenBase<TLayout>
         where TLayout : struct
     {

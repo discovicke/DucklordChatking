@@ -8,6 +8,10 @@
         Options
     }
 
+    /// <summary>
+    /// Responsible for: managing global application state including current screen, logged-in user, and navigation history.
+    /// Provides centralized access to shared state across all screens.
+    /// </summary>
     public static class AppState
     {
         private static Stack<Screen> screenHistory = new Stack<Screen>();

@@ -1,10 +1,14 @@
-﻿using System.Numerics;
+﻿﻿using System.Numerics;
 using ChatClient.Core;
 using ChatClient.UI.Components;
 using Raylib_cs;
 
 namespace ChatClient.UI.Screens;
 
+/// <summary>
+/// Responsible for: composition and rendering of the options/settings screen.
+/// Coordinates user account fields, window mode buttons, and delegates input to OptionsScreenLogic.
+/// </summary>
 public class OptionsScreen : ScreenBase<OptionsScreenLayout.LayoutData>
 {
     private readonly TextField newUsername = new(new Rectangle(), 

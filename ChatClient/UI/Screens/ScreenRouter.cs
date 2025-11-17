@@ -2,6 +2,10 @@ using ChatClient.Core;
 
 namespace ChatClient.UI.Screens;
 
+/// <summary>
+/// Responsible for: routing between different screens and applying window size changes based on current screen.
+/// Manages screen instances and delegates rendering to the active screen.
+/// </summary>
 public static class ScreenRouter
 {
     private static readonly StartScreen start = new StartScreen();

@@ -1,14 +1,12 @@
 ﻿using ChatClient.Core;
 using Raylib_cs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ChatClient.UI.Components
 {
+    /// <summary>
+    /// Responsible for: handling clipboard operations (copy, paste, cut) and undo/redo functionality for text fields.
+    /// Manages undo stack and processes keyboard shortcuts (Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+Z, Cmd on macOS).
+    /// </summary>
     // enums for commands
     public enum ClipboardAction
     {

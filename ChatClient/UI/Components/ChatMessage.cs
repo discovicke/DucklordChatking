@@ -5,6 +5,10 @@ using Shared;
 
 namespace ChatClient.UI.Components;
 
+/// <summary>
+/// Responsible for: rendering individual chat message bubbles with word-wrapping and dynamic sizing.
+/// Wraps MessageDTO into a visual bubble with timestamp, sender name, and message content.
+/// </summary>
 public class ChatMessage
 {
     private readonly MessageDTO message;

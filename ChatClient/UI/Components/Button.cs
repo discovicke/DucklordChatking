@@ -4,6 +4,10 @@ using Raylib_cs;
 
 namespace ChatClient.UI.Components
 {
+    /// <summary>
+    /// Responsible for: rendering and handling click events for customizable buttons with hover effects.
+    /// Provides visual feedback through color changes and plays sound effects on click.
+    /// </summary>
     public class Button : UIComponent
     {
         private string Text;

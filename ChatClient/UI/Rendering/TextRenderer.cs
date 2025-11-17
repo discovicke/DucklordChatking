@@ -6,6 +6,10 @@ using ChatClient.UI.Components;
 
 namespace ChatClient.UI.Rendering
 {
+    /// <summary>
+    /// Responsible for: rendering text with word-wrapping, scrolling, and caret positioning for text fields.
+    /// Handles single-line with horizontal scroll and multiline with word-wrap, including password masking.
+    /// </summary>
     public class TextRenderer(Rectangle bounds, Color textColor, bool isPassword, bool allowMultiline)
     {
         private const int FontSize = 20;

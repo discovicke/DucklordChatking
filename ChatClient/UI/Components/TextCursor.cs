@@ -1,5 +1,9 @@
 namespace ChatClient.UI.Components
 {
+    /// <summary>
+    /// Responsible for: managing text cursor position and blinking animation within text fields.
+    /// Handles cursor movement (left, right, home, end) and provides visible/invisible blinking feedback.
+    /// </summary>
     public class TextCursor
     {
         private int position;

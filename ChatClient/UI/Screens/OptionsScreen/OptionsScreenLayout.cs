@@ -3,6 +3,10 @@ using ChatClient.UI.Components;
 
 namespace ChatClient.UI.Screens;
 
+/// <summary>
+/// Responsible for: calculating layout positions for all UI elements on the options/settings screen.
+/// Determines field sizes for account updates and window mode toggle buttons (windowed/fullscreen).
+/// </summary>
 public static class OptionsScreenLayout
 {
     public struct LayoutData

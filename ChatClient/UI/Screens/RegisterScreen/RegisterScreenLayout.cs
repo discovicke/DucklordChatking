@@ -3,6 +3,10 @@ using ChatClient.UI.Components;
 
 namespace ChatClient.UI.Screens;
 
+/// <summary>
+/// Responsible for: calculating layout positions for all UI elements on the registration screen.
+/// Determines field sizes for username, password, confirm password, and register button placement.
+/// </summary>
 public static class RegisterScreenLayout
 {
     public struct LayoutData

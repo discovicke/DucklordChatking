@@ -1,9 +1,12 @@
-﻿using Raylib_cs;
+﻿﻿using Raylib_cs;
 using ChatClient.UI.Components;
 
 namespace ChatClient.UI.Screens
 {
-    // "Where should all fields be placed?""
+    /// <summary>
+    /// Responsible for: calculating layout positions for all UI elements on the start/login screen.
+    /// Determines field sizes, button positions, and logo placement based on window dimensions.
+    /// </summary>
     public static class StartScreenLayout
     {
         public struct LayoutData

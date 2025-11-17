@@ -2,6 +2,10 @@ using Raylib_cs;
 
 namespace ChatClient.UI.Components;
 
+/// <summary>
+/// Responsible for: calculating layout bounds and positioning UI elements within the window.
+/// Provides utility methods for centering elements horizontally and getting full window dimensions.
+/// </summary>
 class UIWrapper
 {
     public float Width, Height;

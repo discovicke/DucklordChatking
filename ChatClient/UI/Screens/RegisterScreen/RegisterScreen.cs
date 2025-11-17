@@ -1,10 +1,14 @@
-﻿using System.Numerics;
+﻿﻿using System.Numerics;
 using ChatClient.Core;
 using ChatClient.UI.Components;
 using Raylib_cs;
 
 namespace ChatClient.UI.Screens;
 
+/// <summary>
+/// Responsible for: composition and rendering of the user registration screen.
+/// Coordinates username, password, and confirm password fields with registration button and feedback display.
+/// </summary>
 public class RegisterScreen : ScreenBase<RegisterScreenLayout.LayoutData>
 {
     private readonly TextField userField = new(new Rectangle(),

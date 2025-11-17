@@ -5,6 +5,10 @@ using Raylib_cs;
 
 namespace ChatClient.UI.Components
 {
+    /// <summary>
+    /// Responsible for: rendering and managing text input fields with support for multiline, password masking, clipboard, and undo/redo.
+    /// Handles cursor positioning, text selection, placeholder text, and keyboard input with proper DPI scaling.
+    /// </summary>
     public class TextField : UIComponent
     {
         // TODO Bugg FIX!!! ctrl + z should return to last text state

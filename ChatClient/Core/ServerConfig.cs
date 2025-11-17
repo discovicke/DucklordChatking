@@ -2,9 +2,10 @@ using System.Net.Http;
 
 namespace ChatClient.Core;
 
-// Centralized server configuration and HTTP client factory.
-// Change the server URL in one place for the entire application.
-
+/// <summary>
+/// Responsible for: centralized server configuration and HTTP client factory.
+/// Provides a single place to configure the server URL for the entire application.
+/// </summary>
 public static class ServerConfig
 {
     private const string SERVER_URL = "https://ducklord-server.onrender.com/";

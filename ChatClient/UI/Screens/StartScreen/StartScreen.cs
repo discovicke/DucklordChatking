@@ -1,10 +1,14 @@
-﻿using System.Numerics;
+﻿﻿using System.Numerics;
 using ChatClient.Core;
 using ChatClient.UI.Components;
 using Raylib_cs;
 
 namespace ChatClient.UI.Screens;
 
+/// <summary>
+/// Responsible for: composition and rendering of the start/login screen.
+/// Coordinates username/password fields, login/register/options buttons, and delegates input to StartScreenLogic.
+/// </summary>
 public class StartScreen : ScreenBase<StartScreenLayout.LayoutData>
 {
     private readonly TextField userField = new(new Rectangle(0, 0, 0, 0),

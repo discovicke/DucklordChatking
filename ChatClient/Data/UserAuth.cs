@@ -4,6 +4,10 @@ using Shared;
 
 namespace ChatClient.Data;
 
+/// <summary>
+/// Responsible for: user authentication and registration via HTTP/REST API.
+/// Handles login validation, new user registration, and password change requests with the server.
+/// </summary>
 public class UserAuth
 {
     private readonly HttpClient httpClient;

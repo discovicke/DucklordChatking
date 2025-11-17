@@ -5,6 +5,10 @@ using Raylib_cs;
 
 namespace ChatClient.UI.Screens;
 
+/// <summary>
+/// Responsible for: handling user registration logic including validation and server communication.
+/// Manages password confirmation matching, field validation, and feedback display for registration success/failure.
+/// </summary>
 public class RegisterScreenLogic(
     TextField userField,
     TextField passField,

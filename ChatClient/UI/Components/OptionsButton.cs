@@ -3,6 +3,10 @@ using Raylib_cs;
 
 namespace ChatClient.UI.Components
 {
+    /// <summary>
+    /// Responsible for: providing a pre-configured "Ducktions" (Options) button.
+    /// Extends Button with default styling and text for accessing settings/options screens.
+    /// </summary>
     public class OptionsButton : Button
     {
         public OptionsButton(Rectangle rect)

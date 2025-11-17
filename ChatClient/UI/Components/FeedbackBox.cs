@@ -4,6 +4,10 @@ using Raylib_cs;
 
 namespace ChatClient.UI.Components;
 
+/// <summary>
+/// Responsible for: displaying temporary feedback messages with success/error styling.
+/// Shows colored message boxes that auto-hide after a timeout period.
+/// </summary>
 public class FeedbackBox
 {
     private string message = "";

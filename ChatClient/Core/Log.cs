@@ -10,7 +10,11 @@ namespace ChatClient.Core
         Error // Red
     }
 
-    public class Log
+    /// <summary>
+    /// Responsible for: logging application events to console and file with color-coded severity levels.
+    /// Provides Info, Success, and Error logging methods with automatic timestamp formatting.
+    /// </summary>
+    public static class Log
     {
         private static readonly string LogFilePath = "log.txt";
         private static readonly object lockObject = new object();

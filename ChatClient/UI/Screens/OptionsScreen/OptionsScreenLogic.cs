@@ -3,6 +3,10 @@ using ChatClient.UI.Components;
 
 namespace ChatClient.UI.Screens;
 
+/// <summary>
+/// Responsible for: handling settings changes including window mode toggles and account updates.
+/// Manages windowed/fullscreen mode switching and saves user preferences.
+/// </summary>
 public class OptionsScreenLogic(
     TextField userField,
     TextField passField,

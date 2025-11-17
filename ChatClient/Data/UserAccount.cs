@@ -1,5 +1,9 @@
 ﻿namespace ChatClient.Data;
 
+/// <summary>
+/// Responsible for: managing current user account credentials and login state.
+/// Stores username and password in memory for the current session.
+/// </summary>
 public class UserAccount
 {
     public static string? Username { get; private set; }

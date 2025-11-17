@@ -8,6 +8,10 @@ public enum WindowMode
     Fullscreen
 }
 
+/// <summary>
+/// Responsible for: managing window display modes and screen-specific window sizes.
+/// Applies different windowed sizes based on current screen (576x1024 for Start/Register, 1200x720 for Chat/Options).
+/// </summary>
 public static class WindowSettings
 {
     public static WindowMode CurrentMode { get; private set; } = WindowMode.Windowed;

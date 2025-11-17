@@ -2,6 +2,10 @@
 
 namespace ChatClient.UI.Components
 {
+    /// <summary>
+    /// Responsible for: providing base functionality for all UI components with position and bounds management.
+    /// Serves as abstract base class defining common interface for Update, Draw, and SetRect methods.
+    /// </summary>
     public abstract class UIComponent
     {
         public Rectangle Rect { get; protected set; }

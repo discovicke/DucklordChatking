@@ -8,6 +8,10 @@ using Raylib_cs;
 
 namespace ChatClient.Core
 {
+    /// <summary>
+    /// Responsible for: handling mouse input with DPI-aware coordinate scaling for HiDPI displays.
+    /// Provides click detection and hover checks that work correctly on Retina/macOS displays.
+    /// </summary>
     public static class MouseInput
     {
         private static Vector2 mousePos;

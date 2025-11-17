@@ -1,8 +1,12 @@
-﻿using Raylib_cs;
+﻿﻿using Raylib_cs;
 using ChatClient.UI.Components;
 
 namespace ChatClient.UI.Screens;
 
+/// <summary>
+/// Responsible for: calculating layout positions for all UI elements on the chat screen.
+/// Determines chat window, user list, input field, send button, and logo placement with dynamic sizing.
+/// </summary>
 public static class ChatScreenLayout
 {
     public struct LayoutData

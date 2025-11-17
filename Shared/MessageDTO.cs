@@ -1,5 +1,9 @@
 ﻿namespace Shared;
 
+/// <summary>
+/// Responsible for: transferring chat message data between client and server.
+/// Data transfer object containing message ID, sender, content, and server-generated timestamp.
+/// </summary>
 public class MessageDTO
 {
     // Properties are nullable to allow validation before sending to server

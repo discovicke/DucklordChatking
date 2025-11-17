@@ -2,8 +2,10 @@
 
 namespace ChatClient.Core;
 
-// Centralized resource loader for fonts, textures, and other assets.
-// Ensures resources are loaded once and properly unloaded on exit.
+/// <summary>
+/// Responsible for: centralized loading and management of application resources (fonts, textures, sounds).
+/// Ensures resources are loaded once at startup and properly unloaded on exit to prevent memory leaks.
+/// </summary>
 public static class ResourceLoader
 {
     // --- Fonts ---
