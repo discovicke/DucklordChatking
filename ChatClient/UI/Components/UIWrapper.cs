@@ -4,34 +4,25 @@ namespace ChatClient.UI.Components;
 
 class UIWrapper
 {
-    public float X, Y;
-
     public float Width, Height;
-
-    public Rectangle Bounds => new Rectangle(X, Y, Width, Height);
-
+    
     public void SetToFullWindow()
     {
-        X = 0;
-        Y = 0;
-        Width = Raylib.GetScreenWidth();
-        Height = Raylib.GetScreenHeight();
+        //int rw = Raylib.GetRenderWidth();
+        //int rh = Raylib.GetRenderHeight();
+        int sw = Raylib.GetScreenWidth();
+        int sh = Raylib.GetScreenHeight();
+
+        //Width = (rw > 0 ? rw : sw);
+        //Height = (rh > 0 ? rh : sh);
+        Width = sw;
+        Height = sh;
     }
 
     // Center a child horizontally at a given y-offset (relative to this wrapper)
-    public Rectangle CenterHoriz(float childWidth, float childHeight, float y)
+    public Rectangle CenterHoriz(float width, float height, float top)
     {
-        return new Rectangle(
-            X + (Width - childWidth) / 2f,
-            Y + y,
-            childWidth,
-            childHeight
-        );
+        float x = (Width - width) * 0.5f;
+        return new Rectangle(x, top, width, height);
     }
-
-    // Place a child at x/y (relative to this wrapper)
-    public Rectangle At(float x, float y, float w, float h)
-    {
-        return new Rectangle(X + x, Y + y, w, h);
-    }
-}
+}   
