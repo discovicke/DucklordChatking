@@ -62,7 +62,7 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
 
     public override void RenderContent()
     {
-// Start polling only once layout is valid
+        // Start polling only once layout is valid
         if (!pollingStarted && layout.ChatRect.Width > 0)
         {
             pollingStarted = true;
@@ -86,7 +86,7 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
         // Chat window background
         Raylib.DrawRectangleRounded(layout.ChatRect, 0.08f, 10, Colors.TextFieldUnselected);
         Raylib.DrawRectangleRoundedLinesEx(layout.ChatRect, 0.08f, 10, 1, Colors.OutlineColor);
-        
+
         // Draw messages
         float totalChatHeight = chatMessageBubbles.Sum(m => m.Height + 8f);
         chatPanel.BeginScroll(totalChatHeight);
@@ -135,20 +135,20 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
     private void DrawUserList()
     {
         // Placeholder data
-        var onlineUsers = new[] { 
-            "Ducklord", 
-            "QuackyMcQuack", 
+        var onlineUsers = new[] {
+            "Ducklord",
+            "QuackyMcQuack",
             "DaffyDev",
             "DuckyDuck",
             "Goobert",
             "DuckyDuck"
         };
-        var offlineUsers = new[] { 
-            "SleepyDuck", 
-            "LazyFeathers", 
-            "Bunny", 
-            "DuckyDuck", 
-            "DuckyDuck", 
+        var offlineUsers = new[] {
+            "SleepyDuck",
+            "LazyFeathers",
+            "Bunny",
+            "DuckyDuck",
+            "DuckyDuck",
             "DuckyDuck",
             "Felhantering",
             "Varför",
@@ -156,10 +156,10 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
             "inte",
             "detta?"
         };
-        
+
         const float lineH = 22;
         const float fontSize = 14;
-        
+
         float totalHeight = lineH + // "ONLINE" header
                             (onlineUsers.Length * lineH) +
                             10 + // spacing
@@ -176,7 +176,7 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
         Raylib.DrawTextEx(ResourceLoader.BoldFont, "ONLINE",
             new Vector2(x, scrolledY), fontSize, 0.5f, Colors.AccentColor);
         y += lineH;
-        
+
         // Online users
         foreach (var user in onlineUsers)
         {
@@ -213,12 +213,12 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
 
         userListPanel.EndScroll();
     }
-    
+
     private void DrawInputWithScroll()
     {
         // TextField handles it's own rendering, but we can wrap it in scroll
         // if the text gets too long (multiline)
-    
+
         // For now: draw TextField as normal
         // You can add scroll later if the content grows
         // inputPanel.BeginScroll(inputField.Height);
