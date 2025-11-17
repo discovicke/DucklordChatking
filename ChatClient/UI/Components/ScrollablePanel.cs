@@ -55,6 +55,7 @@ public class ScrollablePanel
 
     private void DrawScrollbar()
     {
+        float padding = 10f;
         float scrollbarWidth = 6f;
         float scrollbarX = bounds.X + bounds.Width - scrollbarWidth - 4f;
         
@@ -64,6 +65,10 @@ public class ScrollablePanel
         float maxScrollOffset = contentHeight - bounds.Height;
         float scrollbarY = bounds.Y + (scrollOffset / maxScrollOffset) * 
             (bounds.Height - scrollbarHeight);
+        
+        scrollbarY += padding;
+        scrollbarHeight -= padding * 2;
+
 
         var scrollbarRect = new Rectangle(scrollbarX, scrollbarY, 
             scrollbarWidth, scrollbarHeight);
