@@ -36,8 +36,19 @@ namespace ChatClient.UI.Components
 
         private bool movedThisFrame = false;
 
-        private static readonly List<TextField> TabOrder = new();
-
+        //tab logics 
+        public bool IsFocused => IsSelected;
+        public void Focus() 
+        {
+            IsSelected = true;
+            cursor.ResetBlink();
+        }
+        public void Blur() 
+        {
+            IsSelected = false;
+            cursor.ResetInvisible();
+        }
+        
         public TextField(Rectangle rect, Color backgroundColor, Color hoverColor, Color textColor,
             bool allowMultiline = false, bool isPassword = false, string fieldName = "TextField", string placeholderText = "")
         {
@@ -70,7 +81,6 @@ namespace ChatClient.UI.Components
             undoStack.Push(string.Empty);
             SaveStateForUndo();
 
-            TabOrder.Add(this);
             
         }
         // Tab navigation
@@ -84,26 +94,8 @@ namespace ChatClient.UI.Components
             IsSelected = false;
             cursor.ResetInvisible();
         }
-        //
-        private static void FocusNext(TextField current, bool backWards) 
-        {
-            if (TabOrder.Count == 0) 
-            {
-                return; 
-            }
-            int index = TabOrder.IndexOf(current);
-            if (index < 0 ) 
-            {
-                return; 
-            }
-            int nextIdexer = backWards ? (index - 1 + TabOrder.Count) % TabOrder.Count : (index + 1 ) % TabOrder.Count;
-            if (TabOrder[nextIdexer] == current)
-            {
-                return;
-            }
-            current.NotSelect();
-            TabOrder[nextIdexer].TabFocus();
-        }
+        
+       
 
 
         private void SaveStateForUndo()
@@ -183,13 +175,7 @@ namespace ChatClient.UI.Components
                 return; 
             }
 
-            // function for Tab moves to next / privuous field
-            if (IsSelected && Raylib.IsKeyPressed(KeyboardKey.Tab))
-            {
-                bool backwards = Raylib.IsKeyDown(KeyboardKey.LeftShift) || Raylib.IsKeyDown(KeyboardKey.RightShift);
-                FocusNext(this, backwards);
-                return;
-            }
+            
             cursor.Update(Raylib.GetFrameTime());
             clipboardActions.Process();
 
