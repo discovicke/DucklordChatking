@@ -35,6 +35,8 @@ namespace ChatClient.UI.Components
         private readonly ClipboardActions clipboardActions;
 
         private bool movedThisFrame = false;
+        private readonly HashSet<KeyboardKey> handledKeysThisFrame = new(); // ✅ Lägg till
+
 
         public TextField(Rectangle rect, Color backgroundColor, Color hoverColor, Color textColor,
             bool allowMultiline = false, bool isPassword = false, string fieldName = "TextField", string placeholderText = "")
@@ -123,6 +125,7 @@ namespace ChatClient.UI.Components
         public override void Update()
         {
             movedThisFrame = false;
+            handledKeysThisFrame.Clear();
 
             if (MouseInput.IsLeftClick(Rect))
             {
@@ -210,12 +213,13 @@ namespace ChatClient.UI.Components
         //  Navigation for arrow keys
         private bool TryPress(KeyboardKey key, Action action)
         {
-            if (movedThisFrame) // block duplicate action within same press/frame
+            if (handledKeysThisFrame.Contains(key)) // block duplicate action within same press/frame
                 return false;
 
             if (Raylib.IsKeyPressed(key))
             {
                 action();
+                handledKeysThisFrame.Add(key);
                 movedThisFrame = true;
                 return true;
             }
@@ -224,25 +228,15 @@ namespace ChatClient.UI.Components
         // Method for arrow Navigation with Lamda
         private void HandleNavigation()
         {
+            if (movedThisFrame)
+            {
+                return;
+            }
+            Log.Error($"HandleNavigation called");
             TryPress(KeyboardKey.Left, () => cursor.MoveLeft(Text.Length));
             TryPress(KeyboardKey.Right, () => cursor.MoveRight(Text.Length));
             TryPress(KeyboardKey.Home, () => cursor.MoveToStart());
             TryPress(KeyboardKey.End, () => cursor.MoveToEnd(Text.Length));
-           // bool navigated = false;
-            if (!Raylib.IsKeyDown(KeyboardKey.Left) &&
-                !Raylib.IsKeyDown(KeyboardKey.Right) &&
-                !Raylib.IsKeyDown(KeyboardKey.Home) &&
-                !Raylib.IsKeyDown(KeyboardKey.End))
-            {
-                movedThisFrame = false;
-                //cursor.MoveToEnd(Text.Length);
-             //   navigated = true;
-            }
-            //if (navigated && isTypingWord)
-            //{
-            //    SaveUndoIfChanged();
-            //    isTypingWord = false;
-            //}
         }
 
 
