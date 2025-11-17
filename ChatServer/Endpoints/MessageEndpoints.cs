@@ -37,7 +37,7 @@ public static class MessageEndpoints
       if (!added)
         return Results.StatusCode(StatusCodes.Status500InternalServerError);
 
-      // 204: message stored & broadcasted, no response body needed
+      // 204: message stored successfully, no response body needed
       return Results.NoContent();
     })
     .Produces(StatusCodes.Status204NoContent)
