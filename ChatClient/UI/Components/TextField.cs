@@ -76,6 +76,12 @@ namespace ChatClient.UI.Components
             IsSelected = true;
             cursor.ResetBlink();
         }
+        private void NotSelect()
+        {
+            IsSelected = false;
+            cursor.ResetInvisible();
+        }
+
 
         private void SaveStateForUndo()
         {
