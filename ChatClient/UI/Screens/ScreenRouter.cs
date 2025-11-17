@@ -13,10 +13,11 @@ public static class ScreenRouter
 
     public static void RunCurrent()
     {
-        // Logga skärmbyte om det skett en förändring
+        // Apply window settings when screen changes
         if (lastScreen != AppState.CurrentScreen)
         {
             Log.Info($"[ScreenRouter] Screen changed from {lastScreen?.ToString() ?? "None"} to {AppState.CurrentScreen}");
+            WindowSettings.ApplyCurrentMode(AppState.CurrentScreen);
             lastScreen = AppState.CurrentScreen;
         }
         

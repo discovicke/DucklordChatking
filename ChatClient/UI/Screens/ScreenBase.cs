@@ -50,10 +50,9 @@ namespace ChatClient.UI.Screens
         }
 
         // Optional helper to re-calc layout when window size changes
-        protected void RecalculateIfNeeded()
+        public void RecalculateIfNeeded()
         {
             var newLayout = CalculateLayout();
-            // caller can decide how to compare / apply; simple replace for brevity
             layout = newLayout;
             ApplyLayout(layout);
         }

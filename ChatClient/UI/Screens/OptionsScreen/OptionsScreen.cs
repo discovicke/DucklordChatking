@@ -21,9 +21,15 @@ public class OptionsScreen : ScreenBase<OptionsScreenLayout.LayoutData>
         Colors.ButtonDefault, Colors.ButtonHovered, Colors.TextColor);
     private readonly BackButton backButton = new(new Rectangle(10, 10, 100, 30));
 
+    private readonly Button btnWindowed = new(new Rectangle(), "Windowed", 
+        Colors.ButtonDefault, Colors.ButtonHovered, Colors.TextColor);
+    private readonly Button btnFullscreen = new(new Rectangle(), "Fullscreen", 
+        Colors.ButtonDefault, Colors.ButtonHovered, Colors.TextColor);
+    
+    
     public OptionsScreen()
     {
-        logic = new OptionsScreenLogic(newUsername, newPassword, confirmPassword, confirmButton, backButton);
+        logic = new OptionsScreenLogic(newUsername, newPassword, confirmPassword, confirmButton, backButton, btnWindowed, btnFullscreen);
     }
 
     protected override OptionsScreenLayout.LayoutData CalculateLayout() => OptionsScreenLayout.Calculate(ResourceLoader.LogoTexture.Width);
@@ -35,6 +41,8 @@ public class OptionsScreen : ScreenBase<OptionsScreenLayout.LayoutData>
         confirmPassword.SetRect(layout.PassConfirmRect);
         confirmButton.SetRect(layout.ConfirmRect);
         backButton.SetRect(layout.BackRect);
+        btnWindowed.SetRect(layout.BtnWindowedRect);
+        btnFullscreen.SetRect(layout.BtnFullscreenRect);
     }
 
     public override void RenderContent()
@@ -45,9 +53,12 @@ public class OptionsScreen : ScreenBase<OptionsScreenLayout.LayoutData>
 
         confirmButton.Draw();
         backButton.Draw();
+        
+        btnWindowed.Draw();
+        btnFullscreen.Draw();
 
-        Raylib.DrawTextureEx(ResourceLoader.LogoTexture, 
-            new Vector2(layout.LogoX, layout.LogoY), 
+        Raylib.DrawTextureEx(ResourceLoader.LogoTexture,
+            new Vector2(layout.LogoX, layout.LogoY),
             0f, layout.LogoScale, Color.White);
     }
 }

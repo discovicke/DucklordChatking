@@ -8,7 +8,9 @@ public class OptionsScreenLogic(
     TextField passField,
     TextField passConfirmField,
     Button confirmButton,
-    BackButton backButton
+    BackButton backButton,
+    Button btnWindowed,
+    Button btnFullscreen
 ) : IScreenLogic
 {
     public void HandleInput()
@@ -31,6 +33,18 @@ public class OptionsScreenLogic(
         {
             Clear();
             AppState.GoBack();
+        }
+        
+        if (btnWindowed.IsClicked())
+        {
+            WindowSettings.SetMode(WindowMode.Windowed);
+            Log.Info("[OptionsScreenLogic] Windowed mode selected");
+        }
+        
+        if (btnFullscreen.IsClicked())
+        {
+            WindowSettings.SetMode(WindowMode.Fullscreen);
+            Log.Info("[OptionsScreenLogic] Fullscreen mode selected");
         }
     }
 

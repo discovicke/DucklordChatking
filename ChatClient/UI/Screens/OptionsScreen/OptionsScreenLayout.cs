@@ -8,7 +8,8 @@ public static class OptionsScreenLayout
     public struct LayoutData
     {
         public Rectangle UserRect, PassRect, PassConfirmRect, ConfirmRect, BackRect;
-        public float LogoX, LogoY, LogoScale;
+        public Rectangle BtnWindowedRect, BtnFullscreenRect;
+        public float LogoX, LogoY, LogoScale, LogoWidth, LogoHeight;
     }
 
     public static LayoutData Calculate(int logoWidth)
@@ -26,6 +27,10 @@ public static class OptionsScreenLayout
         float gap = h * 0.02f;
         float colTop = h * 0.45f;
 
+        float btnTop = colTop + 4 * (fieldH + gap);
+        float windowBtnW = w * 0.15f;
+        float windowBtnH = h * 0.04f;
+        float windowBtnGap = w * 0.02f;
 
         float logoTargetW = w * 0.15f;
         float logoScale = logoWidth > 0 ? logoTargetW / logoWidth : 0.15f;
@@ -38,8 +43,12 @@ public static class OptionsScreenLayout
             ConfirmRect = wrap.CenterHoriz(btnW, btnH, colTop + 3 * (fieldH + gap)),
             BackRect = new Rectangle(10, 10, 100, 30),
             LogoScale = logoScale,
+            BtnWindowedRect = new Rectangle(w/2 - windowBtnW - windowBtnGap/2, btnTop, windowBtnW, windowBtnH),
+            BtnFullscreenRect = new Rectangle(w/2 + windowBtnGap/2, btnTop, windowBtnW, windowBtnH),
             LogoX = (w - logoWidth * logoScale) / 2f,
-            LogoY = h * 0.10f
+            LogoY = h * 0.10f,
+            LogoWidth = logoWidth * logoScale,
+            LogoHeight = logoWidth * logoScale
         };
     }
 }
