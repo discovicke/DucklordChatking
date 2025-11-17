@@ -83,4 +83,10 @@ public class ScrollablePanel
     {
         return y + height >= bounds.Y && y <= bounds.Y + bounds.Height;
     }
+    
+    public void ScrollToBottom()
+    {
+        float maxScroll = Math.Max(0, contentHeight - bounds.Height);
+        scrollOffset = maxScroll;
+    }
 }

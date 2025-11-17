@@ -32,11 +32,17 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
     private List<MessageDTO> messages = new();
     private List<ChatMessage> chatMessageBubbles = new();
     private double lastUpdateTime = 0;
+    private int lastMessageCount = 0;
+    private float lastContentHeight = 0f;
+    private bool isFirstLoad = true; // Track first message load
+    private bool userHasScrolledUp = false;
+    private const float BottomTolerancePx = 24f; // adjust as needed (e.g., 16–32)
+
 
     public ChatScreen()
     {
         logic = new ChatScreenLogic(inputField, sendButton, backButton, SendMessage);
-        chatPanel = new ScrollablePanel(new Rectangle(), scrollSpeed: 30f);
+        chatPanel = new ScrollablePanel(new Rectangle(), scrollSpeed: 20f);
         userListPanel = new ScrollablePanel(new Rectangle(), scrollSpeed: 20f);
         inputPanel = new ScrollablePanel(new Rectangle(), scrollSpeed: 20f);
     }
@@ -82,12 +88,38 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
                     .ToList();
             }
         }
-        
-        // Draw messages
-        float totalChatHeight = chatMessageBubbles.Sum(m => m.Height + 8f);
-        chatPanel.BeginScroll(totalChatHeight);
 
-        float currentY = layout.ChatRect.Y + 10;
+        // Layout constants
+        const float paddingTop = 10f;
+        const float spacing = 8f;
+        const float paddingBottom = 10f;
+
+        // Calculate total content height FIRST (consistent spacing with draw)
+        float totalHeight = paddingTop + paddingBottom;
+        foreach (var chatMsg in chatMessageBubbles)
+        {
+            totalHeight += chatMsg.Height + spacing;
+        }
+
+        // Determine if user was at bottom based on previous content height
+        float prevMaxScroll = Math.Max(0, lastContentHeight - layout.ChatRect.Height);
+        bool wasAtBottom = chatPanel.ScrollOffset >= (prevMaxScroll - BottomTolerancePx);
+
+        // Begin scroll with current content height
+        chatPanel.BeginScroll(totalHeight);
+
+        // Auto-scroll on first load or when new messages arrive and user was at bottom
+        bool hasMessages = messages.Count > 0;
+        bool hasNewMessages = messages.Count > lastMessageCount;
+
+        if ((isFirstLoad && hasMessages) || (hasNewMessages && wasAtBottom))
+        {
+            chatPanel.ScrollToBottom();
+            isFirstLoad = false;
+        }
+
+        // Draw messages
+        float currentY = layout.ChatRect.Y + paddingTop;
         foreach (var chatMsg in chatMessageBubbles)
         {
             float scrolledY = chatPanel.GetScrolledY(currentY);
@@ -95,16 +127,18 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
             {
                 chatMsg.Draw(layout.ChatRect.X + 10, scrolledY);
             }
-            currentY += chatMsg.Height + 8f;
+            currentY += chatMsg.Height + spacing;
         }
 
         chatPanel.EndScroll();
 
+        // Update tracking for next frame
+        lastMessageCount = messages.Count;
+        lastContentHeight = totalHeight;
 
         // User list panel
         Raylib.DrawRectangleRounded(layout.UserListRect, 0.08f, 10, Colors.PanelColor);
         Raylib.DrawRectangleRoundedLinesEx(layout.UserListRect, 0.08f, 10, 1, Colors.OutlineColor);
-
         DrawUserList();
 
         // Input + send
