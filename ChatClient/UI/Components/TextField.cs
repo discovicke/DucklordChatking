@@ -35,6 +35,7 @@ namespace ChatClient.UI.Components
         private readonly ClipboardActions clipboardActions;
 
         private bool movedThisFrame = false;
+        private static readonly List<TextField> TabOrder = new();
 
         public TextField(Rectangle rect, Color backgroundColor, Color hoverColor, Color textColor,
             bool allowMultiline = false, bool isPassword = false, string fieldName = "TextField", string placeholderText = "")
@@ -66,8 +67,14 @@ namespace ChatClient.UI.Components
             clipboardActions = new ClipboardActions(ctx);
             
             undoStack.Push(string.Empty);
+            TabOrder.Add(this);
             SaveStateForUndo();
             
+        }
+        private void TabFocus() 
+        {
+            IsSelected = true;
+            cursor.ResetBlink();
         }
 
         private void SaveStateForUndo()
