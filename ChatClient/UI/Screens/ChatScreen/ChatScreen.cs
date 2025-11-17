@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Collections.Concurrent;
+using System.Numerics;
 using ChatClient.Core;
 using ChatClient.Data;
 using ChatClient.UI.Components;
@@ -39,7 +40,7 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
 
     public ChatScreen()
     {
-        logic = new ChatScreenLogic(inputField, sendButton, backButton, SendMessage);
+        logic = new ChatScreenLogic(inputField, sendButton, backButton, SendMessageAsync);
         chatPanel = new ScrollablePanel(new Rectangle(), scrollSpeed: 30f);
         userListPanel = new ScrollablePanel(new Rectangle(), scrollSpeed: 20f);
         inputPanel = new ScrollablePanel(new Rectangle(), scrollSpeed: 20f);
@@ -103,23 +104,17 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
         backButton.Draw();
     }
 
-    private void SendMessage(string text)
+    private async void SendMessageAsync(string text)
     {
         if (messageHandler == null) return;
 
-        // Use logged in username or default to "Anonymous Duck"
         string sender = !string.IsNullOrEmpty(AppState.LoggedInUsername)
             ? AppState.LoggedInUsername
             : "Anonymous Duck";
 
-        Log.Info($"[ChatScreen] Sending message as '{sender}': {text}");
+        bool ok = await messageHandler.SendMessageAsync(text);
 
-        bool ok = messageHandler.SendMessage(text);
-        var list = messageHandler.ReceiveHistory();
-        if (ok && list != null && list.Any())
-        {
-            messages = list.ToList();
-        }
+        // Don't assign ID locally — the polling loop will fetch it
     }
 
     private void DrawUserList()
