@@ -44,15 +44,15 @@ public class MessageStore(UserStore userStore) : ConcurrentStoreBase
     var newMessage = new ChatMessage // Create new message
     {
       Id = nextMessageId++,
-      SenderId = sender.Id,
+      SenderUsername = sender.Id,
       Content = messageContent,
       Timestamp = DateTime.UtcNow
     };
 
     // Validate message ID
-    if (newMessage.SenderId == 0)
+    if (newMessage.SenderUsername == 0)
     {
-      ServerLog.Error($"MessageStore.Add failed: SenderId resolved to 0 for username '{username}'");
+      ServerLog.Error($"MessageStore.Add failed: SenderUsername resolved to 0 for username '{username}'");
       return false;
     }
 
@@ -83,7 +83,7 @@ public class MessageStore(UserStore userStore) : ConcurrentStoreBase
 
     foreach (var m in messages)
     {
-      var user = userStore.GetById(m.SenderId) ?? throw new InvalidOperationException(
+      var user = userStore.GetById(m.SenderUsername) ?? throw new InvalidOperationException(
             $"Message with ID {m.Id} references a missing user"
         );
       result.Add(new MessageDTO
@@ -126,7 +126,7 @@ public class MessageStore(UserStore userStore) : ConcurrentStoreBase
       for (int i = startIndex; i < messages.Count; i++)
       {
         var m = messages[i];
-        var user = userStore.GetById(m.SenderId)
+        var user = userStore.GetById(m.SenderUsername)
                    ?? throw new InvalidOperationException($"Message with ID {m.Id} references a missing user");
 
         result.Add(new MessageDTO
@@ -162,7 +162,7 @@ public class MessageStore(UserStore userStore) : ConcurrentStoreBase
       {
         if (m.Id > lastMessageId)
         {
-          var user = userStore.GetById(m.SenderId)
+          var user = userStore.GetById(m.SenderUsername)
                      ?? throw new InvalidOperationException(
                         $"Message with ID {m.Id} references a missing user");
 
