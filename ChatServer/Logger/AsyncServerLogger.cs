@@ -19,7 +19,7 @@ namespace ChatServer.Logger
   /// </summary>
   public static class ServerLog
   {
-    private static readonly BlockingCollection<string> queue = new();
+    private static readonly BlockingCollection<string> queue = [];
     private static readonly CancellationTokenSource cts = new();
 
     private static readonly string logDirectory = "logs";

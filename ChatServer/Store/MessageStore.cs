@@ -1,5 +1,6 @@
 ﻿using ChatServer.Models;
 using Shared;
+using ChatServer.Logger;
 
 namespace ChatServer.Store;
 
@@ -26,19 +27,34 @@ public class MessageStore(UserStore userStore) : ConcurrentStoreBase
   {
     return WithWrite(() =>
   {
-    if (string.IsNullOrEmpty(username) || string.IsNullOrWhiteSpace(messageContent)) // Validate message sender and content
-    { return false; }
+    // Validate inputs
+    if (string.IsNullOrEmpty(username) || string.IsNullOrWhiteSpace(messageContent))
+    {
+      ServerLog.Warning($"MessageStore.Add failed: invalid parameters (username='{username}')");
+      return false;
+    }
+
+    var sender = userStore.GetByUsername(username);
+    if (sender == null)
+    {
+      ServerLog.Warning($"MessageStore.Add failed: unknown user '{username}'");
+      return false;
+    }
 
     var newMessage = new ChatMessage // Create new message
     {
       Id = nextMessageId++,
-      SenderId = userStore.GetByUsername(username)?.Id ?? 0,
+      SenderUsername = sender.Id,
       Content = messageContent,
       Timestamp = DateTime.UtcNow
     };
 
-    if (newMessage.SenderId == 0) // Validate message sender
-    { return false; }
+    // Validate message ID
+    if (newMessage.SenderUsername == 0)
+    {
+      ServerLog.Error($"MessageStore.Add failed: SenderUsername resolved to 0 for username '{username}'");
+      return false;
+    }
 
     // Store message in both list and dictionary
     messages.Add(newMessage);
@@ -67,7 +83,7 @@ public class MessageStore(UserStore userStore) : ConcurrentStoreBase
 
     foreach (var m in messages)
     {
-      var user = userStore.GetById(m.SenderId) ?? throw new InvalidOperationException(
+      var user = userStore.GetById(m.SenderUsername) ?? throw new InvalidOperationException(
             $"Message with ID {m.Id} references a missing user"
         );
       result.Add(new MessageDTO
@@ -110,7 +126,7 @@ public class MessageStore(UserStore userStore) : ConcurrentStoreBase
       for (int i = startIndex; i < messages.Count; i++)
       {
         var m = messages[i];
-        var user = userStore.GetById(m.SenderId)
+        var user = userStore.GetById(m.SenderUsername)
                    ?? throw new InvalidOperationException($"Message with ID {m.Id} references a missing user");
 
         result.Add(new MessageDTO
@@ -146,7 +162,7 @@ public class MessageStore(UserStore userStore) : ConcurrentStoreBase
       {
         if (m.Id > lastMessageId)
         {
-          var user = userStore.GetById(m.SenderId)
+          var user = userStore.GetById(m.SenderUsername)
                      ?? throw new InvalidOperationException(
                         $"Message with ID {m.Id} references a missing user");
 
@@ -184,6 +200,7 @@ public class MessageStore(UserStore userStore) : ConcurrentStoreBase
      return true;
    }
 
+   ServerLog.Warning($"MessageStore.RemoveById failed: message {messageId} not found");
    return false;
  });
   }
@@ -200,12 +217,19 @@ public class MessageStore(UserStore userStore) : ConcurrentStoreBase
   public bool ClearAll()
   {
     return WithWrite(() =>
- {
-   messages.Clear();
-   messagesById.Clear();
-   return true;
- });
+    {
+      try
+      {
+        messages.Clear();
+        messagesById.Clear();
+        return true;
+      }
+      catch (Exception ex)
+      {
+        ServerLog.Error($"MessageStore.ClearAll failed: {ex}");
+        return false;
+      }
+    });
   }
   #endregion
-
 }
