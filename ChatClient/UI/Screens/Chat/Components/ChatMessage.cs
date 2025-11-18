@@ -48,7 +48,9 @@ public class ChatMessage
 
         for (int i = 0; i < wrappedLines.Count; i++)
         {
-            var font = i < headerLines ? ResourceLoader.BoldFont : ResourceLoader.RegularFont;
+            var font = i < headerLines 
+                ? ResourceLoader.BoldFont 
+                : ResourceLoader.RegularFont;
             var lineWidth = Raylib.MeasureTextEx(font, wrappedLines[i], FontSize, 0.5f).X;
             maxLineWidth = Math.Max(maxLineWidth, lineWidth);
         }
@@ -89,28 +91,42 @@ public class ChatMessage
 
     public void Draw(float x, float y, float containerWidth)
     {
-        // Right-align own messages
-        float bubbleX = isOwnMessage ? x + containerWidth - Width : x;
+        const float RightInset = 5f; // Distance from right edge for own messages
+    
+        // Right-align own messages with inset from scrollbar
+        float bubbleX = isOwnMessage 
+            ? x + containerWidth - Width - RightInset 
+            : x - RightInset;
 
         // Draw bubble background
         var bubbleRect = new Rectangle(bubbleX, y, Width, Height);
-        var bubbleColor = isOwnMessage ? Colors.ChatBubbleSelf : Colors.ChatBubbleOther;
-        
+        var bubbleColor = isOwnMessage 
+            ? Colors.ChatBubbleSelf 
+            : Colors.ChatBubbleOther;
+    
         Raylib.DrawRectangleRounded(bubbleRect, 0.15f, 8, bubbleColor);
         Raylib.DrawRectangleRoundedLinesEx(bubbleRect, 0.15f, 8, 1, Colors.OutlineColor);
 
         // Draw text
         float textY = y + Padding;
-        
-        string sender = string.IsNullOrWhiteSpace(message.Sender) ? "Unknown Duck" : message.Sender;
-        string timestamp = message.Timestamp.ToLocalTime().ToString("HH:mm");
+    
+        string sender = string.IsNullOrWhiteSpace(message.Sender) 
+            ? "Unknown Duck" 
+            : message.Sender;
+        string timestamp = message.Timestamp
+            .ToLocalTime()
+            .ToString("HH:mm");
         string header = $"{timestamp} - {sender}:";
         int headerLineCount = WrapText(header, ResourceLoader.BoldFont).Count;
 
         for (int i = 0; i < wrappedLines.Count; i++)
         {
-            var font = i < headerLineCount ? ResourceLoader.BoldFont : ResourceLoader.RegularFont;
-            var color = i < headerLineCount ? Colors.UiText : Colors.InputText;
+            var font = i < headerLineCount 
+                ? ResourceLoader.BoldFont 
+                : ResourceLoader.RegularFont;
+            var color = i < headerLineCount 
+                ? Colors.UiText 
+                : Colors.InputText;
 
             Raylib.DrawTextEx(font, wrappedLines[i],
                 new Vector2(bubbleX + Padding, textY), FontSize, 0.5f, color);
