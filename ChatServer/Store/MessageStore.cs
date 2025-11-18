@@ -1,5 +1,6 @@
 ﻿using ChatServer.Models;
 using Shared;
+using ChatServer.Logger;
 
 namespace ChatServer.Store;
 
@@ -26,19 +27,34 @@ public class MessageStore(UserStore userStore) : ConcurrentStoreBase
   {
     return WithWrite(() =>
   {
-    if (string.IsNullOrEmpty(username) || string.IsNullOrWhiteSpace(messageContent)) // Validate message sender and content
-    { return false; }
+    // Validate inputs
+    if (string.IsNullOrEmpty(username) || string.IsNullOrWhiteSpace(messageContent))
+    {
+      ServerLog.Warning($"MessageStore.Add failed: invalid parameters (username='{username}')");
+      return false;
+    }
+
+    var sender = userStore.GetByUsername(username);
+    if (sender == null)
+    {
+      ServerLog.Warning($"MessageStore.Add failed: unknown user '{username}'");
+      return false;
+    }
 
     var newMessage = new ChatMessage // Create new message
     {
       Id = nextMessageId++,
-      SenderId = userStore.GetByUsername(username)?.Id ?? 0,
+      SenderId = sender.Id,
       Content = messageContent,
       Timestamp = DateTime.UtcNow
     };
 
-    if (newMessage.SenderId == 0) // Validate message sender
-    { return false; }
+    // Validate message ID
+    if (newMessage.SenderId == 0)
+    {
+      ServerLog.Error($"MessageStore.Add failed: SenderId resolved to 0 for username '{username}'");
+      return false;
+    }
 
     // Store message in both list and dictionary
     messages.Add(newMessage);
@@ -184,6 +200,7 @@ public class MessageStore(UserStore userStore) : ConcurrentStoreBase
      return true;
    }
 
+   ServerLog.Warning($"MessageStore.RemoveById failed: message {messageId} not found");
    return false;
  });
   }
@@ -200,12 +217,19 @@ public class MessageStore(UserStore userStore) : ConcurrentStoreBase
   public bool ClearAll()
   {
     return WithWrite(() =>
- {
-   messages.Clear();
-   messagesById.Clear();
-   return true;
- });
+    {
+      try
+      {
+        messages.Clear();
+        messagesById.Clear();
+        return true;
+      }
+      catch (Exception ex)
+      {
+        ServerLog.Error($"MessageStore.ClearAll failed: {ex}");
+        return false;
+      }
+    });
   }
   #endregion
-
 }
