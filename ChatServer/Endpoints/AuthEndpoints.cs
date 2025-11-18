@@ -28,7 +28,7 @@ public static class AuthEndpoints
       var token = userStore.AssignNewSessionAuthToken(user);
 
       // 200: success
-      return Results.Ok(token);
+      return Results.Ok(new { user.Username, token });
     })
     .Produces(StatusCodes.Status200OK)
     .Produces(StatusCodes.Status400BadRequest)

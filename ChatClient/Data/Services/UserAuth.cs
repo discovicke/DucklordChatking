@@ -33,14 +33,17 @@ public class UserAuth(HttpClient httpClient)
                 return false;
 
             // Read token from JSON response body
-            var token = response.Content.ReadFromJsonAsync<string>().Result;
-            if (string.IsNullOrWhiteSpace(token))
+            var content = response.Content.ReadFromJsonAsync<string[]>().Result;
+            if (content == null || content.Length < 2 || string.IsNullOrWhiteSpace(content[0]) || string.IsNullOrWhiteSpace(content[1]))
                 return false;
 
+            var returnedUsername = content[0];
+            var token = content[1];
+
             // Store identity
-            UserAccount.SetUser(username, password);
-            // TODO: username -> ServerUserName
-            AppState.LoggedInUsername = username;
+            UserAccount.SetUser(returnedUsername, password);
+            
+            AppState.LoggedInUsername = returnedUsername;
             AppState.SessionAuthToken = token;
 
             // Attach token to all future requests
