@@ -14,14 +14,6 @@ namespace ChatClient.UI.Components.Specialized
     public class BackButton(Rectangle rect)
         : Button(rect, "Back", Colors.ButtonDefault, Colors.ButtonHovered, Colors.TextColor)
     {
-        public override void Update()
-        {
-            if (AppState.CanGoBack && IsClicked())
-            {
-                Log.Info($"[BackButton] Navigating back from {AppState.CurrentScreen}");
-                AppState.GoBack();
-                Log.Info($"[BackButton] Navigated to {AppState.CurrentScreen}");
-            }
-        }
+
     }
 }
