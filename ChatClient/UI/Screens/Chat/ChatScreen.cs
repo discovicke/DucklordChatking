@@ -195,6 +195,7 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
             return;
         }
 
+        toolbar.ClearInput();
         dataService.StartPolling();
     }
     #endregion
