@@ -1,7 +1,5 @@
-﻿using ChatClient.Core;
-using ChatClient.Core.Application;
+﻿using ChatClient.Core.Application;
 using ChatClient.Core.Infrastructure;
-using ChatClient.UI.Components;
 using ChatClient.UI.Components.Base;
 using ChatClient.UI.Components.Specialized;
 using ChatClient.UI.Components.Text;
@@ -9,27 +7,25 @@ using ChatClient.UI.Screens.Common;
 
 namespace ChatClient.UI.Screens.Options;
 
-/// <summary>
-/// Responsible for: handling settings changes including window mode toggles and account updates.
-/// Manages windowed/fullscreen mode switching and saves user preferences.
-/// </summary>
+// TODO Save settings
 public class OptionsScreenLogic(
     TextField userField,
     TextField passField,
     TextField passConfirmField,
     Button confirmButton,
     BackButton backButton,
-    Button btnWindowed,
-    Button btnFullscreen
+    ToggleBox toggleWindowed,
+    ToggleBox toggleFullscreen
 ) : IScreenLogic
 {
     private readonly TabLogics tabs = new();
     private bool tabsIniti;
+    private bool togglesIniti;
+
     public void HandleInput()
     {
         tabs.Update();
 
-        // Register fields once in desired tab order (username -> password)
         if (!tabsIniti)
         {
             tabs.Register(userField);
@@ -38,15 +34,59 @@ public class OptionsScreenLogic(
             tabsIniti = true;
         }
 
+        // Initialize toggle state from current window mode once
+        if (!togglesIniti)
+        {
+            if (WindowSettings.CurrentMode == WindowMode.Windowed)
+            {
+                toggleWindowed.SetChecked(true);
+                toggleFullscreen.SetChecked(false);
+            }
+            else
+            {
+                toggleWindowed.SetChecked(false);
+                toggleFullscreen.SetChecked(true);
+            }
+            togglesIniti = true;
+        }
+
         userField.Update();
         passField.Update();
         passConfirmField.Update();
+
+        toggleWindowed.Update();
+        toggleFullscreen.Update();
+
+        // Enforce mutual exclusion and reflect active mode immediately
+        if (toggleWindowed.IsClicked())
+        {
+            // Always force state: cannot uncheck without selecting the other
+            toggleWindowed.SetChecked(true);
+            toggleFullscreen.SetChecked(false);
+
+            if (WindowSettings.CurrentMode != WindowMode.Windowed)
+            {
+                WindowSettings.SetMode(WindowMode.Windowed);
+                Log.Info("[OptionsScreenLogic] Windowed mode selected");
+            }
+        }
+
+        if (toggleFullscreen.IsClicked())
+        {
+            toggleFullscreen.SetChecked(true);
+            toggleWindowed.SetChecked(false);
+
+            if (WindowSettings.CurrentMode != WindowMode.Fullscreen)
+            {
+                WindowSettings.SetMode(WindowMode.Fullscreen);
+                Log.Info("[OptionsScreenLogic] Fullscreen mode selected");
+            }
+        }
 
         confirmButton.Update();
         if (confirmButton.IsClicked())
         {
             Log.Info($"[OptionsScreenLogic] Settings confirmed - New username: '{userField.Text}'");
-            // TODO: Save settings
             Clear();
             AppState.GoBack();
         }
@@ -56,18 +96,6 @@ public class OptionsScreenLogic(
         {
             Clear();
             AppState.GoBack();
-        }
-        
-        if (btnWindowed.IsClicked())
-        {
-            WindowSettings.SetMode(WindowMode.Windowed);
-            Log.Info("[OptionsScreenLogic] Windowed mode selected");
-        }
-        
-        if (btnFullscreen.IsClicked())
-        {
-            WindowSettings.SetMode(WindowMode.Fullscreen);
-            Log.Info("[OptionsScreenLogic] Fullscreen mode selected");
         }
     }
 

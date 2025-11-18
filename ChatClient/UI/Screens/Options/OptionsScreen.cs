@@ -1,4 +1,4 @@
-﻿﻿using System.Numerics;
+﻿using System.Numerics;
 using ChatClient.Core;
 using ChatClient.Core.Infrastructure;
 using ChatClient.UI.Components;
@@ -10,10 +10,6 @@ using Raylib_cs;
 
 namespace ChatClient.UI.Screens.Options;
 
-/// <summary>
-/// Responsible for: composition and rendering of the options/settings screen.
-/// Coordinates user account fields, window mode buttons, and delegates input to OptionsScreenLogic.
-/// </summary>
 public class OptionsScreen : ScreenBase<OptionsScreenLayout.LayoutData>
 {
     private readonly TextField newUsername = new(new Rectangle(), 
@@ -30,18 +26,17 @@ public class OptionsScreen : ScreenBase<OptionsScreenLayout.LayoutData>
         Colors.ButtonDefault, Colors.ButtonHovered, Colors.TextColor);
     private readonly BackButton backButton = new(new Rectangle(10, 10, 100, 30));
 
-    private readonly Button btnWindowed = new(new Rectangle(), "Windowed", 
-        Colors.ButtonDefault, Colors.ButtonHovered, Colors.TextColor);
-    private readonly Button btnFullscreen = new(new Rectangle(), "Fullscreen", 
-        Colors.ButtonDefault, Colors.ButtonHovered, Colors.TextColor);
-    
+    private readonly ToggleBox toggleWindowed = new(new Rectangle(), "Windowed");
+    private readonly ToggleBox toggleFullscreen = new(new Rectangle(), "Fullscreen");
     
     public OptionsScreen()
     {
-        logic = new OptionsScreenLogic(newUsername, newPassword, confirmPassword, confirmButton, backButton, btnWindowed, btnFullscreen);
+        logic = new OptionsScreenLogic(newUsername, newPassword, confirmPassword, 
+            confirmButton, backButton, toggleWindowed, toggleFullscreen);
     }
 
-    protected override OptionsScreenLayout.LayoutData CalculateLayout() => OptionsScreenLayout.Calculate(ResourceLoader.LogoTexture.Width, ResourceLoader.LogoTexture.Height);
+    protected override OptionsScreenLayout.LayoutData CalculateLayout() => 
+        OptionsScreenLayout.Calculate(ResourceLoader.LogoTexture.Width, ResourceLoader.LogoTexture.Height);
 
     protected override void ApplyLayout(OptionsScreenLayout.LayoutData layout)
     {
@@ -50,8 +45,8 @@ public class OptionsScreen : ScreenBase<OptionsScreenLayout.LayoutData>
         confirmPassword.SetRect(layout.PassConfirmRect);
         confirmButton.SetRect(layout.ConfirmRect);
         backButton.SetRect(layout.BackRect);
-        btnWindowed.SetRect(layout.BtnWindowedRect);
-        btnFullscreen.SetRect(layout.BtnFullscreenRect);
+        toggleWindowed.SetRect(layout.ToggleWindowedRect);
+        toggleFullscreen.SetRect(layout.ToggleFullscreenRect);
     }
 
     public override void RenderContent()
@@ -63,8 +58,8 @@ public class OptionsScreen : ScreenBase<OptionsScreenLayout.LayoutData>
         confirmButton.Draw();
         backButton.Draw();
         
-        btnWindowed.Draw();
-        btnFullscreen.Draw();
+        toggleWindowed.Draw();
+        toggleFullscreen.Draw();
 
         Raylib.DrawTextureEx(ResourceLoader.LogoTexture,
             new Vector2(layout.LogoX, layout.LogoY),

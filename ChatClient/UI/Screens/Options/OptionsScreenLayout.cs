@@ -13,7 +13,7 @@ public static class OptionsScreenLayout
     public struct LayoutData
     {
         public Rectangle UserRect, PassRect, PassConfirmRect, ConfirmRect, BackRect;
-        public Rectangle BtnWindowedRect, BtnFullscreenRect;
+        public Rectangle ToggleWindowedRect, ToggleFullscreenRect;
         public float LogoX, LogoY, LogoScale, LogoWidth, LogoHeight;
     }
 
@@ -57,17 +57,17 @@ public static class OptionsScreenLayout
         float fieldH = h * 0.035f;
         float btnW = w * 0.25f;
         float btnH = h * 0.045f;
-        float windowBtnW = w * 0.15f;
-        float windowBtnH = h * 0.04f;
+        float toggleSize = h * 0.025f; // square checkboxes
 
         // 4) Stack vertically with 10px gaps
         float userY = fieldsStartY;
         float passY = userY + fieldH + GapBetweenItems;
         float passConfirmY = passY + fieldH + GapBetweenItems;
         float confirmY = passConfirmY + fieldH + (GapBetweenItems * 3);
-        
-        // Window mode buttons below confirm button
-        float windowBtnY = confirmY + btnH + (GapBetweenItems * 3);
+
+        // Window mode toggles below confirm button, centered
+        float toggleY = confirmY + btnH + (GapBetweenItems * 3);
+        float toggleCenterX = w / 2f;
 
         return new LayoutData
         {
@@ -84,17 +84,17 @@ public static class OptionsScreenLayout
             PassConfirmRect = wrap.CenterHoriz(fieldW, fieldH, passConfirmY),
             ConfirmRect = wrap.CenterHoriz(btnW, btnH, confirmY),
 
-            // Window mode buttons side-by-side, centered
-            BtnWindowedRect = new Rectangle(
-                (w / 2) - windowBtnW - (GapBetweenItems / 2),
-                windowBtnY,
-                windowBtnW,
-                windowBtnH),
-            BtnFullscreenRect = new Rectangle(
-                (w / 2) + (GapBetweenItems / 2),
-                windowBtnY,
-                windowBtnW,
-                windowBtnH)
+            // Toggles side-by-side, centered
+            ToggleWindowedRect = new Rectangle(
+                toggleCenterX - toggleSize - (GapBetweenItems * 8),
+                toggleY,
+                toggleSize,
+                toggleSize),
+            ToggleFullscreenRect = new Rectangle(
+                toggleCenterX + (GapBetweenItems * 8),
+                toggleY,
+                toggleSize,
+                toggleSize)
         };
     }
 }
