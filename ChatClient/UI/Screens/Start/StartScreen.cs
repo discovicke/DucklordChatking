@@ -24,7 +24,7 @@ public class StartScreen : ScreenBase<StartScreenLayout.LayoutData>
         Colors.TextFieldUnselected, Colors.TextFieldHovered, Colors.TextColor,
         false, true, "StartScreen_Password", "Enter password...");
 
-    private readonly Button registerButton = new(new Rectangle(0, 0, 0, 0), "Register",
+    private readonly Button registerButton = new(new Rectangle(0, 0, 0, 0), "Create duck",
         Colors.ButtonDefault, Colors.ButtonHovered, Colors.TextColor);
 
     private readonly Button loginButton = new(new Rectangle(0, 0, 0, 0), "Login",

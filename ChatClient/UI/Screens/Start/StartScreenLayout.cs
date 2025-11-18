@@ -18,47 +18,64 @@ namespace ChatClient.UI.Screens.Start
 
         public static LayoutData Calculate(int logoWidth, int logoHeight)
         {
-            // Create UI wrapper for layout
-            // Covers full window - must be called each time to get current window size
-            var wrapper = new UIWrapper();
-            wrapper.SetToFullWindow(); // This updates Width/Height based on current window size
-            
-            // Use wrapper dimensions for all calculations
-            float w = wrapper.Width;
-            float h = wrapper.Height;
-            
-            float colTop = h * 0.45f;
-            
-            // Logo
-            float logoTargetW = w * 0.15f;
-            float logoScale = logoWidth > 0 ? logoTargetW / logoWidth : 0.15f;
-            float scaledLogoHeight = logoHeight * logoScale;
-            float scaledLogoWidth = logoWidth * logoScale;
-            float logoX = (w - scaledLogoWidth) / 2f;
-            float logoY = h * 0.10f;
-            
-            // Dynamic sizing based on screen dimensions
-            float fieldWidth = w * 0.3f;
-            float fieldHeight = h * 0.05f;
-            float buttonWidth = w * 0.25f;
-            float buttonHeight = h * 0.05f;
-            float gap = h * 0.02f;
-            // Starting top position (Y axis) for first column
+            var wrap = new UIWrapper();
+            wrap.SetToFullWindow();
 
+            float w = wrap.Width;
+            float h = wrap.Height;
+
+            const float Padding = 30f;
+            const float GapBetweenItems = 10f;
+
+            // 1) Logo: top 10px to middle of screen (50% height) minus 10px padding at bottom
+            float logoY = Padding;
+            float logoAvailableH = (h * 0.5f) - (Padding * 2);
+    
+            // Scale by height, then clamp to width if needed
+            float logoScale = (logoHeight > 0) 
+                ? (logoAvailableH / logoHeight) 
+                : 1f;
+            float scaledLogoW = logoWidth * logoScale;
+            float scaledLogoH = logoHeight * logoScale;
+
+            // Clamp to 90% of width if too wide
+            if (scaledLogoW > w * 0.90f && logoWidth > 0)
+            {
+                logoScale = (w * 0.90f) / logoWidth;
+                scaledLogoW = logoWidth * logoScale;
+                scaledLogoH = logoHeight * logoScale;
+            }
+
+            float logoX = (w - scaledLogoW) / 2f;
+
+            // 2) Fields and button start at middle of screen (50% y)
+            float fieldsStartY = h * 0.5f;
+
+            // 3) Element sizes
+            float fieldW = w * 0.45f;
+            float fieldH = h * 0.035f;
+            float btnW = w * 0.25f;
+            float btnH = h * 0.045f;
+
+            // 4) Stack vertically with 10px gaps
+            float userY = fieldsStartY;
+            float passY = userY + fieldH + GapBetweenItems;
+            float loginY = passY + fieldH + (GapBetweenItems * 3);
+            float registerY = loginY + fieldH + (GapBetweenItems * 2);
 
             return new LayoutData
             {
                 // Calculate rectangles for each component
                 // Centered horizontally in the window
-                UserRect = wrapper.CenterHoriz(fieldWidth, fieldHeight, colTop),
-                PassRect = wrapper.CenterHoriz(fieldWidth, fieldHeight, colTop + fieldHeight + gap),
-                LoginRect = wrapper.CenterHoriz(buttonWidth, buttonHeight, colTop + 2 * (fieldHeight + gap)),
-                RegisterRect = wrapper.CenterHoriz(buttonWidth, buttonHeight, colTop + 3 * (fieldHeight + gap)),
+                UserRect = wrap.CenterHoriz(fieldW, fieldH, userY),
+                PassRect = wrap.CenterHoriz(fieldW, fieldH, passY),
+                LoginRect = wrap.CenterHoriz(btnW, btnH, loginY),
+                RegisterRect = wrap.CenterHoriz(btnW, btnH, registerY),
                 LogoScale = logoScale,
                 LogoX = logoX,
                 LogoY = logoY,
-                LogoWidth = scaledLogoWidth,
-                LogoHeight = scaledLogoHeight,
+                LogoWidth = scaledLogoW,
+                LogoHeight = scaledLogoH,
                 ScreenHeight = h
             };
         }
