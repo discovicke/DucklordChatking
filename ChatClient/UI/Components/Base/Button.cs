@@ -66,7 +66,7 @@ namespace ChatClient.UI.Components.Base
             }
             else if (isHovered)
             {
-                Raylib.DrawRectangleRoundedLinesEx(Rect, Rounds, Segments, 3, Colors.AccentColor);
+                Raylib.DrawRectangleRoundedLinesEx(Rect, Rounds, Segments, 3, Colors.BrandGold);
             }
             else
             {
@@ -113,7 +113,6 @@ namespace ChatClient.UI.Components.Base
 
                 // Duck sound
                 Raylib.PlaySound(ResourceLoader.ButtonSound);
-
             }
 
             return clicked;
