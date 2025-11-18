@@ -137,15 +137,6 @@ namespace ChatClient.UI.Screens.Start
             ClearFields();
         }
 
-        /*
-        private void NavigateToOptions()
-        {
-            Log.Info("[StartScreenLogic] Navigating to options screen");
-            AppState.CurrentScreen = Screen.Options;
-            ClearFields();
-        }
-        */
-
         private void ClearFields()
         {
             Log.Info("[StartScreenLogic] Clearing all fields");

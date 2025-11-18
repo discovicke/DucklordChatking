@@ -2,18 +2,24 @@
 using Scalar.AspNetCore;
 using ChatServer.Configuration;
 using ChatServer.Endpoints;
+using ChatServer.Logger;
 
 // Stores (in-memory storage)
 UserStore userStore = new();
 MessageStore messageStore = new(userStore);
 
 var builder = WebApplication.CreateBuilder(args);
+ServerLog.Info("Booting Ducklord Server");
+
 builder.Services.AddCustomOpenApi(); // Register the OpenAPI custom configuration which is found in the OpenApiConfiguration.cs Class
+ServerLog.Info("OpenAPI configuration loaded");
+
 var app = builder.Build();
 
 // Seed initial users (for testing + Scalar UI authentication)
 userStore.Add("Ducklord", "chatking", isAdmin: true);
 userStore.Add("Scalar", "APIDOCS", isAdmin: true); // This user is used to allow Scalar UI to send test requests
+ServerLog.Info("Initial test users seeded");
 
 // Print debug token
 Console.WriteLine(userStore.GetByUsername("Scalar")?.SessionAuthToken ?? "Token retrieval error: user not found or no token assigned. Ask server admin to generate one");
@@ -45,11 +51,15 @@ app.MapAuthEndpoints(userStore);
 app.MapUserEndpoints(userStore);
 app.MapMessageEndpoints(userStore, messageStore);
 app.MapSystemEndpoints();
+ServerLog.Info("All API endpoints mapped");
+
 
 // Redirect root && /docs → /scalar/ (OpenAPI UI)
 app.MapGet("/", () => Results.Redirect("/scalar/", permanent: false)).ExcludeFromApiReference();
 app.MapGet("/docs", () => Results.Redirect("/scalar/", permanent: false)).ExcludeFromApiReference();
 
+// Final ready state
+ServerLog.Success("Ducklord Server is now running");
 
 app.Run();
 
