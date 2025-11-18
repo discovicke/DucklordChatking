@@ -11,8 +11,6 @@ public class Program
 {
     // TODO:
     //      - Add relative spacing to window size
-    //      - Tab & Ctrl + Tab for switching between fields
-    //      - Quack login = DuckLord acc
     //      - Add chat bubble for own user message
     //      - Add feedback box / message when other users change status
     

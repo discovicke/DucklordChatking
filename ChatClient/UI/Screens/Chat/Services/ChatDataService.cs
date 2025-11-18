@@ -35,7 +35,10 @@ public class ChatDataService
     /// </summary>
     public async Task LoadChatHistoryAsync()
     {
-        if (hasLoadedInitialHistory) return;
+        if (hasLoadedInitialHistory)
+        {
+            return;
+        }
         hasLoadedInitialHistory = true;
 
         Log.Info("[ChatDataService] Loading initial chat history");
@@ -68,7 +71,10 @@ public class ChatDataService
     /// </summary>
     public void StartPolling()
     {
-        if (isPolling || !hasLoadedInitialHistory) return;
+        if (isPolling || !hasLoadedInitialHistory)
+        {
+            return;
+        }
 
         isPolling = true;
         pollingCts = new CancellationTokenSource();

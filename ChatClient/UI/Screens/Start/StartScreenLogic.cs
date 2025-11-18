@@ -111,11 +111,28 @@ namespace ChatClient.UI.Screens.Start
 
         private void DevLogin()
         {
-            // TODO DEV LOGIN
             Log.Info("[StartScreenLogic] DEV MODE: Quack login activated (Ctrl+Shift+D)");
-            AppState.LoggedInUsername = "Ducklord";
-            AppState.CurrentScreen = Screen.Chat;
-            ClearFields();
+    
+            // Actual login with server validation
+            bool success = userAuth.Login("Ducklord", "chatking");
+    
+            if (success)
+            {
+                Log.Success("[StartScreenLogic] DEV MODE: Login successful for Ducklord");
+                AppState.LoggedInUsername = "Ducklord";
+                FeedbackBox.Show("DEV MODE: Welcome back, Ducklord!", true);
+        
+                Task.Delay(1000).ContinueWith(_ =>
+                {
+                    AppState.CurrentScreen = Screen.Chat;
+                    ClearFields();
+                });
+            }
+            else
+            {
+                Log.Error("[StartScreenLogic] DEV MODE: Login failed for Ducklord - Invalid credentials");
+                FeedbackBox.Show("DEV MODE: Login failed!", false);
+            }
         }
 
         private void NavigateToRegister()

@@ -85,10 +85,16 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
 
     public override void RenderContent()
     {
-        if (!CanRender()) return;
+        if (!CanRender())
+        {
+            return;
+        }
 
         // Ensure history is loaded before starting polling
-        if (!EnsureHistoryLoaded()) return;
+        if (!EnsureHistoryLoaded())
+        {
+            return;
+        }
 
         // Start polling once layout is ready
         StartPollingIfNeeded();
@@ -127,7 +133,7 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
     private void OnMessagesChanged(IReadOnlyList<MessageDTO> messages)
     {
         currentMessages = messages.ToList();
-        float usableWidth = layout.ChatRect.Width - 20; // 10px insets on both sides
+        float usableWidth = layout.ChatRect.Width - 20; // 20px insets on both sides
         messagesView.UpdateMessages(currentMessages, usableWidth);
     }
 
@@ -168,10 +174,14 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
     private bool EnsureHistoryLoaded()
     {
         if (dataService.HasLoadedHistory)
+        {
             return true;
+        }
 
         _ = dataService.LoadChatHistoryAsync();
-        return false;
+        {
+            return false;
+        }
     }
 
     /// <summary>
@@ -180,7 +190,10 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
     /// </summary>
     private void StartPollingIfNeeded()
     {
-        if (layout.ChatRect.Width <= 0) return;
+        if (layout.ChatRect.Width <= 0)
+        {
+            return;
+        }
 
         dataService.StartPolling();
     }
