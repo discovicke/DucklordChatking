@@ -116,7 +116,7 @@ public class ChatMessage
         string timestamp = message.Timestamp
             .ToLocalTime()
             .ToString("HH:mm");
-        string header = $"{timestamp} - {sender}:";
+        string header = $"{timestamp} - {sender}";
         int headerLineCount = WrapText(header, ResourceLoader.BoldFont).Count;
 
         for (int i = 0; i < wrappedLines.Count; i++)
@@ -125,7 +125,7 @@ public class ChatMessage
                 ? ResourceLoader.BoldFont 
                 : ResourceLoader.RegularFont;
             var color = i < headerLineCount 
-                ? Colors.UiText 
+                ? Colors.ChatBubbleSelfText 
                 : Colors.ChatBubbleOtherText;
 
             Raylib.DrawTextEx(font, wrappedLines[i],

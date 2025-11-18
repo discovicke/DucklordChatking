@@ -38,7 +38,7 @@ public class FeedbackBox
     {
         if (string.IsNullOrEmpty(message)) return;
 
-        Color feedbackColor = isSuccess ? Colors.BrandGreen : Colors.Fail;
+        Color feedbackColor = isSuccess ? Colors.Success : Colors.Fail;
 
         // Measure text size
         Vector2 textSize = Raylib.MeasureTextEx(ResourceLoader.MediumFont, message, 16, 0.5f);
