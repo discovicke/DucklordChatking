@@ -85,4 +85,29 @@ namespace ChatServer.Logger
     }
 
 
-}}
+    // ---------------------------------------------------------------
+    // File rotation
+    // ---------------------------------------------------------------
+
+    private static void RotateIfNeeded()
+    {
+      try
+      {
+        var info = new FileInfo(currentLogFile);
+
+        if (info.Exists && info.Length >= maxFileSizeBytes)
+        {
+          string rotated = currentLogFile.Replace(".log",
+              $".{DateTime.Now:yyyyMMdd_HHmmss}.log");
+
+          File.Move(currentLogFile, rotated);
+          currentLogFile = CreateLogFilePath();
+        }
+      }
+      catch
+      {
+      }
+    }
+
+  }
+}
