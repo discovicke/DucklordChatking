@@ -29,6 +29,8 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
     private readonly UserListView userListView;
     private readonly ChatToolbar toolbar;
     private readonly BackButton backButton;
+    // --- Options button ---
+    private readonly OptionsButton optionsButton;
     #endregion
 
     #region Fields: Data & Services
@@ -62,6 +64,9 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
         // Back button
         backButton = new BackButton(new Rectangle(10, 10, 100, 30));
 
+        // --- Options button ---
+        optionsButton = new OptionsButton(new Rectangle(10, 500, 100, 30));
+
         // Data service
         var messageHandler = new MessageHandler(ServerConfig.CreateHttpClient());
         dataService = new ChatDataService(messageHandler);
@@ -71,8 +76,8 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
         dataService.UsersStatusChanged += OnUsersStatusChanged;
         toolbar.SendPressed += OnSendPressed;
 
-        // Logic (simplified - now just handles back button)
-        logic = new ChatScreenLogic(this, backButton);
+        // Logic (simplified - now just handles back / options button)
+        logic = new ChatScreenLogic(this, backButton, optionsButton);
     }
 
     protected override ChatScreenLayout.LayoutData CalculateLayout()
@@ -84,6 +89,7 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
         userListView.SetBounds(layout.UserListRect);
         toolbar.SetBounds(layout.InputRect, layout.SendRect);
         backButton.SetRect(layout.BackRect);
+        optionsButton.SetRect(layout.OptionsRect);
     }
 
     public override void RenderContent()
@@ -128,8 +134,9 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
         toolbar.Update();
         toolbar.Draw();
 
-        // Back button
+        // Back / Options button
         backButton.Draw();
+        optionsButton.Draw();
     }
 
     #region Event Handlers
