@@ -192,7 +192,8 @@ public static class UserEndpoints
         return Results.NoContent();
       }
 
-      ServerLog.Info($"User statuses returned ({statuses.Count()} entries)");
+      // Optional log, normally avoided to prevent noise in log file
+      // ServerLog.Info($"User statuses returned ({statuses.Count()} entries)");
 
       // Convert from tuple -> DTO
       var result = statuses.Select(s => new UserStatusDTO
