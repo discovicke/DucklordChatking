@@ -33,7 +33,7 @@ public class UserListView(ScrollablePanel panel)
 
         // Online header
         float scrolledY = panel.GetScrolledY(y);
-        Raylib.DrawTextEx(ResourceLoader.BoldFont, "ONLINE", new Vector2(x, scrolledY), fontSize, 0.5f, Colors.AccentColor);
+        Raylib.DrawTextEx(ResourceLoader.BoldFont, "ONLINE", new Vector2(x, scrolledY), fontSize, 0.5f, Colors.Online);
         y += lineH;
 
         // Online users
@@ -42,7 +42,7 @@ public class UserListView(ScrollablePanel panel)
             scrolledY = panel.GetScrolledY(y);
             if (panel.IsVisible(scrolledY, lineH))
             {
-                Raylib.DrawCircle((int)x + 5, (int)scrolledY + 7, 4f, Colors.AccentColor);
+                Raylib.DrawCircle((int)x + 5, (int)scrolledY + 7, 4f, Colors.Online);
                 Raylib.DrawTextEx(ResourceLoader.RegularFont, user, new Vector2(x + 15, scrolledY), fontSize, 0.5f, Colors.UiText);
             }
             y += lineH;
