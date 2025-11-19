@@ -14,6 +14,7 @@ public static class ResourceLoader
     public static Font MediumFont { get; private set; }
     public static Font RegularFont { get; private set; }
     public static Font BoldFont { get; private set; }
+    public static Font SymbolFont { get; private set; }
 
     // --- Textures ---
     public static Texture2D LogoTexture { get; private set; }
@@ -80,6 +81,9 @@ public static class ResourceLoader
         int[] charArray = chars.ToArray();
         int charCount = chars.Count;
 
+        // For symbols
+        int[] codepoints = Enumerable.Range(0xf000, 0x8ff).ToArray();
+
         // Load fonts at higher resolution (40px) for better quality on all DPI screens
         // We scale down when rendering for crisp text even on low-DPI displays
         ExtraLightFont = Raylib.LoadFontEx("Resources/CascadiaCode-ExtraLight.ttf", 40, charArray, charCount);
@@ -87,6 +91,9 @@ public static class ResourceLoader
         MediumFont = Raylib.LoadFontEx("Resources/CascadiaCode-Medium.ttf", 40, charArray, charCount);
         RegularFont = Raylib.LoadFontEx("Resources/CascadiaCode-Regular.ttf", 40, charArray, charCount);
         BoldFont = Raylib.LoadFontEx("Resources/CascadiaCode-Bold.ttf", 40, charArray, charCount);
+
+        // Font for symbols
+        SymbolFont = Raylib.LoadFontEx("Resources/Font Awesome 7 Free-Solid-900.otf", 40, codepoints, charCount);
 
         Log.Info("[ResourceLoader] Fonts loaded");
     }
@@ -133,6 +140,7 @@ public static class ResourceLoader
         Raylib.UnloadFont(MediumFont);
         Raylib.UnloadFont(RegularFont);
         Raylib.UnloadFont(BoldFont);
+        Raylib.UnloadFont(SymbolFont);
 
         Log.Info("[ResourceLoader] Fonts unloaded");
     }

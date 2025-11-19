@@ -26,6 +26,25 @@ namespace ChatClient.UI.Components.Specialized
             Raylib.DrawRectangleRounded(Rect, 0.12f, 12, bg);
             Raylib.DrawRectangleRoundedLinesEx(Rect, 0.12f, 12, 1f, Colors.OutlineColor);
 
+            // --- TEST Gear Icon ---
+            string gearIcon = "\uf013";
+            float fontSize = Rect.Height * 0.6f;
+            Vector2 textSize = Raylib.MeasureTextEx(ResourceLoader.SymbolFont, gearIcon, fontSize, 0);
+            // Center icon in button
+            Vector2 pos = new Vector2(
+                Rect.X + (Rect.Width - textSize.X) * 0.5f,
+                Rect.Y + (Rect.Height - textSize.Y) * 0.5f
+            );
+            Raylib.DrawTextEx(
+            ResourceLoader.SymbolFont,
+            gearIcon,
+            pos,
+            fontSize,
+            0,
+            Colors.TextColor
+            );
+
+            /*
             // Gear icon geometry
             Vector2 center = new(Rect.X + Rect.Width * 0.5f, Rect.Y + Rect.Height * 0.5f);
             float size = MathF.Min(Rect.Width, Rect.Height);
@@ -43,8 +62,10 @@ namespace ChatClient.UI.Components.Specialized
             float toothArc = arc * 0.60f;    // 60% of per‑tooth arc width
             float toothWidth = toothArc * outerR; // convert arc length to linear width
 
+
             // Gear ring (donut)
             DrawRing(center, innerR, outerR, Colors.UiText);
+            
 
             // Teeth (rotated rectangles)
             for (int i = 0; i < teeth; i++)
@@ -60,11 +81,14 @@ namespace ChatClient.UI.Components.Specialized
                 var origin = new Vector2(toothWidth * 0.5f, toothDepth * 0.5f);
 
                 Raylib.DrawRectanglePro(toothRect, origin, angle, Colors.UiText);
+
             }
 
             // Axle hole
             Raylib.DrawCircleV(center, axleR, bg);
             Raylib.DrawCircleLines((int)center.X, (int)center.Y, axleR, Colors.OutlineColor);
+
+            */
         }
 
         public override void Update()

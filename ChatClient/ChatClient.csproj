@@ -16,6 +16,7 @@
     <None Remove="Resources\DuckLord1.2.png" />
     <None Remove="Resources\DuckLord1.2slim.png" />
     <None Remove="Resources\FailedSound.mp3" />
+    <None Remove="Resources\Font Awesome 7 Free-Solid-900.otf" />
     <None Remove="Resources\LoginSound.mp3" />
     <None Remove="Resources\MessageDelete.mp3" />
     <None Remove="Resources\MessageDuck.mp3" />
@@ -49,6 +50,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\FailedSound.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Font Awesome 7 Free-Solid-900.otf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\LoginSound.mp3">
