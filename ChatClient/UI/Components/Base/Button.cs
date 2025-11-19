@@ -13,7 +13,7 @@ namespace ChatClient.UI.Components.Base
     /// </summary>
     public class Button : UIComponent
     {
-        private string Text;
+        public string Text { get; set; }
         private Color NormalColor;
         private Color HoverColorButton;
         private Color PressedColorButton;
