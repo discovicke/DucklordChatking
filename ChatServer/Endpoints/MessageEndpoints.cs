@@ -3,20 +3,19 @@ using ChatServer.Auth;
 using Shared;
 using Scalar.AspNetCore;
 using ChatServer.Logger;
+using ChatServer.Services;
 
 namespace ChatServer.Endpoints;
 
 public static class MessageEndpoints
 {
   public static RouteGroupBuilder MapMessageEndpoints(
-      this IEndpointRouteBuilder app,
-      UserStore userStore,
-      MessageStore messageStore)
+      this IEndpointRouteBuilder app)
   {
     var messages = app.MapGroup("/messages").WithTags("Messages");
 
     #region SEND MESSAGE
-    messages.MapPost("/send", (HttpContext context, MessageDTO dto) =>
+    messages.MapPost("/send", (HttpContext context, UserStore userStore, MessageStore messageStore, MessageDTO dto) =>
     {
       // 401: authentication required
       if (!AuthUtils.TryAuthenticate(context.Request, userStore, out var caller) || caller == null)
@@ -72,7 +71,12 @@ public static class MessageEndpoints
     #endregion
 
     #region GET MESSAGE UPDATES (LONG POLLING)
-    messages.MapGet("/updates", async (HttpContext context, int lastId) =>
+    messages.MapGet("/updates", async (
+        HttpContext context,
+        UserStore userStore,
+        MessageStore messageStore,
+        MessageNotifier notifier,
+        int lastId) =>
     {
       // 401: authentication required
       if (!AuthUtils.TryAuthenticate(context.Request, userStore, out var caller) || caller == null)
@@ -133,7 +137,7 @@ public static class MessageEndpoints
     #endregion
 
     #region GET MESSAGE HISTORY (WITH OPTIONAL TAKE PARAMETER)
-    messages.MapGet("/history", (HttpContext context, int? take) =>
+    messages.MapGet("/history", (HttpContext context, UserStore userStore, MessageStore messageStore, int? take) =>
     {
       // 401: authentication required
       if (!AuthUtils.TryAuthenticate(context.Request, userStore, out var caller) || caller == null)
@@ -170,7 +174,7 @@ public static class MessageEndpoints
     #endregion
 
     #region CLEAR MESSAGE HISTORY
-    messages.MapPost("/clear", (HttpContext context) =>
+    messages.MapPost("/clear", (HttpContext context, UserStore userStore, MessageStore messageStore) =>
     {
       // 401: authentication required
       if (!AuthUtils.TryAuthenticate(context.Request, userStore, out var caller) || caller == null)

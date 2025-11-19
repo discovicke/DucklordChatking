@@ -9,13 +9,12 @@ namespace ChatServer.Endpoints;
 public static class UserEndpoints
 {
   public static RouteGroupBuilder MapUserEndpoints(
-      this IEndpointRouteBuilder app,
-      UserStore userStore)
+      this IEndpointRouteBuilder app)
   {
     var users = app.MapGroup("/users").WithTags("Users");
 
     #region LIST USERS
-    users.MapGet("", (HttpContext context) =>
+    users.MapGet("", (HttpContext context, UserStore userStore) =>
     {
       // 401: authentication required
       if (!AuthUtils.TryAuthenticate(context.Request, userStore, out var user))
@@ -58,7 +57,7 @@ public static class UserEndpoints
     #endregion
 
     #region UPDATE USER CREDENTIALS
-    users.MapPost("/update", (HttpContext context, UpdateUserDTO dto) =>
+    users.MapPost("/update", (HttpContext context, UserStore userStore, UpdateUserDTO dto) =>
     {
 
       // 401: authentication required
@@ -113,7 +112,7 @@ public static class UserEndpoints
     #endregion
 
     #region DELETE USER
-    users.MapPost("/delete", (HttpContext context, UserDTO dto) =>
+    users.MapPost("/delete", (HttpContext context, UserStore userStore, UserDTO dto) =>
     {
       // 401: authentication required
       if (!AuthUtils.TryAuthenticate(context.Request, userStore, out var caller) || caller == null)
@@ -174,7 +173,7 @@ public static class UserEndpoints
     #endregion
 
     #region GET ALL USER STATUSES
-    users.MapGet("/status", (HttpContext context) =>
+    users.MapGet("/status", (HttpContext context, UserStore userStore) =>
     {
       // 401: authentication required
       if (!AuthUtils.TryAuthenticate(context.Request, userStore, out var caller))
@@ -217,7 +216,7 @@ public static class UserEndpoints
     #endregion
 
     #region USER HEARTBEAT CHECK
-    users.MapPost("/heartbeat", (HttpContext context) =>
+    users.MapPost("/heartbeat", (HttpContext context, UserStore userStore) =>
     {
       if (!AuthUtils.TryAuthenticate(context.Request, userStore, out var caller) || caller == null)
       {

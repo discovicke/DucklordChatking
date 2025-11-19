@@ -7,13 +7,13 @@ namespace ChatServer.Endpoints;
 public static class AuthEndpoints
 {
   public static RouteGroupBuilder MapAuthEndpoints(
-      this IEndpointRouteBuilder app,
-      UserStore userStore)
+      this IEndpointRouteBuilder app
+      )
   {
     var auth = app.MapGroup("/auth").WithTags("Authentication");
 
     #region LOGIN
-    auth.MapPost("/login", (UserDTO dto) =>
+    auth.MapPost("/login", (UserStore userStore, UserDTO dto) =>
     {
       ServerLog.Info($"Login attempt for '{dto.Username}'");
 
@@ -57,7 +57,7 @@ public static class AuthEndpoints
     #endregion
 
     #region REGISTER
-    auth.MapPost("/register", (UserDTO dto) =>
+    auth.MapPost("/register", (UserStore userStore, UserDTO dto) =>
     {
       ServerLog.Info($"Registration attempt for '{dto.Username}'");
 

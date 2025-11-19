@@ -3,18 +3,26 @@ using Scalar.AspNetCore;
 using ChatServer.Configuration;
 using ChatServer.Endpoints;
 using ChatServer.Logger;
+using ChatServer.Services;
 
-// Stores (in-memory storage)
-UserStore userStore = new();
-MessageStore messageStore = new(userStore);
 
 var builder = WebApplication.CreateBuilder(args);
 ServerLog.Info("Booting Ducklord Server");
+
+// Dependency injections
+builder.Services.AddSingleton<UserStore>();
+builder.Services.AddSingleton<MessageStore>();
+builder.Services.AddSingleton<MessageNotifier>();
+ServerLog.Info("Dependency injections registered");
 
 builder.Services.AddCustomOpenApi(); // Register the OpenAPI custom configuration which is found in the OpenApiConfiguration.cs Class
 ServerLog.Info("OpenAPI configuration loaded");
 
 var app = builder.Build();
+
+// Get required DI services for Program.cs
+var userStore = app.Services.GetRequiredService<UserStore>();
+var messageStore = app.Services.GetRequiredService<MessageStore>();
 
 // Seed initial users (for testing + Scalar UI authentication)
 userStore.Add("Ducklord", "chatking", isAdmin: true);
@@ -47,9 +55,9 @@ app.MapScalarApiReference(opt => // exposes visual UI at /scalar
 });
 
 // Register all API endpoint modules
-app.MapAuthEndpoints(userStore);
-app.MapUserEndpoints(userStore);
-app.MapMessageEndpoints(userStore, messageStore);
+app.MapAuthEndpoints();
+app.MapUserEndpoints();
+app.MapMessageEndpoints();
 app.MapSystemEndpoints();
 ServerLog.Info("All API endpoints mapped");
 
