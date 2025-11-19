@@ -4,6 +4,7 @@ using ChatClient.UI.Components.Base;
 using ChatClient.UI.Components.Specialized;
 using ChatClient.UI.Components.Text;
 using ChatClient.UI.Screens.Common;
+using Raylib_cs;
 
 namespace ChatClient.UI.Screens.Options;
 /// <summary>
@@ -18,7 +19,8 @@ public class OptionsScreenLogic(
     Button confirmButton,
     BackButton backButton,
     ToggleBox toggleWindowed,
-    ToggleBox toggleFullscreen
+    ToggleBox toggleFullscreen,
+    ToggleBox toggleMute
 ) : IScreenLogic
 {
     private readonly TabLogics tabs = new();
@@ -59,6 +61,7 @@ public class OptionsScreenLogic(
 
         toggleWindowed.Update();
         toggleFullscreen.Update();
+        toggleMute.Update();
 
         // Enforce mutual exclusion and reflect active mode immediately
         if (toggleWindowed.IsClicked())
@@ -86,20 +89,39 @@ public class OptionsScreenLogic(
             }
         }
 
-        confirmButton.Update();
-        if (confirmButton.IsClicked())
+        // Mute application
+        if (toggleMute.IsChecked)
         {
-            Log.Info($"[OptionsScreenLogic] Settings confirmed - New username: '{userField.Text}'");
-            Clear();
-            AppState.GoBack();
+            
+            Raylib.SetMasterVolume(0.0f);
+            Log.Info("[OptionsScreenLogic] Mute enabled");
+        }
+        else
+        {
+            
+            Raylib.SetMasterVolume(1.0f);
+            Log.Info("[OptionsScreenLogic] Mute disabled");
         }
 
-        backButton.Update();
-        if (backButton.IsClicked())
-        {
-            Clear();
-            AppState.GoBack();
-        }
+            
+
+
+
+            confirmButton.Update();
+            if (confirmButton.IsClicked())
+            {
+                Log.Info($"[OptionsScreenLogic] Settings confirmed - New username: '{userField.Text}'");
+                Clear();
+                AppState.GoBack();
+            }
+
+            backButton.Update();
+            if (backButton.IsClicked())
+            {
+                Clear();
+                AppState.GoBack();
+            }
+     
     }
 
     private void Clear()

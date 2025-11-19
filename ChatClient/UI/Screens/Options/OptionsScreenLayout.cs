@@ -10,7 +10,7 @@ public static class OptionsScreenLayout
     public struct LayoutData
     {
         public Rectangle UserRect, PassRect, PassConfirmRect, ConfirmRect, BackRect;
-        public Rectangle ToggleWindowedRect, ToggleFullscreenRect;
+        public Rectangle ToggleWindowedRect, ToggleFullscreenRect, ToggleMuteRect;
         public float LogoX, LogoY, LogoScale, LogoWidth, LogoHeight;
     }
 
@@ -61,9 +61,18 @@ public static class OptionsScreenLayout
         float wrapperH = toggleBoxSize + 5f + labelHeightApprox + 8f; // 8px internal padding
         float toggleY = confirmY + btnH + (GapBetweenItems * 3);
 
+        // --- Old calc --- 
+        // float leftX = centerX - wrapperW - (GapBetweenItems / 2f);
+        // float rightX = centerX + (GapBetweenItems / 2f);
+
+        // --- New calc ---
         float centerX = w / 2f;
-        float leftX = centerX - wrapperW - (GapBetweenItems / 2f);
-        float rightX = centerX + (GapBetweenItems / 2f);
+        float totalWidth = (wrapperW * 3) + (GapBetweenItems * 2);
+        float startX = centerX - (totalWidth / 2f);
+
+        float windowedX = startX;
+        float fullscreenX = startX + wrapperW + GapBetweenItems;
+        float muteX = fullscreenX + wrapperW + GapBetweenItems;
 
         return new LayoutData
         {
@@ -80,8 +89,9 @@ public static class OptionsScreenLayout
             PassConfirmRect = wrap.CenterHoriz(fieldW, fieldH, passConfirmY),
             ConfirmRect = wrap.CenterHoriz(btnW, btnH, confirmY),
 
-            ToggleWindowedRect = new Rectangle(leftX, toggleY, wrapperW, wrapperH),
-            ToggleFullscreenRect = new Rectangle(rightX, toggleY, wrapperW, wrapperH)
+            ToggleWindowedRect = new Rectangle(windowedX, toggleY, wrapperW, wrapperH),
+            ToggleFullscreenRect = new Rectangle(fullscreenX, toggleY, wrapperW, wrapperH),
+            ToggleMuteRect = new Rectangle(muteX, toggleY, wrapperW, wrapperH)
         };
     }
 }
