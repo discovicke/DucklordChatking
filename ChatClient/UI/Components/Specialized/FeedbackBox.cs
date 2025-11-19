@@ -1,4 +1,4 @@
-using System.Numerics;
+﻿using System.Numerics;
 using ChatClient.Core.Infrastructure;
 using ChatClient.UI.Theme;
 using Raylib_cs;

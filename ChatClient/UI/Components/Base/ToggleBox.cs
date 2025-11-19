@@ -1,4 +1,4 @@
-// File: ChatClient/UI/Components/Base/ToggleBox.cs
+﻿// File: ChatClient/UI/Components/Base/ToggleBox.cs
 using System.Numerics;
 using ChatClient.Core.Infrastructure;
 using ChatClient.Core.Input;

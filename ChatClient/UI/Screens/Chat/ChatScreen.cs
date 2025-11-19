@@ -61,8 +61,9 @@ public class ChatScreen : ScreenBase<ChatScreenLayout.LayoutData>
             Colors.ButtonDefault, Colors.ButtonHovered, Colors.TextColor);
         toolbar = new ChatToolbar(inputField, sendButton);
 
-        // Back button
+        // --- Log out button (Back button) --- 
         backButton = new BackButton(new Rectangle(10, 10, 100, 30));
+        backButton.Text = "Sign out";
 
         // --- Options button ---
         optionsButton = new OptionsButton(new Rectangle(10, 500, 100, 30));

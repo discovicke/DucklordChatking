@@ -70,30 +70,35 @@ public class RegisterScreenLogic(
 
         if (string.IsNullOrWhiteSpace(username))
         {
+            Raylib.PlaySound(ResourceLoader.FailedSound);
             FeedbackBox.Show("Quackername cannot be empty!", false);
             return;
         }
 
         if (string.IsNullOrWhiteSpace(password))
         {
+            Raylib.PlaySound(ResourceLoader.FailedSound);
             FeedbackBox.Show("Password cannot be empty!", false);
             return;
         }
 
         if (password != passwordConfirm)
         {
+            Raylib.PlaySound(ResourceLoader.FailedSound);
             FeedbackBox.Show("Passwords do not match!", false);
             return;
         }
 
         if (password.Length < 8)
         {
+            Raylib.PlaySound(ResourceLoader.FailedSound);
             FeedbackBox.Show("Password must be at least 8 characters!", false);
             return;
         }
         
         if (password.Any(char.IsWhiteSpace))
         {
+            Raylib.PlaySound(ResourceLoader.FailedSound);
             FeedbackBox.Show("Password can not contain blank spaces!", false);
             return;
         }
@@ -102,6 +107,7 @@ public class RegisterScreenLogic(
 
         if (success)
         {
+            Raylib.PlaySound(ResourceLoader.LoginSound);
             FeedbackBox.Show($"Duckount created! Welcome, {username}!", true);
             
             Task.Delay(3000).ContinueWith(_ =>
@@ -112,6 +118,7 @@ public class RegisterScreenLogic(
         }
         else
         {
+            Raylib.PlaySound(ResourceLoader.FailedSound);
             FeedbackBox.Show("Registration failed! Quackername may be taken.", false);
         }
     }

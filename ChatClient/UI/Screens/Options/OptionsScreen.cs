@@ -28,11 +28,12 @@ public class OptionsScreen : ScreenBase<OptionsScreenLayout.LayoutData>
 
     private readonly ToggleBox toggleWindowed = new(new Rectangle(), "Windowed");
     private readonly ToggleBox toggleFullscreen = new(new Rectangle(), "Fullscreen");
+    private readonly ToggleBox toggleMute = new(new Rectangle(), "Sound OFF");
     
     public OptionsScreen()
     {
         logic = new OptionsScreenLogic(newUsername, newPassword, confirmPassword, 
-            confirmButton, backButton, toggleWindowed, toggleFullscreen);
+            confirmButton, backButton, toggleWindowed, toggleFullscreen, toggleMute);
     }
 
     protected override OptionsScreenLayout.LayoutData CalculateLayout() => 
@@ -47,6 +48,7 @@ public class OptionsScreen : ScreenBase<OptionsScreenLayout.LayoutData>
         backButton.SetRect(layout.BackRect);
         toggleWindowed.SetRect(layout.ToggleWindowedRect);
         toggleFullscreen.SetRect(layout.ToggleFullscreenRect);
+        toggleMute.SetRect(layout.ToggleMuteRect);
     }
 
     public override void RenderContent()
@@ -60,6 +62,7 @@ public class OptionsScreen : ScreenBase<OptionsScreenLayout.LayoutData>
         
         toggleWindowed.Draw();
         toggleFullscreen.Draw();
+        toggleMute.Draw();
 
         Raylib.DrawTextureEx(ResourceLoader.LogoTexture,
             new Vector2(layout.LogoX, layout.LogoY),
