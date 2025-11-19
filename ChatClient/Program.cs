@@ -53,11 +53,12 @@ public class Program
             int screenHeight = Raylib.GetScreenHeight();
             const int fontSize = 10; // Constant font size - does not scale with window
             const int padding = 10;
+            const int paddingH = 5;
 
             Raylib.DrawTextEx(
                 ResourceLoader.RegularFont,
                 $"{appVersion}",
-                new Vector2(padding, screenHeight - fontSize - padding),
+                new Vector2(padding, screenHeight - fontSize - paddingH),
                 fontSize,
                 0.5f,
                 Colors.SubtleText);
