@@ -1,12 +1,15 @@
 ﻿using ChatServer.Models;
 using Shared;
 using ChatServer.Logger;
+using ChatServer.Services;
 
 namespace ChatServer.Store;
 
-public class MessageStore(UserStore userStore) : ConcurrentStoreBase
+public class MessageStore(UserStore userStore, MessageNotifier messageNotifier) : ConcurrentStoreBase
 {
   private readonly UserStore userStore = userStore;
+  private readonly MessageNotifier messageNotifier = messageNotifier;
+
   private readonly List<ChatMessage> messages = [];
   private readonly Dictionary<int, ChatMessage> messagesById = [];
 
@@ -59,6 +62,9 @@ public class MessageStore(UserStore userStore) : ConcurrentStoreBase
     // Store message in both list and dictionary
     messages.Add(newMessage);
     messagesById.Add(newMessage.Id, newMessage);
+
+    // Notify all waiting long-poll clients that a new message arrived
+    messageNotifier.NotifyNewMessage();
     return true;
   });
   }

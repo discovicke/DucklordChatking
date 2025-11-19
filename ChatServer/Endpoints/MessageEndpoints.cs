@@ -92,48 +92,55 @@ public static class MessageEndpoints
         return Results.BadRequest();
       }
 
-      const int timeoutMs = 25000;     // total wait before returning empty
-      const int sleepMs = 200;         // minimum wait between checks ( to avoid heavy load if server is busy )
-      int waited = 0;
-
-      // long polling loop
-      while (waited < timeoutMs)
+      // 1. Immediate updates
+      var updates = messageStore.GetMessagesAfter(lastId);
+      if (updates.Count > 0)
       {
-        var updates = messageStore.GetMessagesAfter(lastId);
-
-        if (updates.Count > 0)
+        var dtoUpdates = updates.Select(m => new MessageDTO
         {
-          // Map ChatMessage -> MessageDTO, including the ID
-          var dtoUpdates = updates.Select(m => new MessageDTO
-          {
-            Id = m.Id,                     // copy the ID
-            Sender = m.Sender,    // map sender username
-            Content = m.Content,
-            Timestamp = m.Timestamp
-          }).ToList();
+          Id = m.Id,
+          Sender = m.Sender,
+          Content = m.Content,
+          Timestamp = m.Timestamp
+        }).ToList();
 
-          // Optional lightweight info log:
-          // ServerLog.Info($"Delivered {dtoUpdates.Count} updates to '{caller.Username}'");
-
-          return Results.Ok(dtoUpdates); // 200: new messages available
-        }
-
-        await Task.Delay(sleepMs);
-        waited += sleepMs;
+        return Results.Ok(dtoUpdates);
       }
 
-      // timeout reached, return empty list
-      return Results.Ok(new List<MessageDTO>()); // 200: no new messages
+      // 2. Wait for notification or timeout
+      var waitTask = notifier.WaitForNextMessageAsync();
+      var timeoutTask = Task.Delay(25000);
+
+      var completed = await Task.WhenAny(waitTask, timeoutTask);
+
+      if (completed == timeoutTask)
+        return Results.Ok(new List<MessageDTO>());
+
+      // 3. Fetch updates again after being signaled (if timeout was not reached before signaling)
+      updates = messageStore.GetMessagesAfter(lastId);
+
+      var dtoUpdatesAfterNotify = updates.Select(m => new MessageDTO
+      {
+        Id = m.Id,
+        Sender = m.Sender,
+        Content = m.Content,
+        Timestamp = m.Timestamp
+      }).ToList();
+
+      return Results.Ok(dtoUpdatesAfterNotify);
     })
-    .Produces<IEnumerable<MessageDTO>>(StatusCodes.Status200OK)
-    .Produces(StatusCodes.Status400BadRequest)
-    .Produces(StatusCodes.Status401Unauthorized)
-    .WithSummary("Get Message Updates (Long Polling)")
-    .WithDescription(
-        "Long-polling endpoint that waits for new messages after the given lastId. " +
-        "Returns immediately if updates exist, otherwise waits up to 25 seconds before returning an empty list."
-    )
-    .WithBadge("Auth Required 🔐", BadgePosition.Before, "#ffec72");
+.Produces<IEnumerable<MessageDTO>>(StatusCodes.Status200OK)
+.Produces(StatusCodes.Status400BadRequest)
+.Produces(StatusCodes.Status401Unauthorized)
+.WithSummary("Get Message Updates (Event-Driven Long Polling)")
+.WithDescription(
+    "Returns new chat messages that have an ID greater than the provided lastId. " +
+    "If updates are available, the response is returned immediately. " +
+    "If no updates exist, the request is suspended and waits efficiently until either a new message is posted " +
+    "or a 25-second timeout is reached. " +
+    "This event-driven design eliminates CPU polling and resumes the request the moment new messages arrive."
+)
+.WithBadge("Auth Required 🔐", BadgePosition.Before, "#ffec72");
     #endregion
 
     #region GET MESSAGE HISTORY (WITH OPTIONAL TAKE PARAMETER)
