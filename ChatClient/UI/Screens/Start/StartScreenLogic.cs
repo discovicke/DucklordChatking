@@ -76,6 +76,9 @@ namespace ChatClient.UI.Screens.Start
 
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             {
+                // --- Failed login sound ---
+                Raylib.PlaySound(ResourceLoader.FailedSound);
+
                 FeedbackBox.Show("Please enter quackername and password!", false);
                 Log.Info("[StartScreenLogic] Login failed - Username or password empty");
                 return;
