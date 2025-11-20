@@ -14,14 +14,14 @@ namespace ChatClient.UI.Screens.Options;
 // TODO Save settings
 public class OptionsScreenLogic : ScreenLogicBase
 {
-    private readonly TextField userField;
-    private readonly TextField passField;
-    private readonly TextField passConfirmField;
-    private readonly Button confirmButton;
-    private readonly BackButton backButton;
-    private readonly ToggleBox toggleWindowed;
-    private readonly ToggleBox toggleFullscreen;
-    private readonly ToggleBox toggleMute;
+    private readonly TextField UserField;
+    private readonly TextField PassField;
+    private readonly TextField PassConfirmField;
+    private readonly Button ConfirmButton;
+    private readonly BackButton BackButton;
+    private readonly ToggleBox ToggleWindowed;
+    private readonly ToggleBox ToggleFullscreen;
+    private readonly ToggleBox ToggleMute;
 
     public OptionsScreenLogic(
         TextField userField,
@@ -33,14 +33,14 @@ public class OptionsScreenLogic : ScreenLogicBase
         ToggleBox toggleFullscreen,
         ToggleBox toggleMute)
     {
-        this.userField = userField;
-        this.passField = passField;
-        this.passConfirmField = passConfirmField;
-        this.confirmButton = confirmButton;
-        this.backButton = backButton;
-        this.toggleWindowed = toggleWindowed;
-        this.toggleFullscreen = toggleFullscreen;
-        this.toggleMute = toggleMute;
+        UserField = userField;
+        PassField = passField;
+        PassConfirmField = passConfirmField;
+        ConfirmButton = confirmButton;
+        BackButton = backButton;
+        ToggleWindowed = toggleWindowed;
+        ToggleFullscreen = toggleFullscreen;
+        ToggleMute = toggleMute;
 
         // Register fields for automatic tab navigation
         RegisterField(userField);
@@ -53,23 +53,23 @@ public class OptionsScreenLogic : ScreenLogicBase
         base.UpdateComponents(); // Updates all registered fields with tab navigation
         
         // Use WindowSettings to handle window mode toggles
-        WindowSettings.UpdateToggles(toggleWindowed, toggleFullscreen);
+        WindowSettings.UpdateToggles(ToggleWindowed, ToggleFullscreen);
         
-        toggleMute.Update();
-        confirmButton.Update();
-        backButton.Update();
+        ToggleMute.Update();
+        ConfirmButton.Update();
+        BackButton.Update();
         
         HandleMuteToggle();
     }
 
     protected override void HandleActions()
     {
-        if (confirmButton.IsClicked())
+        if (ConfirmButton.IsClicked())
         {
             SaveSettings();
         }
 
-        if (backButton.IsClicked())
+        if (BackButton.IsClicked())
         {
             Cancel();
         }
@@ -77,7 +77,7 @@ public class OptionsScreenLogic : ScreenLogicBase
 
     private void HandleMuteToggle()
     {
-        if (toggleMute.IsChecked)
+        if (ToggleMute.IsChecked)
         {
             Raylib.SetMasterVolume(0.0f);
         }
@@ -89,7 +89,7 @@ public class OptionsScreenLogic : ScreenLogicBase
 
     private void SaveSettings()
     {
-        Log.Info($"[OptionsScreenLogic] Settings confirmed - New username: '{userField.Text}'");
+        Log.Info($"[OptionsScreenLogic] Settings confirmed - New username: '{UserField.Text}'");
         ClearFields();
         Navigation.NavigateBack();
     }

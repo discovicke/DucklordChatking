@@ -20,7 +20,6 @@ public class Program
         string appVersion = "DuckLord v.0.5.1";
         Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
 
-
         Raylib.InitWindow(500, 500, appVersion);
         Raylib.SetTargetFPS(60);
 
@@ -34,6 +33,7 @@ public class Program
         Log.Write("Program started.");
 
         Raylib.SetWindowSize(500, 500);
+        Raylib.SetWindowPosition(Raylib.GetScreenWidth() / 2 - 100, Raylib.GetScreenHeight() / 2 - 150);
         while (!Raylib.WindowShouldClose())
         {
             // --- Mouse settings ---
