@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using ChatClient.Core;
+using ChatClient.Core.Application;
 using ChatClient.Core.Infrastructure;
 using ChatClient.UI.Components;
 using ChatClient.UI.Components.Base;
@@ -34,6 +35,9 @@ public class OptionsScreen : ScreenBase<OptionsScreenLayout.LayoutData>
     {
         logic = new OptionsScreenLogic(newUsername, newPassword, confirmPassword,
             confirmButton, backButton, toggleWindowed, toggleFullscreen, toggleMute);
+        toggleWindowed.SetChecked(!AppState.IsFullscreen);
+        toggleFullscreen.SetChecked(AppState.IsFullscreen);
+        toggleMute.SetChecked(AppState.IsSoundMuted);
     }
 
     protected override OptionsScreenLayout.LayoutData CalculateLayout() =>

@@ -60,22 +60,16 @@ public class OptionsScreenLogic : ScreenLogicBase
     protected override void UpdateComponents()
     {
         base.UpdateComponents(); // Updates all registered fields with tab navigation
-
-        ToggleMute.SetChecked(AppState.IsSoundMuted);
-        WindowSettings.UpdateToggles(ToggleWindowed, ToggleFullscreen);
-    
-        ToggleMute.Update();
-        ToggleWindowed.Update();
-        ToggleFullscreen.Update();
         
+        ToggleMute.Update();
+        HandleMuteToggle();
+
         // Use WindowSettings to handle window mode toggles
         WindowSettings.UpdateToggles(ToggleWindowed, ToggleFullscreen);
-        
-        ToggleMute.Update();
+
         ConfirmButton.Update();
         BackButton.Update();
         FeedbackBox.Update();
-        HandleMuteToggle();
     }
 
     protected override void HandleActions()
