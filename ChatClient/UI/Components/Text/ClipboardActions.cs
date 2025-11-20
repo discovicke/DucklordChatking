@@ -39,7 +39,7 @@ namespace ChatClient.UI.Components.Text
 
     public class ClipboardActions
     {
-        private readonly ClipboardContext Context;
+        private ClipboardContext Context { get; }
 
         // null checks constructor (safety checks)
         public ClipboardActions(ClipboardContext context)
@@ -54,10 +54,6 @@ namespace ChatClient.UI.Components.Text
             if (Context.UndoStack is null) throw new ArgumentException("UndoStack required", nameof(context));
             if (Context.ResetCursorToStart is null) throw new ArgumentException("ResetCursorToStart delegate required", nameof(context));
             if (Context.ResetCursorBlink is null) throw new ArgumentException("ResetCursorBlink delegate required", nameof(context));
-
-
-
-
         }
         public  void Process()
         {
