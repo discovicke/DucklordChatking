@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net;
+using System.Net.Http.Json;
 using ChatClient.Core;
 using ChatClient.Core.Application;
 using ChatClient.Core.Infrastructure;
@@ -81,4 +82,27 @@ public class UserAuth(HttpClient httpClient)
         if (user == null) throw new ArgumentNullException(nameof(user));
         return Login(user.Username ?? string.Empty, user.Password ?? string.Empty);
     }
+
+    public bool UpdateCredentials(string oldUsername, string newUsername, string newPassword)
+    {
+        var dto = new UpdateUserDTO
+        {
+            OldUsername = oldUsername,
+            NewUsername = newUsername,
+            Password = newPassword
+        };
+
+        try
+        {
+            var response = httpClient.PostAsJsonAsync("users/update", dto).Result;
+            return response.StatusCode == HttpStatusCode.NoContent;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+
+
 }
