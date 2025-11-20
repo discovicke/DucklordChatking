@@ -1,16 +1,12 @@
-﻿using ChatClient.Core;
-using ChatClient.Core.Application;
+﻿using ChatClient.Core.Application;
 using ChatClient.Core.Infrastructure;
 using ChatClient.Core.Input;
 using ChatClient.Data;
 using ChatClient.Data.Services;
-using ChatClient.UI.Components;
 using ChatClient.UI.Components.Base;
 using ChatClient.UI.Components.Specialized;
-using ChatClient.UI.Components.Text;
 using ChatClient.UI.Screens.Common;
 using Raylib_cs;
-using System.Security.AccessControl;
 
 namespace ChatClient.UI.Screens.Register;
 
@@ -18,37 +14,49 @@ namespace ChatClient.UI.Screens.Register;
 /// Responsible for: handling user registration logic including validation and server communication.
 /// Manages password confirmation matching, field validation, and feedback display for registration success/failure.
 /// </summary>
-public class RegisterScreenLogic(
-    TextField userField,
-    TextField passField,
-    TextField passConfirmField,
-    Button registerButton,
-    BackButton backButton
-) : IScreenLogic
+public class RegisterScreenLogic : ScreenLogicBase
 {
-    private readonly UserAuth userAuth = new UserAuth(ServerConfig.CreateHttpClient());
-    public readonly FeedbackBox FeedbackBox = new();
-    private readonly TabLogics tabs = new();
-    private bool tabsInitialized;
+    private readonly TextField userField;
+    private readonly TextField passField;
+    private readonly TextField passConfirmField;
+    private readonly Button registerButton;
+    private readonly BackButton backButton;
+    private readonly IFeedbackService feedback;
+    private readonly UserAuth userAuth;
 
-    public void HandleInput()
+    public FeedbackBox FeedbackBox { get; }
+
+    public RegisterScreenLogic(
+        TextField userField,
+        TextField passField,
+        TextField passConfirmField,
+        Button registerButton,
+        BackButton backButton)
     {
-        tabs.Update();
-
-        // Register fields once in desired tab order (username -> password)
-        if (!tabsInitialized)
-        {
-            tabs.Register(userField);
-            tabs.Register(passField);
-            tabs.Register(passConfirmField);
-            tabsInitialized = true;
-        }
-        FeedbackBox.Update();
+        this.userField = userField;
+        this.passField = passField;
+        this.passConfirmField = passConfirmField;
+        this.registerButton = registerButton;
+        this.backButton = backButton;
         
-        userField.Update();
-        passField.Update();
-        passConfirmField.Update();
+        this.FeedbackBox = new FeedbackBox();
+        this.feedback = new FeedbackService(FeedbackBox);
+        this.userAuth = new UserAuth(ServerConfig.CreateHttpClient());
 
+        // Register fields for automatic tab navigation
+        RegisterField(userField);
+        RegisterField(passField);
+        RegisterField(passConfirmField);
+    }
+
+    protected override void UpdateComponents()
+    {
+        base.UpdateComponents(); // Updates all registered fields with tab navigation
+        feedback.Update();
+    }
+
+    protected override void HandleActions()
+    {
         if (MouseInput.IsLeftClick(registerButton.Rect) || Raylib.IsKeyPressed(KeyboardKey.Enter))
         {
             TryRegister();
@@ -57,8 +65,8 @@ public class RegisterScreenLogic(
         backButton.Update();
         if (backButton.IsClicked())
         {
-            Clear();
-            AppState.GoBack();
+            ClearFields();
+            Navigation.NavigateBack();
         }
     }
 
@@ -68,38 +76,30 @@ public class RegisterScreenLogic(
         string password = passField.Text;
         string passwordConfirm = passConfirmField.Text;
 
-        if (string.IsNullOrWhiteSpace(username))
+        // Validate username
+        var usernameValidation = InputValidator.ValidateUsername(username);
+        if (!usernameValidation.IsValid)
         {
             Raylib.PlaySound(ResourceLoader.FailedSound);
-            FeedbackBox.Show("Quackername cannot be empty!", false);
+            feedback.ShowError(usernameValidation.ErrorMessage);
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(password))
+        // Validate password
+        var passwordValidation = InputValidator.ValidatePassword(password);
+        if (!passwordValidation.IsValid)
         {
             Raylib.PlaySound(ResourceLoader.FailedSound);
-            FeedbackBox.Show("Password cannot be empty!", false);
+            feedback.ShowError(passwordValidation.ErrorMessage);
             return;
         }
 
-        if (password != passwordConfirm)
+        // Validate password match
+        var matchValidation = InputValidator.ValidatePasswordMatch(password, passwordConfirm);
+        if (!matchValidation.IsValid)
         {
             Raylib.PlaySound(ResourceLoader.FailedSound);
-            FeedbackBox.Show("Passwords do not match!", false);
-            return;
-        }
-
-        if (password.Length < 8)
-        {
-            Raylib.PlaySound(ResourceLoader.FailedSound);
-            FeedbackBox.Show("Password must be at least 8 characters!", false);
-            return;
-        }
-        
-        if (password.Any(char.IsWhiteSpace))
-        {
-            Raylib.PlaySound(ResourceLoader.FailedSound);
-            FeedbackBox.Show("Password can not contain blank spaces!", false);
+            feedback.ShowError(matchValidation.ErrorMessage);
             return;
         }
 
@@ -108,25 +108,18 @@ public class RegisterScreenLogic(
         if (success)
         {
             Raylib.PlaySound(ResourceLoader.LoginSound);
-            FeedbackBox.Show($"Duckount created! Welcome, {username}!", true);
+            feedback.ShowSuccess($"Duckount created! Welcome, {username}!");
             
             Task.Delay(3000).ContinueWith(_ =>
             {
-                Clear();
-                AppState.CurrentScreen = Screen.Start;
+                ClearFields();
+                Navigation.NavigateTo(Screen.Start);
             });
         }
         else
         {
             Raylib.PlaySound(ResourceLoader.FailedSound);
-            FeedbackBox.Show("Registration failed! Quackername may be taken.", false);
+            feedback.ShowError("Registration failed! Quackername may be taken.");
         }
-    }
-
-    private void Clear()
-    {
-        userField.Clear();
-        passField.Clear();
-        passConfirmField.Clear();
     }
 }
