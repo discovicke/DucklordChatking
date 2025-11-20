@@ -13,20 +13,20 @@ namespace ChatClient.UI.Components.Base;
 /// </summary>
 public class ToggleBox : UIComponent
 {
-    private string label;
-    private bool isChecked;
+    private string Label { get; set; }
+    public bool IsChecked { get; private set; }
 
     private const float LabelGap = 5f;
     private const float WrapperPaddingTop = 4f;
     private const float BorderThickness = 2f;
 
-    public bool IsChecked => isChecked;
+    
 
     public ToggleBox(Rectangle rect, string labelText, bool initialState = false)
     {
         Rect = rect;
-        label = labelText;
-        isChecked = initialState;
+        Label = labelText;
+        IsChecked = initialState;
     }
 
     public override void Draw()
@@ -50,12 +50,12 @@ public class ToggleBox : UIComponent
         Rectangle boxRect = new(boxX, boxY, boxSize, boxSize);
 
         // Checkbox fill
-        Color boxFill = isChecked ? Colors.BrandGold : Colors.TextFieldUnselected;
+        Color boxFill = IsChecked ? Colors.BrandGold : Colors.TextFieldUnselected;
         Raylib.DrawRectangleRounded(boxRect, 60f, 4, boxFill);
         Raylib.DrawRectangleRoundedLinesEx(boxRect, 60f, 4, 2, border);
 
         // Check indicator
-        if (isChecked)
+        if (IsChecked)
         {
             float padding = boxSize * 0.25f;
             Vector2 center = new(boxRect.X + boxRect.Width / 2f, boxRect.Y + boxRect.Height / 2f);
@@ -65,20 +65,20 @@ public class ToggleBox : UIComponent
 
         // Label below checkbox
         int fontSize = 14;
-        Vector2 measure = Raylib.MeasureTextEx(ResourceLoader.RegularFont, label, fontSize, 0.5f);
+        Vector2 measure = Raylib.MeasureTextEx(ResourceLoader.RegularFont, Label, fontSize, 0.5f);
         float textX = Rect.X + (Rect.Width - measure.X) / 2f;
         float textY = boxY + boxSize + LabelGap;
-        Raylib.DrawTextEx(ResourceLoader.RegularFont, label, new Vector2(textX, textY), fontSize, 0.5f, Colors.TextColor);
+        Raylib.DrawTextEx(ResourceLoader.RegularFont, Label, new Vector2(textX, textY), fontSize, 0.5f, Colors.TextColor);
     }
 
     public override void Update()
     {
         if (MouseInput.IsLeftClick(Rect))
         {
-            isChecked = !isChecked;
+            IsChecked = !IsChecked;
         }
     }
 
     public bool IsClicked() => MouseInput.IsLeftClick(Rect);
-    public void SetChecked(bool value) => isChecked = value;
+    public void SetChecked(bool value) => IsChecked = value;
 }
