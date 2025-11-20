@@ -6,74 +6,72 @@ namespace ChatClient.UI.Components.Text
     /// </summary>
     public class TextCursor
     {
-        private int position;
-        private float blinkTimer;
-        private bool visible = false;
+        private int RawPosition { get; set; }
+        private float BlinkTimer { get; set; }
+        public bool IsVisible { get; private set; } = false;
         private const float BlinkInterval = 0.5f;
 
         public int Position
         {
-            get => position;
-            set => position = Math.Clamp(value, 0, int.MaxValue);
+            get => RawPosition;
+            set => RawPosition = Math.Clamp(value, 0, int.MaxValue);
         }
-
-        public bool IsVisible => visible;
         
         public void ResetInvisible()
         {
-            visible = false;
-            blinkTimer = 0f;
+            IsVisible = false;
+            BlinkTimer = 0f;
         }
 
         public void Update(float deltaTime)
         {
-            blinkTimer += deltaTime;
-            if (blinkTimer >= BlinkInterval)
+            BlinkTimer += deltaTime;
+            if (BlinkTimer >= BlinkInterval)
             {
-                blinkTimer = 0f;
-                visible = !visible;
+                BlinkTimer = 0f;
+                IsVisible = !IsVisible;
             }
         }
 
         public void ResetBlink()
         {
-            blinkTimer = 0f;
-            visible = true;
+            BlinkTimer = 0f;
+            IsVisible = true;
         }
 
         public void MoveLeft(int textLength)
         {
-            if (position > 0)
+            if (RawPosition > 0)
             {
-                position--;
+                RawPosition--;
                 ResetBlink();
             }
         }
 
         public void MoveRight(int textLength)
         {
-            if (position < textLength)
+            if (RawPosition < textLength)
             {
-                position++;
+                RawPosition++;
                 ResetBlink();
             }
         }
 
         public void MoveToStart()
         {
-            position = 0;
+            RawPosition = 0;
             ResetBlink();
         }
 
         public void MoveToEnd(int textLength)
         {
-            position = textLength;
+            RawPosition = textLength;
             ResetBlink();
         }
 
         public void Reset()
         {
-            position = 0;
+            RawPosition = 0;
             ResetBlink();
         }
     }
