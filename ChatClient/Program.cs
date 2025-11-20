@@ -22,6 +22,10 @@ public class Program
 
 
         Raylib.InitWindow(500, 500, appVersion);
+        Raylib_cs.Image icon = Raylib.LoadImage("Resources/NewIcon.ico");
+        Raylib.SetWindowIcon(icon);
+
+
         Raylib.SetTargetFPS(60);
 
         // For ducksound
