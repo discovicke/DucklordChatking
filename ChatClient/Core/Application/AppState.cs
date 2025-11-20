@@ -1,4 +1,6 @@
-﻿﻿namespace ChatClient.Core.Application
+﻿﻿using Raylib_cs;
+
+ namespace ChatClient.Core.Application
 {
     public enum Screen
     {
@@ -27,7 +29,8 @@
         // Amount of recent messages to fetch on inital chat load
         public static int HistoryFetchCount { get; set; } = 30;
 
-
+        public static bool IsSoundMuted { get; set; } = false;
+        public static bool IsFullscreen { get; set; } = false;
 
         public static Screen CurrentScreen
         {

@@ -61,6 +61,13 @@ public class OptionsScreenLogic : ScreenLogicBase
     {
         base.UpdateComponents(); // Updates all registered fields with tab navigation
 
+        ToggleMute.SetChecked(AppState.IsSoundMuted);
+        WindowSettings.UpdateToggles(ToggleWindowed, ToggleFullscreen);
+    
+        ToggleMute.Update();
+        ToggleWindowed.Update();
+        ToggleFullscreen.Update();
+        
         // Use WindowSettings to handle window mode toggles
         WindowSettings.UpdateToggles(ToggleWindowed, ToggleFullscreen);
         
@@ -86,13 +93,12 @@ public class OptionsScreenLogic : ScreenLogicBase
 
     private void HandleMuteToggle()
     {
-        if (ToggleMute.IsChecked)
+        bool stateChanged = ToggleMute.IsChecked != AppState.IsSoundMuted;
+    
+        if (stateChanged)
         {
-            Raylib.SetMasterVolume(0.0f);
-        }
-        else
-        {
-            Raylib.SetMasterVolume(1.0f);
+            AppState.IsSoundMuted = ToggleMute.IsChecked;
+            Raylib.SetMasterVolume(AppState.IsSoundMuted ? 0.0f : 1.0f);
         }
     }
 

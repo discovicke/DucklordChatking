@@ -4,6 +4,7 @@ using ChatClient.UI.Screens.Common;
 using ChatClient.UI.Theme;
 using Raylib_cs;
 using System.Numerics;
+using ChatClient.Core.Application;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace ChatClient;
@@ -39,6 +40,7 @@ public class Program
             // --- Mouse settings ---
             // Calls on class for mouse interact (always on top)
             MouseInput.Update();
+            Raylib.SetMasterVolume(AppState.IsSoundMuted ? 0.0f : 1.0f);
 
             // --- Begin Frame ---
             Raylib.BeginDrawing();
