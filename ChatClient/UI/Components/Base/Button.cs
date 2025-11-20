@@ -14,12 +14,12 @@ namespace ChatClient.UI.Components.Base
     public class Button : UIComponent
     {
         public string Text { get; set; }
-        private Color NormalColor;
-        private Color HoverColorButton;
-        private Color PressedColorButton;
-        private Color TextColorButton;
-        private float Rounds = 0.3f;
-        private int Segments = 10;
+        private Color NormalColor { get; set; }
+        private Color HoverColorButton { get; set; }
+        private Color PressedColorButton { get; set; }
+        private Color TextColorButton { get; set; }
+        private float Rounds { get; set; } = 0.3f;
+        private int Segments { get; set; } = 10;
 
         public Button(Rectangle rect, string text, Color normalColor, Color hoverColor, Color textColor)
         {
@@ -29,17 +29,6 @@ namespace ChatClient.UI.Components.Base
             HoverColorButton = hoverColor;
             PressedColorButton = Colors.ButtonPressed; // Add pressed state
             TextColorButton = textColor;
-        }
-
-        // Simplified constructor using Colors.cs defaults
-        public Button(Rectangle rect, string text)
-        {
-            Rect = rect;
-            Text = text;
-            NormalColor = Colors.ButtonDefault;
-            HoverColorButton = Colors.ButtonHovered;
-            PressedColorButton = Colors.ButtonPressed;
-            TextColorButton = Colors.TextColor;
         }
 
         public override void Draw()
