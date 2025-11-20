@@ -39,6 +39,9 @@ public static class WindowSettings
             return;
         }
 
+        windowedToggle.SetChecked(!AppState.IsFullscreen);
+        fullscreenToggle.SetChecked(AppState.IsFullscreen);
+        
         bool windowedBefore = windowedToggle.IsChecked;
         bool fullscreenBefore = fullscreenToggle.IsChecked;
 
@@ -52,6 +55,7 @@ public static class WindowSettings
         if (windowedChanged && windowedToggle.IsChecked)
         {
             fullscreenToggle.SetChecked(false);
+            AppState.IsFullscreen = false;
             RestoreWindowedMode();
             SetMode(WindowMode.Windowed);
             return;
@@ -60,13 +64,14 @@ public static class WindowSettings
         if (fullscreenChanged && fullscreenToggle.IsChecked)
         {
             windowedToggle.SetChecked(false);
+            AppState.IsFullscreen = true;
             SetMode(WindowMode.FullscreenWindowed);
             return;
         }
 
         if (!windowedToggle.IsChecked && !fullscreenToggle.IsChecked)
         {
-            if (CurrentMode == WindowMode.Windowed)
+            if (!AppState.IsFullscreen)
             {
                 windowedToggle.SetChecked(true);
             }
@@ -74,11 +79,6 @@ public static class WindowSettings
             {
                 fullscreenToggle.SetChecked(true);
             }
-        }
-        else
-        {
-            windowedToggle.SetChecked(CurrentMode == WindowMode.Windowed);
-            fullscreenToggle.SetChecked(CurrentMode == WindowMode.FullscreenWindowed);
         }
     }
 
