@@ -17,11 +17,11 @@ public class Program
 
     public static void Main()
     {
-        string appVersion = "DuckLord v.0.5.1";
+        string appVersion = "DuckLord v.0.8.2";
         Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
 
         Raylib.InitWindow(500, 500, appVersion);
-        Raylib_cs.Image icon = Raylib.LoadImage("Resources/NewIcon.ico");
+        Raylib_cs.Image icon = Raylib.LoadImage("Resources/ICON.png");
         Raylib.SetWindowIcon(icon);
 
 
