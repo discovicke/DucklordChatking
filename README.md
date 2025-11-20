@@ -6,6 +6,18 @@ Grupparbete för första kursen
 
 # :P
 
+## Getting started
+1. Launch program.
+2. Register a new account (Create duck).
+3. Login on your account.
+4. Quack with the other ducks in the pond.
+
+If you want to change your preferences like soundtoggle, window size or change your account credentials:
+
+1. Click on the cog wheel in the top right corner in chat window.
+2. Change your preferences.
+3. Go back to quack with the other ducks in the pond. 
+
 ## Server API Documentation
 
 The full interactive API reference is available at:
