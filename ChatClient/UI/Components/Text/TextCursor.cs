@@ -1,4 +1,4 @@
-namespace ChatClient.UI.Components.Text
+﻿namespace ChatClient.UI.Components.Text
 {
     /// <summary>
     /// Responsible for: managing text cursor position and blinking animation within text fields.
@@ -6,16 +6,11 @@ namespace ChatClient.UI.Components.Text
     /// </summary>
     public class TextCursor
     {
-        private int RawPosition { get; set; }
         private float BlinkTimer { get; set; }
-        public bool IsVisible { get; private set; } = false;
         private const float BlinkInterval = 0.5f;
-
-        public int Position
-        {
-            get => RawPosition;
-            set => RawPosition = Math.Clamp(value, 0, int.MaxValue);
-        }
+        public int Position { get; private set; }
+        public bool IsVisible { get; private set; } = false;
+        
         
         public void ResetInvisible()
         {
@@ -41,38 +36,44 @@ namespace ChatClient.UI.Components.Text
 
         public void MoveLeft(int textLength)
         {
-            if (RawPosition > 0)
+            if (Position > 0)
             {
-                RawPosition--;
+                Position--;
                 ResetBlink();
             }
         }
 
         public void MoveRight(int textLength)
         {
-            if (RawPosition < textLength)
+            if (Position < textLength)
             {
-                RawPosition++;
+                Position++;
                 ResetBlink();
             }
         }
 
         public void MoveToStart()
         {
-            RawPosition = 0;
+            Position = 0;
             ResetBlink();
         }
 
         public void MoveToEnd(int textLength)
         {
-            RawPosition = textLength;
+            Position = textLength;
             ResetBlink();
         }
 
         public void Reset()
         {
-            RawPosition = 0;
+            Position = 0;
             ResetBlink();
+        }
+
+        // New: central clamp tied to current text length
+        public void ClampToTextLength(int textLength)
+        {
+            Position = Math.Clamp(Position, 0, textLength);
         }
     }
 }
