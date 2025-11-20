@@ -8,7 +8,8 @@ namespace ChatClient.UI.Components.Layout;
 /// </summary>
 class UIWrapper
 {
-    public float Width, Height;
+    public float Width { get; private set; }
+    public float Height { get; private set; }
     
     public void SetToFullWindow()
     {
