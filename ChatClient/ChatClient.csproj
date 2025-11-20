@@ -5,6 +5,9 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <StartupObject>ChatClient.Program</StartupObject>
+    <AssemblyName>DuckLord - ChatKing</AssemblyName>
+    <ApplicationIcon>Resources\NewIcon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,10 +20,17 @@
     <None Remove="Resources\DuckLord1.2slim.png" />
     <None Remove="Resources\FailedSound.mp3" />
     <None Remove="Resources\Font Awesome 7 Free-Solid-900.otf" />
+    <None Remove="Resources\Icon.ico" />
+    <None Remove="Resources\ICON.PNG" />
+    <None Remove="Resources\Icon2.ico" />
+    <None Remove="Resources\Icon3.ico" />
+    <None Remove="Resources\Icon512.ico" />
+    <None Remove="Resources\Icon512real.ico" />
     <None Remove="Resources\LoginSound.mp3" />
     <None Remove="Resources\MessageDelete.mp3" />
     <None Remove="Resources\MessageDuck.mp3" />
     <None Remove="Resources\MessageTyping.mp3" />
+    <None Remove="Resources\NewIcon.ico" />
     <None Remove="Resources\NewLogo.png" />
   </ItemGroup>
 
@@ -55,6 +65,9 @@
     <Content Include="Resources\Font Awesome 7 Free-Solid-900.otf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\ICON.PNG">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\LoginSound.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -66,6 +79,9 @@
     </Content>
     <Content Include="Resources\MessageTyping.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\NewIcon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\NewLogo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
