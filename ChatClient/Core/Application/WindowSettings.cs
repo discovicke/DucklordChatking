@@ -18,7 +18,6 @@ public enum WindowMode
 public static class WindowSettings
 {
     public static WindowMode CurrentMode { get; private set; } = WindowMode.Windowed;
-    private static bool togglesInitialized = false;
     private static int WindowedWidth { get; set; } = 1024;
     private static int WindowedHeight { get; set; } = 768;
     private static int WindowedX { get; set; } = 100;
