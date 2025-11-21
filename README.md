@@ -4,7 +4,17 @@
 
 Grupparbete för första kursen
 
-# :P
+# 
+ ____             _    _                  _ 
+|  _ \ _   _  ___| | _| |    ___  _ __ __| |
+| | | | | | |/ __| |/ / |   / _ \| '__/ _` |
+| |_| | |_| | (__|   <| |__| (_) | | | (_| |
+|____/ \__,_|\___|_|\_\_____\___/|_|  \__,_|
+ / ___| |__   __ _| |_| | _(_)_ __   __ _   
+| |   | '_ \ / _` | __| |/ / | '_ \ / _` |  
+| |___| | | | (_| | |_|   <| | | | | (_| |  
+ \____|_| |_|\__,_|\__|_|\_\_|_| |_|\__, |  
+                                    |___/ 
 
 ## Getting started
 1. Launch program.
@@ -27,3 +37,9 @@ The full interactive API reference is available at:
 If the server is deployed, you can also visit:
 
 `https://ducklord-server.onrender.com/scalar`
+
+### Created by
+Viktor, Christian, Marcus, André
+>(')____,  >(')____,  >(')____,  >(')____,  
+  (` =~~/    (` =~~/    (` =~~/    (` =~~/    
+~^~^`---'~^~^~^`---'~^~^~^`---'~^~^~^`---'~^~^~^`--
