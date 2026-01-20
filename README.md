@@ -56,11 +56,26 @@ If the server is deployed, you can also visit:
 
 `https://ducklord-server.onrender.com/scalar`
 
-### Created by
-Viktor Johansson 
-Christian Gennari 
-Marcus Löf
-André Pontén
+---
+
+## Developers
+
+**Viktor Johansson**
+- LinkedIn: [linkedin.com/in/viktorjohansson96](https://www.linkedin.com/in/viktorjohansson96/)
+- GitHub: [@discovicke](https://github.com/discovicke)
+
+**Christian Gennari**
+- LinkedIn: [linkedin.com/in/christiangennari](https://linkedin.com/in/christiangennari)
+- GitHub: [@Christian-Gennari](https://github.com/Christian-Gennari)
+
+**Marcus Lööv**
+- LinkedIn: [linkedin.com/in/marcus-lof-a64888382](https://www.linkedin.com/in/marcus-l%C3%B6f-a64888382)
+- GitHub: [@LeafMaster1](https://github.com/LeafMaster1)
+
+**André Pontén**
+- LinkedIn: [linkedin.com/in/andreponten](https://linkedin.com/in/andreponten)
+- GitHub: [@aponten](https://github.com/aponten)
+
 ```
 >(.)__ <(.)__ =(.)__ >(.)__ 
  (___/  (___/  (___/  (___/
