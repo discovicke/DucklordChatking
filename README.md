@@ -16,6 +16,14 @@
       ╚██████╗██║  ██║██║  ██║   ██║   ██║  ██╗██║██║ ╚████║╚██████╔╝      
        ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝ ╚═════╝
 ```
+
+![C#](https://img.shields.io/badge/C%23-12.0-239120?logo=csharp&logoColor=white)
+![.NET](https://img.shields.io/badge/.NET-9.0-512BD4?logo=dotnet&logoColor=white)
+![Raylib](https://img.shields.io/badge/Raylib-raylib__cs-000000)
+![ASP.NET](https://img.shields.io/badge/ASP.NET-REST%20API-512BD4?logo=dotnet&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Functional%20Prototype-yellow)
+![Docs](https://img.shields.io/badge/API%20Docs-%2Fscalar-brightgreen)
+
 ## Overview
 Ducklord, Chatking is a playful chat client for communicating with friends.
 It blends a game-like UI with real-time messaging so conversations feel fun and fluid.
